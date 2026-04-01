@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0f0f0f;
+    font-family:'Noto Sans Devanagari', sans-serif;
+    color:#eee;
+    min-height:100vh;
+    padding:20px;
+  }
+  .container { max-width:500px; margin:0 auto; }
+
+  .logo {
+    text-align:center;
+    padding:20px 0 30px;
+  }
+  .logo span {
+    font-family:Georgia,serif;
+    font-size:36px; font-weight:700;
+    background:linear-gradient(to bottom,#F5D77A,#D4A520,#8B6508);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:3px;
+  }
+  .logo p {
+    font-size:12px; color:#555;
+    letter-spacing:2px;
+    margin-top:4px;
+  }
+
+  .section {
+    background:#1a1a1a;
+    border:1px solid #2a2a2a;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:16px;
+  }
+  .section-title {
+    font-size:13px;
+    color:#D4A520;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    font-weight:700;
+  }
+
+  label {
+    display:block;
+    font-size:12px;
+    color:#888;
+    margin-bottom:6px;
+    margin-top:14px;
+  }
+  label:first-of-type { margin-top:0; }
+
+  input, textarea {
+    width:100%;
+    background:#111;
+    border:1px solid #333;
+    border-radius:6px;
+    color:#fff;
+    font-size:15px;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:10px 12px;
+    outline:none;
+    transition:border 0.2s;
+  }
+  input:focus, textarea:focus { border-color:#D4A520; }
+  textarea { resize:vertical; min-height:80px; line-height:1.5; }
+
+  /* Color buttons */
+  .color-wrap {
+    display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;
+  }
+  .color-btn {
+    padding:6px 14px;
+    border-radius:5px;
+    border:none; cursor:pointer;
+    font-size:13px;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    font-weight:700;
+  }
+  .color-btn.red   { background:#CC0000; color:#fff; }
+  .color-btn.gold  { background:#D4A520; color:#000; }
+  .color-btn.white { background:#fff;    color:#111; border:1px solid #333; }
+  .color-btn.black { background:#111;    color:#fff; border:1px solid #333; }
+
+  .hint {
+    font-size:11px; color:#555;
+    margin-top:6px; line-height:1.6;
+  }
+
+  /* Preview box */
+  .preview-box {
+    background:#111;
+    border:1px solid #2a2a2a;
+    border-radius:8px;
+    padding:14px;
+    font-size:15px;
+    line-height:1.5;
+    min-height:50px;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    color:#fff;
+    word-break:break-word;
+  }
+
+  /* Photo preview */
+  .photo-preview {
+    width:100%; height:140px;
+    object-fit:cover;
+    border-radius:8px;
+    margin-top:10px;
+    background:#111;
+    display:block;
+  }
+
+  /* Buttons */
+  .btn-save {
+    width:100%;
+    background:linear-gradient(135deg,#CC0000,#990000);
+    color:#fff;
+    border:none; border-radius:8px;
+    font-size:16px; font-weight:900;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:14px;
+    cursor:pointer;
+    margin-top:8px;
+    letter-spacing:1px;
+    transition:opacity 0.2s;
+  }
+  .btn-save:active { opacity:0.8; }
+
+  .btn-view {
+    width:100%;
+    background:#1a1a1a;
+    color:#D4A520;
+    border:1px solid #D4A520;
+    border-radius:8px;
+    font-size:14px;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:12px;
+    cursor:pointer;
+    margin-top:10px;
+    letter-spacing:1px;
+    transition:background 0.2s;
+  }
+  .btn-view:hover { background:#222; }
+
+  .toast {
+    position:fixed; bottom:20px; left:50%;
+    transform:translateX(-50%) translateY(80px);
+    background:#D4A520; color:#000;
+    padding:10px 24px; border-radius:8px;
+    font-weight:700; font-size:14px;
+    transition:transform 0.3s;
+    z-index:999;
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="logo">
+    <span>BBN</span>
+    <p>NEWS ADMIN PANEL</p>
+  </div>
+
+  <!-- Headline Section -->
+  <div class="section">
+    <div class="section-title">📝 Headline / खबर</div>
+
+    <label>खबर टाइप करो (Hindi mein)</label>
+    <textarea id="rawText" placeholder="जैसे: PM मोदी ने की रैली सम्बोधित" oninput="updatePreview()"></textarea>
+
+    <label>रंग चुनो (text select करके button dabao)</label>
+    <div class="color-wrap">
+      <button class="color-btn red"   onclick="wrapColor('red')">🔴 लाल</button>
+      <button class="color-btn gold"  onclick="wrapColor('gold')">🟡 सोना</button>
+      <button class="color-btn white" onclick="wrapColor('white')">⬜ सफेद</button>
+      <button class="color-btn black" onclick="wrapColor('black')">⬛ काला</button>
+    </div>
+    <div class="hint">
+      💡 Text select karo → color button dabao → woh rang lag jayega<br>
+      Ya seedha HTML type karo: &lt;span class="hl-red"&gt;text&lt;/span&gt;
+    </div>
+
+    <label>Preview</label>
+    <div class="preview-box" id="previewBox">यहाँ preview aayega</div>
+  </div>
+
+  <!-- Photo Section -->
+  <div class="section">
+    <div class="section-title">🖼️ Photo</div>
+
+    <label>Photo URL daalo (internet se link)</label>
+    <input type="text" id="photoUrl" placeholder="https://example.com/photo.jpg" oninput="previewPhoto()"/>
+
+    <label>Ya photos/ folder ka naam (GitHub pe upload karo)</label>
+    <input type="text" id="photoFile" placeholder="photos/modi.jpg" oninput="previewPhotoFile()"/>
+
+    <img id="photoPreview" class="photo-preview" src="" alt="" style="display:none"/>
+  </div>
+
+  <!-- Source Section -->
+  <div class="section">
+    <div class="section-title">📡 Source / Channel</div>
+    <label>Channel ka naam</label>
+    <input type="text" id="sourceText" placeholder="BBN NEWS • bbn.com" value="BBN NEWS"/>
+  </div>
+
+  <!-- Save -->
+  <button class="btn-save" onclick="saveNews()">💾 NEWS SAVE KARO</button>
+  <button class="btn-view" onclick="window.location='index.html'">👁️ Card Dekho</button>
+
+</div>
+
+<div class="toast" id="toast">✅ News save ho gayi!</div>
+
+<script>
+  // Load existing data
+  window.onload = function() {
+    const saved = localStorage.getItem('bbn_news');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.headline) {
+        document.getElementById('rawText').value = data.headline;
+        updatePreview();
+      }
+      if (data.photo) {
+        if (data.photo.startsWith('http')) {
+          document.getElementById('photoUrl').value = data.photo;
+        } else {
+          document.getElementById('photoFile').value = data.photo;
+        }
+        showPhotoPreview(data.photo);
+      }
+      if (data.source) document.getElementById('sourceText').value = data.source;
+    }
+  };
+
+  function updatePreview() {
+    const text = document.getElementById('rawText').value;
+    document.getElementById('previewBox').innerHTML = text || 'यहाँ preview aayega';
+  }
+
+  // Wrap selected text with color span
+  function wrapColor(color) {
+    const ta = document.getElementById('rawText');
+    const start = ta.selectionStart;
+    const end   = ta.selectionEnd;
+    if (start === end) return alert('Pehle text select karo!');
+    const selected = ta.value.substring(start, end);
+    const classMap = { red:'hl-red', gold:'hl-gold', white:'hl-white', black:'hl-black' };
+    const wrapped = `<span class="${classMap[color]}">${selected}</span>`;
+    ta.value = ta.value.substring(0, start) + wrapped + ta.value.substring(end);
+    updatePreview();
+  }
+
+  function previewPhoto() {
+    const url = document.getElementById('photoUrl').value.trim();
+    if (url) showPhotoPreview(url);
+  }
+
+  function previewPhotoFile() {
+    const file = document.getElementById('photoFile').value.trim();
+    if (file) showPhotoPreview(file);
+  }
+
+  function showPhotoPreview(src) {
+    const img = document.getElementById('photoPreview');
+    img.src = src;
+    img.style.display = 'block';
+  }
+
+  function saveNews() {
+    const headline = document.getElementById('rawText').value.trim();
+    const photoUrl  = document.getElementById('photoUrl').value.trim();
+    const photoFile = document.getElementById('photoFile').value.trim();
+    const source    = document.getElementById('sourceText').value.trim();
+
+    const photo = photoUrl || photoFile || 'photos/default.jpg';
+
+    if (!headline) return alert('Koi headline nahi likhi!');
+
+    localStorage.setItem('bbn_news', JSON.stringify({ headline, photo, source }));
+
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
