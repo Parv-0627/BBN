@@ -6,212 +6,151 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
     background:#000;
     display:flex;
     justify-content:center;
     align-items:center;
     min-height:100vh;
-    padding:0;
   }
-
-  /* 4:5 ratio = 1080x1350px — Facebook News Feed standard */
   .card {
     width: min(100vw, calc(100vh * 4/5));
     height: min(100vh, calc(100vw * 5/4));
-    position: relative;
-    overflow: hidden;
-    background: #000;
-    display: flex;
-    flex-direction: column;
+    position:relative;
+    overflow:hidden;
+    background:#000;
+    display:flex;
+    flex-direction:column;
   }
-
-  /* ── Photo: 60% of card ── */
   .photo-area {
-    width: 100%;
-    height: 60%;
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
+    width:100%; height:60%;
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
   }
-
   .photo-area img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
-    display: block;
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position:center 20%;
+    display:block;
   }
-
-  /* Top red strip */
   .top-strip {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 1%;
-    background: #CC0000;
-    z-index: 10;
+    position:absolute; top:0; left:0;
+    width:100%; height:1%;
+    background:#CC0000; z-index:10;
   }
-
-  /* Bottom fade on photo */
   .photo-fade {
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 30%;
-    background: linear-gradient(to top, #0d0d0d 0%, transparent 100%);
-    z-index: 2;
+    position:absolute; bottom:0; left:0;
+    width:100%; height:30%;
+    background:linear-gradient(to top,#0d0d0d 0%,transparent 100%);
+    z-index:2;
   }
-
-  /* BBN Logo */
   .bbn-logo {
-    position: absolute;
-    top: 3%; right: 3%;
-    z-index: 20;
-    background: rgba(10,10,20,0.90);
-    border: 0.35vmin solid #D4A520;
-    border-radius: 1vmin;
-    padding: 1vmin 2vmin;
-    display: flex;
-    align-items: center;
+    position:absolute; top:3%; right:3%;
+    z-index:20;
+    background:rgba(10,10,20,0.90);
+    border:0.35vmin solid #D4A520;
+    border-radius:1vmin;
+    padding:1vmin 2vmin;
+    display:flex; align-items:center;
   }
-
   .bbn-text {
-    font-family: Georgia, serif;
-    font-size: 5.5vmin;
-    font-weight: 700;
-    background: linear-gradient(to bottom, #F5D77A 0%, #D4A520 55%, #8B6508 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 0.5vmin;
-    line-height: 1;
+    font-family:Georgia,serif;
+    font-size:5.5vmin; font-weight:700;
+    background:linear-gradient(to bottom,#F5D77A 0%,#D4A520 55%,#8B6508 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:0.5vmin; line-height:1;
   }
-
-  /* ── News Area: 40% of card ── */
   .headline-area {
-    width: 100%;
-    flex: 1;
-    background: #ffffff;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2.5vmin 5vmin 3vmin;
+    width:100%; flex:1;
+    background:#fff;
+    position:relative;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:2.5vmin 5vmin 3vmin;
   }
-
-  /* Red top border */
   .headline-area::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 1.2vmin;
-    background: #CC0000;
+    content:'';
+    position:absolute; top:0; left:0;
+    width:100%; height:1.2vmin;
+    background:#CC0000;
   }
-
-  /* Breaking badge */
   .breaking-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 1vmin;
-    background: #CC0000;
-    color: #fff;
-    font-family: 'Noto Sans Devanagari', sans-serif;
-    font-size: 2.8vmin;
-    font-weight: 700;
-    padding: 0.6vmin 2.5vmin;
-    border-radius: 0.5vmin;
-    margin-bottom: 2.5vmin;
-    letter-spacing: 0.3vmin;
+    display:inline-flex; align-items:center; gap:1vmin;
+    background:#CC0000; color:#fff;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    font-size:2.8vmin; font-weight:700;
+    padding:0.6vmin 2.5vmin;
+    border-radius:0.5vmin;
+    margin-bottom:2.5vmin;
   }
-
-  /* Main headline */
   .headline {
-    font-size: 6vmin;
-    font-weight: 900;
-    line-height: 1.35;
-    text-align: center;
-    font-family: 'Noto Sans Devanagari', 'Mangal', sans-serif;
-    color: #111;
+    font-size:6vmin; font-weight:900;
+    line-height:1.35; text-align:center;
+    font-family:'Noto Sans Devanagari','Mangal',sans-serif;
+    color:#111;
   }
-
-  .hl-red { color: #CC0000; }
-  .hl-gold { color: #D4A520; }
-
-  /* Divider */
+  .hl-red { color:#CC0000; }
+  .hl-gold { color:#D4A520; }
   .divider {
-    display: flex;
-    align-items: center;
-    gap: 1.5vmin;
-    margin: 2vmin 0;
-    width: 80%;
-    opacity: 0.3;
+    display:flex; align-items:center; gap:1.5vmin;
+    margin:2vmin 0; width:80%; opacity:0.3;
   }
-  .div-line { flex: 1; height: 0.25vmin; background: #333; }
+  .div-line { flex:1; height:0.25vmin; background:#333; }
   .div-diamond {
-    width: 1.5vmin; height: 1.5vmin;
-    background: #CC0000;
-    transform: rotate(45deg);
-    flex-shrink: 0;
-    opacity: 1;
+    width:1.5vmin; height:1.5vmin;
+    background:#CC0000;
+    transform:rotate(45deg);
+    flex-shrink:0; opacity:1;
   }
-
-  /* Source line */
   .source {
-    font-size: 1.8vmin;
-    color: #999;
-    letter-spacing: 0.3vmin;
-    font-family: 'Trebuchet MS', sans-serif;
-    text-align: center;
-    text-transform: uppercase;
+    font-size:1.8vmin; color:#999;
+    letter-spacing:0.3vmin;
+    font-family:'Trebuchet MS',sans-serif;
+    text-align:center; text-transform:uppercase;
+  }
+  .admin-link {
+    position:fixed; bottom:10px; right:10px;
+    background:rgba(0,0,0,0.5);
+    color:#555; font-size:10px;
+    padding:4px 8px; border-radius:4px;
+    text-decoration:none;
+    font-family:monospace;
   }
 </style>
 </head>
 <body>
-
 <div class="card">
-
-  <!-- Photo Section -->
   <div class="photo-area">
     <div class="top-strip"></div>
-
-    <!-- ✏️ STEP 1: Apna photo link yahan daalo -->
-    <img src="APNI_PHOTO.jpg" alt="Photo"/>
-
+    <img id="newsPhoto" src="photos/default.jpg" alt="Photo"/>
     <div class="photo-fade"></div>
-
-    <div class="bbn-logo">
-      <span class="bbn-text">BBN</span>
-    </div>
+    <div class="bbn-logo"><span class="bbn-text">BBN</span></div>
   </div>
-
-  <!-- News Section -->
   <div class="headline-area">
-
-    <div class="breaking-badge">
-      ⚡ ब्रेकिंग न्यूज़
-    </div>
-
-    <!-- ✏️ STEP 2: Apni headline yahan likho -->
-    <!-- .hl-red = laal rang | .hl-gold = sona rang -->
-    <div class="headline">
-      ट्रंप <span class="hl-red">होर्मुज़ जलडमरूमध्य</span> को दोबारा
-      खोले बिना<br>
-      <span class="hl-gold">युद्ध समाप्त करने को तैयार</span>
-    </div>
-
+    <div class="breaking-badge">⚡ ब्रेकिंग न्यूज़</div>
+    <div class="headline" id="newsHeadline">यहाँ खबर आएगी</div>
     <div class="divider">
       <div class="div-line"></div>
       <div class="div-diamond"></div>
       <div class="div-line"></div>
     </div>
-
-    <!-- ✏️ STEP 3: Source/channel name -->
-    <div class="source">BBN NEWS • bbn.com</div>
-
+    <div class="source" id="newsSource">BBN NEWS</div>
   </div>
-
 </div>
+<a href="admin.html" class="admin-link">⚙</a>
 
+<script>
+  // Load saved news from localStorage
+  const saved = localStorage.getItem('bbn_news');
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (data.headline) document.getElementById('newsHeadline').innerHTML = data.headline;
+    if (data.photo)    document.getElementById('newsPhoto').src = data.photo;
+    if (data.source)   document.getElementById('newsSource').textContent = data.source;
+  }
+</script>
 </body>
 </html>
