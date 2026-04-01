@@ -165,19 +165,12 @@
     <p>NEWS ADMIN PANEL</p>
   </div>
 
-  <!-- API Key Section -->
+  <!-- No API Key needed -->
   <div class="section">
-    <div class="section-title">🔑 Claude API Key <span class="gemini-badge" style="background:#cc5500;">ANTHROPIC</span></div>
-    <label>Apni Claude API Key daalo (sirf ek baar — save ho jayegi)</label>
-    <div class="key-row">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-..."/>
-      <button class="btn-key-save" onclick="saveApiKey()">💾 Save</button>
-    </div>
-    <div class="key-status" id="keyStatus"></div>
-    <p class="api-notice">
-      🔗 Free key yahan se lo: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a><br>
-      🔒 Key sirf aapke browser mein save hoti hai, kahi nahi jaati.<br>
-      ✅ Claude Haiku use hoga — fast aur affordable!
+    <div class="section-title">✅ Google Translate <span class="gemini-badge" style="background:#34A853;">FREE</span></div>
+    <p class="api-notice" style="color:#4CAF50; font-size:13px;">
+      🎉 Koi API Key nahi chahiye! Google Translate bilkul free hai.<br>
+      ✅ Hinglish/English → Hindi automatic convert hoga!
     </p>
   </div>
 
@@ -252,59 +245,31 @@
 <div class="toast" id="toast">✅ Card save ho gaya!</div>
 
 <script>
-// ── API Key Management ──
-function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key.startsWith('sk-ant-')) {
-    document.getElementById('keyStatus').className = 'key-status err';
-    document.getElementById('keyStatus').textContent = '❌ Key galat lag rahi hai! "sk-ant-" se shuru honi chahiye.';
-    return;
-  }
-  localStorage.setItem('bbn_claude_key', key);
-  document.getElementById('keyStatus').className = 'key-status ok';
-  document.getElementById('keyStatus').textContent = '✅ Key save ho gayi! Ab convert kar sakte ho.';
-}
-
-function getApiKey() {
-  return localStorage.getItem('bbn_claude_key') || '';
-}
-
 // ── Page Load ──
 window.onload = function() {
-  const key = getApiKey();
-  if (key) {
-    document.getElementById('apiKeyInput').value = key;
-    document.getElementById('keyStatus').className = 'key-status ok';
-    document.getElementById('keyStatus').textContent = '✅ Key pehle se save hai.';
-  }
-
   const saved = localStorage.getItem('bbn_news');
   if (!saved) return;
-  const data = JSON.parse(saved);
-  if (data.headline) {
-    const box = document.getElementById('hindiOut');
-    box.innerHTML = data.headline;
-    box.classList.remove('empty');
-  }
-  if (data.photo) {
-    if (data.photo.startsWith('http')) document.getElementById('photoUrl').value = data.photo;
-    else document.getElementById('photoFile').value = data.photo;
-    const i = document.getElementById('photoPreview');
-    i.src = data.photo; i.style.display = 'block';
-  }
-  if (data.source) document.getElementById('sourceText').value = data.source;
+  try {
+    const data = JSON.parse(saved);
+    if (data.headline) {
+      const box = document.getElementById('hindiOut');
+      box.innerHTML = data.headline;
+      box.classList.remove('empty');
+    }
+    if (data.photo) {
+      if (data.photo.startsWith('http')) document.getElementById('photoUrl').value = data.photo;
+      else document.getElementById('photoFile').value = data.photo;
+      const i = document.getElementById('photoPreview');
+      i.src = data.photo; i.style.display = 'block';
+    }
+    if (data.source) document.getElementById('sourceText').value = data.source;
+  } catch(e) {}
 };
 
-// ── Convert via Claude API ──
+// ── Translate via Google Translate (Free) ──
 async function convertNews() {
   const input = document.getElementById('inputText').value.trim();
   if (!input) return alert('Kuch likho pehle!');
-
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    alert('Pehle Claude API Key daalo aur Save karo! (Upar wala section dekho 🔑)');
-    return;
-  }
 
   // Show loading
   const btn = document.getElementById('convertBtn');
@@ -313,43 +278,17 @@ async function convertNews() {
   document.getElementById('convertLabel').textContent = 'Ban raha hai...';
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `You are a Hindi news converter. Convert the input to Hindi and English.
+    // Translate to Hindi
+    const hindiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=hi&dt=t&q=${encodeURIComponent(input)}`;
+    const hindiRes = await fetch(hindiUrl);
+    const hindiData = await hindiRes.json();
+    const hindi = hindiData[0].map(x => x[0]).join('');
 
-Respond ONLY in this exact format (two lines, nothing else):
-HINDI: <proper formal Hindi in Devanagari script>
-ENGLISH: <clean English translation>
-
-Input: ${input}`
-        }]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || 'API Error: ' + res.status);
-    }
-
-    const data = await res.json();
-    const text = data.content[0].text.trim();
-
-    const hindiMatch = text.match(/HINDI:\s*(.+)/i);
-    const englishMatch = text.match(/ENGLISH:\s*(.+)/i);
-
-    const hindi = hindiMatch ? hindiMatch[1].trim() : text;
-    const english = englishMatch ? englishMatch[1].trim() : '';
+    // Translate to English
+    const engUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(input)}`;
+    const engRes = await fetch(engUrl);
+    const engData = await engRes.json();
+    const english = engData[0].map(x => x[0]).join('');
 
     // Show Hindi
     const hindiBox = document.getElementById('hindiOut');
@@ -364,7 +303,7 @@ Input: ${input}`
     showToast('✅ Convert ho gaya!');
 
   } catch(e) {
-    alert('❌ Error aaya!\n\n' + e.message + '\n\nAPI Key check karo:\nconsole.anthropic.com/settings/keys');
+    alert('❌ Error aaya!\n\n' + e.message + '\n\nInternet connection check karo.');
   }
 
   // Reset button
