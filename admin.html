@@ -9,13 +9,10 @@
   body {
     background:#0f0f0f;
     font-family:'Noto Sans Devanagari', sans-serif;
-    color:#eee;
-    min-height:100vh;
-    padding:20px;
+    color:#eee; min-height:100vh; padding:20px;
   }
   .container { max-width:500px; margin:0 auto; }
-
-  .logo { text-align:center; padding:20px 0 30px; }
+  .logo { text-align:center; padding:20px 0 24px; }
   .logo span {
     font-family:Georgia,serif; font-size:36px; font-weight:700;
     background:linear-gradient(to bottom,#F5D77A,#D4A520,#8B6508);
@@ -26,14 +23,13 @@
 
   .section {
     background:#1a1a1a; border:1px solid #2a2a2a;
-    border-radius:10px; padding:20px; margin-bottom:16px;
+    border-radius:10px; padding:20px; margin-bottom:14px;
   }
   .section-title {
     font-size:13px; color:#D4A520; letter-spacing:1px;
     text-transform:uppercase; margin-bottom:12px; font-weight:700;
   }
-
-  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:14px; }
+  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:12px; }
   label:first-of-type { margin-top:0; }
 
   input, textarea {
@@ -42,50 +38,46 @@
     padding:10px 12px; outline:none; transition:border 0.2s;
   }
   input:focus, textarea:focus { border-color:#D4A520; }
-  textarea { resize:vertical; min-height:80px; line-height:1.5; }
+  textarea { resize:vertical; min-height:70px; line-height:1.6; }
 
-  /* Hindi Keyboard */
-  .hindi-keyboard {
-    background:#111; border:1px solid #2a2a2a;
-    border-radius:8px; padding:10px; margin-top:10px;
+  /* Step indicator */
+  .step-badge {
+    display:inline-block; background:#CC0000; color:#fff;
+    font-size:11px; font-weight:700; border-radius:50%;
+    width:20px; height:20px; text-align:center; line-height:20px;
+    margin-right:6px;
   }
-  .kb-rows { display:flex; flex-direction:column; gap:6px; }
-  .kb-row { display:flex; gap:4px; flex-wrap:wrap; justify-content:center; }
-  .kb-key {
-    background:#1e1e1e; border:1px solid #333; border-radius:5px;
-    color:#fff; font-size:14px;
+
+  /* Convert button */
+  .btn-convert {
+    width:100%; background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
+    border:1px solid #4CAF50; border-radius:8px;
+    color:#4CAF50; font-size:14px; font-weight:700;
     font-family:'Noto Sans Devanagari',sans-serif;
-    padding:7px 6px; cursor:pointer; min-width:32px;
-    text-align:center; transition:background 0.15s;
-    flex-shrink:0;
+    padding:11px; cursor:pointer; margin-top:10px;
+    letter-spacing:0.5px; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
   }
-  .kb-key:active { background:#D4A520; color:#000; }
-  .kb-key.space { flex:1; font-size:11px; color:#666; min-width:80px; }
-  .kb-key.backspace { background:#2a1a1a; color:#CC0000; min-width:50px; }
-  .kb-key.enter { background:#1a2a1a; color:#4CAF50; min-width:50px; }
-  .kb-toggle {
-    width:100%; background:#222; border:1px solid #333; border-radius:6px;
-    color:#D4A520; font-size:12px; padding:7px; cursor:pointer;
-    margin-bottom:8px; letter-spacing:1px;
-  }
+  .btn-convert:hover { background:#1f3f1f; }
+  .btn-convert.loading { opacity:0.7; pointer-events:none; }
 
-  /* Translator */
-  .translator-box {
-    background:#111; border:1px solid #2a2a2a;
-    border-radius:8px; padding:12px; margin-top:12px;
+  /* Output boxes */
+  .out-box {
+    background:#111; border:1px solid #2a2a2a; border-radius:8px;
+    padding:12px 14px; min-height:48px; line-height:1.6;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    word-break:break-word; margin-top:8px;
   }
-  .trans-label { font-size:11px; color:#555; margin-bottom:6px; }
-  .trans-output {
-    font-size:14px; color:#aaa; line-height:1.6;
-    min-height:36px; font-family:sans-serif;
+  .out-box.hindi { color:#fff; font-size:15px; font-weight:700; }
+  .out-box.english { color:#aaa; font-size:13px; font-family:sans-serif; }
+  .out-box.empty { color:#444; font-style:italic; }
+
+  .out-label {
+    font-size:11px; margin-top:12px; margin-bottom:4px;
+    display:flex; align-items:center; gap:6px;
   }
-  .btn-translate {
-    width:100%; background:#1a1a2a; border:1px solid #3a3a6a;
-    border-radius:6px; color:#7a7aff; font-size:13px;
-    padding:8px; cursor:pointer; margin-top:8px;
-    transition:background 0.2s;
-  }
-  .btn-translate:hover { background:#222; }
+  .out-label .flag { font-size:14px; }
+  .out-label span { color:#666; }
 
   /* Color buttons */
   .color-wrap { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
@@ -96,19 +88,20 @@
   .color-btn.red   { background:#CC0000; color:#fff; }
   .color-btn.gold  { background:#D4A520; color:#000; }
   .color-btn.white { background:#fff; color:#111; border:1px solid #333; }
-  .color-btn.black { background:#111; color:#fff; border:1px solid #333; }
 
-  .hint { font-size:11px; color:#555; margin-top:6px; line-height:1.6; }
+  .hint { font-size:11px; color:#444; margin-top:8px; line-height:1.6; }
 
-  .preview-box {
-    background:#111; border:1px solid #2a2a2a; border-radius:8px;
-    padding:14px; font-size:15px; line-height:1.5; min-height:50px;
-    font-family:'Noto Sans Devanagari',sans-serif; color:#fff; word-break:break-word;
+  /* Copy button */
+  .btn-copy {
+    background:#222; border:1px solid #333; border-radius:6px;
+    color:#888; font-size:11px; padding:5px 10px;
+    cursor:pointer; margin-top:6px; float:right;
   }
+  .btn-copy:hover { color:#D4A520; border-color:#D4A520; }
 
   .photo-preview {
     width:100%; height:140px; object-fit:cover;
-    border-radius:8px; margin-top:10px; background:#111; display:block;
+    border-radius:8px; margin-top:10px; display:block;
   }
 
   .btn-save {
@@ -125,8 +118,7 @@
     width:100%; background:#1a1a1a; color:#D4A520;
     border:1px solid #D4A520; border-radius:8px;
     font-size:14px; font-family:'Noto Sans Devanagari',sans-serif;
-    padding:12px; cursor:pointer; margin-top:10px;
-    letter-spacing:1px; transition:background 0.2s;
+    padding:12px; cursor:pointer; margin-top:10px; letter-spacing:1px;
   }
   .btn-view:hover { background:#222; }
 
@@ -139,6 +131,14 @@
     transition:transform 0.3s; z-index:999;
   }
   .toast.show { transform:translateX(-50%) translateY(0); }
+
+  .spinner {
+    display:inline-block; width:14px; height:14px;
+    border:2px solid #4CAF5044;
+    border-top-color:#4CAF50;
+    border-radius:50%; animation:spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -149,198 +149,223 @@
     <p>NEWS ADMIN PANEL</p>
   </div>
 
-  <!-- Headline Section -->
+  <!-- Step 1: Input -->
   <div class="section">
-    <div class="section-title">📝 Headline / खबर</div>
-
-    <label>खबर टाइप करो</label>
-    <textarea id="rawText" placeholder="यहाँ खबर लिखो..." oninput="updatePreview()"></textarea>
-
-    <!-- Hindi Keyboard -->
-    <div class="hindi-keyboard">
-      <button class="kb-toggle" onclick="toggleKB()">⌨️ हिंदी कीबोर्ड दिखाओ / छुपाओ</button>
-      <div id="kbWrap" style="display:none">
-        <div class="kb-rows" id="kbRows"></div>
-      </div>
+    <div class="section-title">
+      <span class="step-badge">1</span> Khabr Likho (Hinglish/Hindi/English)
     </div>
 
-    <!-- Translator -->
-    <div class="translator-box">
-      <div class="trans-label">🔄 Hindi → English Translation</div>
-      <div class="trans-output" id="transOutput">translation yahan aayega...</div>
-      <button class="btn-translate" onclick="translateText()">🌐 Translate karo</button>
-    </div>
+    <label>Koi bhi bhasha mein likho — auto convert ho jayega</label>
+    <textarea id="inputText"
+      placeholder="Jaise: Congress assam me bidesiyon ko basana chati hai... PM Modi ka bipakch par hamla"></textarea>
 
-    <label style="margin-top:16px">रंग चुनो (text select करके button dabao)</label>
-    <div class="color-wrap">
-      <button class="color-btn red"   onclick="wrapColor('red')">🔴 लाल</button>
-      <button class="color-btn gold"  onclick="wrapColor('gold')">🟡 सोना</button>
-      <button class="color-btn white" onclick="wrapColor('white')">⬜ सफेद</button>
-      <button class="color-btn black" onclick="wrapColor('black')">⬛ काला</button>
-    </div>
-    <div class="hint">💡 Text select karo → color button dabao → woh rang lag jayega</div>
-
-    <label>Preview</label>
-    <div class="preview-box" id="previewBox">यहाँ preview aayega</div>
+    <button class="btn-convert" onclick="convertNews()" id="convertBtn">
+      <span id="convertIcon">✨</span>
+      <span id="convertLabel">Hindi + English Banao</span>
+    </button>
   </div>
 
-  <!-- Photo Section -->
+  <!-- Step 2: Output -->
   <div class="section">
-    <div class="section-title">🖼️ Photo</div>
-    <label>Photo URL daalo (internet se link)</label>
-    <input type="text" id="photoUrl" placeholder="https://example.com/photo.jpg" oninput="previewPhoto()"/>
-    <label>Ya photos/ folder ka naam</label>
+    <div class="section-title">
+      <span class="step-badge">2</span> Auto Generated Text
+    </div>
+
+    <div class="out-label">
+      <span class="flag">🇮🇳</span>
+      <span>Hindi — Card par yeh dikhega</span>
+      <button class="btn-copy" onclick="copyHindi()">Copy</button>
+    </div>
+    <div class="out-box hindi empty" id="hindiOut">pehle "Banao" button dabao...</div>
+
+    <div class="out-label" style="margin-top:14px">
+      <span class="flag">🇬🇧</span>
+      <span>English — Translate (reference ke liye)</span>
+      <button class="btn-copy" onclick="copyEnglish()">Copy</button>
+    </div>
+    <div class="out-box english empty" id="englishOut">pehle "Banao" button dabao...</div>
+
+    <!-- Color highlight on Hindi -->
+    <label style="margin-top:14px">Hindi text mein rang lagao (select karke)</label>
+    <div class="color-wrap">
+      <button class="color-btn red"  onclick="wrapColor('hl-red')">🔴 लाल</button>
+      <button class="color-btn gold" onclick="wrapColor('hl-gold')">🟡 सोना</button>
+      <button class="color-btn white" onclick="wrapColor('hl-white')" style="border:1px solid #333">⬜ सफेद</button>
+    </div>
+    <div class="hint">💡 Hindi box mein text select karo → color dabao → rang lag jayega</div>
+  </div>
+
+  <!-- Step 3: Photo -->
+  <div class="section">
+    <div class="section-title">
+      <span class="step-badge">3</span> Photo
+    </div>
+    <label>Photo ka internet link (URL)</label>
+    <input type="text" id="photoUrl" placeholder="https://...photo.jpg" oninput="previewPhoto()"/>
+    <label>Ya GitHub photos/ folder se</label>
     <input type="text" id="photoFile" placeholder="photos/modi.jpg" oninput="previewPhotoFile()"/>
     <img id="photoPreview" class="photo-preview" src="" alt="" style="display:none"/>
   </div>
 
-  <!-- Source Section -->
+  <!-- Step 4: Source -->
   <div class="section">
-    <div class="section-title">📡 Source / Channel</div>
-    <label>Channel ka naam</label>
-    <input type="text" id="sourceText" placeholder="BBN NEWS • bbn.com" value="BBN NEWS"/>
+    <div class="section-title">
+      <span class="step-badge">4</span> Channel / Source
+    </div>
+    <input type="text" id="sourceText" value="BBN NEWS"/>
   </div>
 
-  <button class="btn-save" onclick="saveNews()">💾 NEWS SAVE KARO</button>
+  <button class="btn-save" onclick="saveNews()">💾 CARD SAVE KARO</button>
   <button class="btn-view" onclick="window.location='index.html'">👁️ Card Dekho</button>
 
 </div>
-<div class="toast" id="toast">✅ News save ho gayi!</div>
+<div class="toast" id="toast">✅ Card save ho gaya!</div>
 
 <script>
-// ── Hindi Keyboard Layout ──
-const rows = [
-  ['अ','आ','इ','ई','उ','ऊ','ए','ऐ','ओ','औ','अं','अः'],
-  ['क','ख','ग','घ','ङ','च','छ','ज','झ','ञ','ट','ठ'],
-  ['ड','ढ','ण','त','थ','द','ध','न','प','फ','ब','भ'],
-  ['म','य','र','ल','व','श','ष','स','ह','ळ','क्ष','ज्ञ'],
-  ['ा','ि','ी','ु','ू','े','ै','ो','ौ','ं','ः','्'],
-  ['।','?','!','०','१','२','३','४','५','६','७','८','९'],
-];
+// ── Hinglish → Hindi + English via Claude API ──
+async function convertNews() {
+  const input = document.getElementById('inputText').value.trim();
+  if (!input) return alert('Kuch likho pehle!');
 
-function buildKeyboard() {
-  const wrap = document.getElementById('kbRows');
-  rows.forEach(row => {
-    const div = document.createElement('div');
-    div.className = 'kb-row';
-    row.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.className = 'kb-key';
-      btn.textContent = ch;
-      btn.onclick = () => insertChar(ch);
-      div.appendChild(btn);
-    });
-    wrap.appendChild(div);
-  });
-  // Space, Backspace, Enter row
-  const lastRow = document.createElement('div');
-  lastRow.className = 'kb-row';
-  lastRow.innerHTML = `
-    <button class="kb-key backspace" onclick="insertChar('BACK')">⌫</button>
-    <button class="kb-key space" onclick="insertChar(' ')">SPACE</button>
-    <button class="kb-key enter" onclick="insertChar('\n')">↵</button>
-  `;
-  wrap.appendChild(lastRow);
-}
+  // Show loading
+  const btn = document.getElementById('convertBtn');
+  btn.classList.add('loading');
+  document.getElementById('convertIcon').innerHTML = '<span class="spinner"></span>';
+  document.getElementById('convertLabel').textContent = 'Ban raha hai...';
 
-function toggleKB() {
-  const w = document.getElementById('kbWrap');
-  w.style.display = w.style.display === 'none' ? 'block' : 'none';
-}
-
-function insertChar(ch) {
-  const ta = document.getElementById('rawText');
-  const s = ta.selectionStart, e = ta.selectionEnd;
-  if (ch === 'BACK') {
-    if (s === 0 && e === 0) return;
-    ta.value = ta.value.substring(0, s > e ? s-1 : s) + ta.value.substring(e > s ? e : s);
-    ta.selectionStart = ta.selectionEnd = s > 0 ? s-1 : 0;
-  } else {
-    ta.value = ta.value.substring(0,s) + ch + ta.value.substring(e);
-    ta.selectionStart = ta.selectionEnd = s + ch.length;
-  }
-  ta.focus();
-  updatePreview();
-}
-
-buildKeyboard();
-
-// ── Translator (Google Translate free API) ──
-async function translateText() {
-  const text = document.getElementById('rawText').value.trim();
-  if (!text) return;
-  const plain = text.replace(/<[^>]+>/g,''); // remove HTML tags
-  document.getElementById('transOutput').textContent = 'Translating...';
   try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=hi&tl=en&dt=t&q=${encodeURIComponent(plain)}`;
-    const res  = await fetch(url);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `You are a Hindi news headline converter. The user will give you a news headline in Hinglish (Roman Hindi), Hindi, or English. 
+
+Your job:
+1. Convert it to proper formal Hindi (Devanagari script) — as it would appear on a news channel
+2. Also provide a clean English translation
+
+IMPORTANT RULES:
+- Hindi output: Only the headline text, no quotes, no extra words. Formal news style.
+- English output: Only the translated headline, no extra words.
+- Keep it concise — like a TV news ticker
+
+Respond ONLY in this exact JSON format (no other text):
+{"hindi":"...","english":"..."}
+
+Input: ${input}`
+        }]
+      })
+    });
+
     const data = await res.json();
-    const translated = data[0].map(x => x[0]).join('');
-    document.getElementById('transOutput').textContent = translated;
+    const text = data.content[0].text.trim();
+    const parsed = JSON.parse(text);
+
+    // Show Hindi
+    const hindiBox = document.getElementById('hindiOut');
+    hindiBox.textContent = parsed.hindi;
+    hindiBox.classList.remove('empty');
+    hindiBox.dataset.raw = parsed.hindi;
+
+    // Show English
+    const engBox = document.getElementById('englishOut');
+    engBox.textContent = parsed.english;
+    engBox.classList.remove('empty');
+
   } catch(e) {
-    document.getElementById('transOutput').textContent = '❌ Internet check karo ya baad mein try karo';
+    alert('Error aaya! Internet check karo.\n' + e.message);
   }
+
+  // Reset button
+  btn.classList.remove('loading');
+  document.getElementById('convertIcon').textContent = '✨';
+  document.getElementById('convertLabel').textContent = 'Dobara Banao';
 }
 
-// ── Preview ──
-function updatePreview() {
-  const text = document.getElementById('rawText').value;
-  document.getElementById('previewBox').innerHTML = text || 'यहाँ preview aayega';
+// ── Color wrap on Hindi box (contenteditable trick) ──
+function wrapColor(cls) {
+  const box = document.getElementById('hindiOut');
+  // Make editable temporarily
+  box.contentEditable = 'true';
+  box.focus();
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.toString().length === 0) {
+    box.contentEditable = 'false';
+    return alert('Hindi text mein se kuch select karo pehle!');
+  }
+  const range = sel.getRangeAt(0);
+  const span = document.createElement('span');
+  span.className = cls;
+  const colorMap = { 'hl-red':'#CC0000', 'hl-gold':'#D4A520', 'hl-white':'#ffffff' };
+  span.style.color = colorMap[cls] || '#fff';
+  range.surroundContents(span);
+  sel.removeAllRanges();
+  box.contentEditable = 'false';
 }
 
-// ── Color Wrap ──
-function wrapColor(color) {
-  const ta = document.getElementById('rawText');
-  const s = ta.selectionStart, e = ta.selectionEnd;
-  if (s === e) return alert('Pehle text select karo!');
-  const sel = ta.value.substring(s,e);
-  const map = {red:'hl-red',gold:'hl-gold',white:'hl-white',black:'hl-black'};
-  const wrapped = `<span class="${map[color]}">${sel}</span>`;
-  ta.value = ta.value.substring(0,s) + wrapped + ta.value.substring(e);
-  updatePreview();
+// ── Copy ──
+function copyHindi() {
+  const box = document.getElementById('hindiOut');
+  navigator.clipboard.writeText(box.innerText).then(()=>showToast('Hindi copy ho gaya!'));
+}
+function copyEnglish() {
+  const box = document.getElementById('englishOut');
+  navigator.clipboard.writeText(box.innerText).then(()=>showToast('English copy ho gaya!'));
 }
 
-// ── Photo Preview ──
+// ── Photo ──
 function previewPhoto() {
   const url = document.getElementById('photoUrl').value.trim();
-  if (url) showPhotoPreview(url);
+  if (url) { const i=document.getElementById('photoPreview'); i.src=url; i.style.display='block'; }
 }
 function previewPhotoFile() {
   const f = document.getElementById('photoFile').value.trim();
-  if (f) showPhotoPreview(f);
-}
-function showPhotoPreview(src) {
-  const img = document.getElementById('photoPreview');
-  img.src = src; img.style.display = 'block';
+  if (f) { const i=document.getElementById('photoPreview'); i.src=f; i.style.display='block'; }
 }
 
 // ── Save ──
 function saveNews() {
-  const headline = document.getElementById('rawText').value.trim();
+  const hindiBox  = document.getElementById('hindiOut');
+  const headline  = hindiBox.innerHTML.trim();
   const photoUrl  = document.getElementById('photoUrl').value.trim();
   const photoFile = document.getElementById('photoFile').value.trim();
   const source    = document.getElementById('sourceText').value.trim();
-  const photo = photoUrl || photoFile || 'photos/default.jpg';
-  if (!headline) return alert('Koi headline nahi likhi!');
-  localStorage.setItem('bbn_news', JSON.stringify({headline,photo,source}));
+  const photo     = photoUrl || photoFile || 'photos/default.jpg';
+
+  if (!headline || hindiBox.classList.contains('empty')) return alert('Pehle headline banao!');
+
+  localStorage.setItem('bbn_news', JSON.stringify({headline, photo, source}));
+  showToast('✅ Card save ho gaya!');
+}
+
+function showToast(msg) {
   const t = document.getElementById('toast');
+  t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+  setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
 // ── Load saved ──
 window.onload = function() {
   const saved = localStorage.getItem('bbn_news');
-  if (saved) {
-    const data = JSON.parse(saved);
-    if (data.headline) { document.getElementById('rawText').value = data.headline; updatePreview(); }
-    if (data.photo) {
-      if (data.photo.startsWith('http')) document.getElementById('photoUrl').value = data.photo;
-      else document.getElementById('photoFile').value = data.photo;
-      showPhotoPreview(data.photo);
-    }
-    if (data.source) document.getElementById('sourceText').value = data.source;
+  if (!saved) return;
+  const data = JSON.parse(saved);
+  if (data.headline) {
+    const box = document.getElementById('hindiOut');
+    box.innerHTML = data.headline;
+    box.classList.remove('empty');
   }
+  if (data.photo) {
+    if (data.photo.startsWith('http')) document.getElementById('photoUrl').value = data.photo;
+    else document.getElementById('photoFile').value = data.photo;
+    const i = document.getElementById('photoPreview');
+    i.src = data.photo; i.style.display = 'block';
+  }
+  if (data.source) document.getElementById('sourceText').value = data.source;
 };
 </script>
 </body>
