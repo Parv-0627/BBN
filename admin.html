@@ -40,7 +40,6 @@
   input:focus, textarea:focus { border-color:#D4A520; }
   textarea { resize:vertical; min-height:70px; line-height:1.6; }
 
-  /* Step indicator */
   .step-badge {
     display:inline-block; background:#CC0000; color:#fff;
     font-size:11px; font-weight:700; border-radius:50%;
@@ -48,7 +47,6 @@
     margin-right:6px;
   }
 
-  /* Convert button */
   .btn-convert {
     width:100%; background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
     border:1px solid #4CAF50; border-radius:8px;
@@ -61,7 +59,6 @@
   .btn-convert:hover { background:#1f3f1f; }
   .btn-convert.loading { opacity:0.7; pointer-events:none; }
 
-  /* Output boxes */
   .out-box {
     background:#111; border:1px solid #2a2a2a; border-radius:8px;
     padding:12px 14px; min-height:48px; line-height:1.6;
@@ -79,7 +76,6 @@
   .out-label .flag { font-size:14px; }
   .out-label span { color:#666; }
 
-  /* Color buttons */
   .color-wrap { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
   .color-btn {
     padding:6px 14px; border-radius:5px; border:none; cursor:pointer;
@@ -91,7 +87,6 @@
 
   .hint { font-size:11px; color:#444; margin-top:8px; line-height:1.6; }
 
-  /* Copy button */
   .btn-copy {
     background:#222; border:1px solid #333; border-radius:6px;
     color:#888; font-size:11px; padding:5px 10px;
@@ -139,6 +134,27 @@
     border-radius:50%; animation:spin 0.7s linear infinite;
   }
   @keyframes spin { to { transform:rotate(360deg); } }
+
+  .api-notice { font-size:11px; color:#555; margin-top:6px; line-height:1.6; }
+  .api-notice a { color:#4285F4; text-decoration:none; }
+  .key-row { display:flex; gap:8px; align-items:center; }
+  .key-row input { flex:1; font-family:monospace; font-size:12px; letter-spacing:1px; }
+  .btn-key-save {
+    background:#222; border:1px solid #4285F4; border-radius:6px;
+    color:#4285F4; font-size:12px; padding:10px 14px;
+    cursor:pointer; white-space:nowrap;
+  }
+  .btn-key-save:hover { background:#001a3a; }
+  .key-status { font-size:11px; margin-top:6px; }
+  .key-status.ok  { color:#4CAF50; }
+  .key-status.err { color:#CC0000; }
+
+  .gemini-badge {
+    display:inline-block; background:#4285F4;
+    color:#fff; font-size:10px; font-weight:700;
+    border-radius:4px; padding:2px 7px; margin-left:6px;
+    vertical-align:middle;
+  }
 </style>
 </head>
 <body>
@@ -149,12 +165,27 @@
     <p>NEWS ADMIN PANEL</p>
   </div>
 
+  <!-- API Key Section -->
+  <div class="section">
+    <div class="section-title">🔑 Google Gemini API Key <span class="gemini-badge">FREE</span></div>
+    <label>Apni Gemini API Key daalo (sirf ek baar — save ho jayegi)</label>
+    <div class="key-row">
+      <input type="password" id="apiKeyInput" placeholder="AIza..."/>
+      <button class="btn-key-save" onclick="saveApiKey()">💾 Save</button>
+    </div>
+    <div class="key-status" id="keyStatus"></div>
+    <p class="api-notice">
+      🔗 Free key yahan se lo: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a><br>
+      🔒 Key sirf aapke browser mein save hoti hai, kahi nahi jaati.<br>
+      ✅ Gemini 2.0 Flash use hoga — bilkul free!
+    </p>
+  </div>
+
   <!-- Step 1: Input -->
   <div class="section">
     <div class="section-title">
       <span class="step-badge">1</span> Khabr Likho (Hinglish/Hindi/English)
     </div>
-
     <label>Koi bhi bhasha mein likho — auto convert ho jayega</label>
     <textarea id="inputText"
       placeholder="Jaise: Congress assam me bidesiyon ko basana chati hai... PM Modi ka bipakch par hamla"></textarea>
@@ -185,12 +216,11 @@
     </div>
     <div class="out-box english empty" id="englishOut">pehle "Banao" button dabao...</div>
 
-    <!-- Color highlight on Hindi -->
     <label style="margin-top:14px">Hindi text mein rang lagao (select karke)</label>
     <div class="color-wrap">
       <button class="color-btn red"  onclick="wrapColor('hl-red')">🔴 लाल</button>
       <button class="color-btn gold" onclick="wrapColor('hl-gold')">🟡 सोना</button>
-      <button class="color-btn white" onclick="wrapColor('hl-white')" style="border:1px solid #333">⬜ सफेद</button>
+      <button class="color-btn white" onclick="wrapColor('hl-white')">⬜ सफेद</button>
     </div>
     <div class="hint">💡 Hindi box mein text select karo → color dabao → rang lag jayega</div>
   </div>
@@ -222,135 +252,32 @@
 <div class="toast" id="toast">✅ Card save ho gaya!</div>
 
 <script>
-// ── Hinglish → Hindi + English via Claude API ──
-async function convertNews() {
-  const input = document.getElementById('inputText').value.trim();
-  if (!input) return alert('Kuch likho pehle!');
-
-  // Show loading
-  const btn = document.getElementById('convertBtn');
-  btn.classList.add('loading');
-  document.getElementById('convertIcon').innerHTML = '<span class="spinner"></span>';
-  document.getElementById('convertLabel').textContent = 'Ban raha hai...';
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `You are a Hindi news headline converter. The user will give you a news headline in Hinglish (Roman Hindi), Hindi, or English. 
-
-Your job:
-1. Convert it to proper formal Hindi (Devanagari script) — as it would appear on a news channel
-2. Also provide a clean English translation
-
-IMPORTANT RULES:
-- Hindi output: Only the headline text, no quotes, no extra words. Formal news style.
-- English output: Only the translated headline, no extra words.
-- Keep it concise — like a TV news ticker
-
-Respond ONLY in this exact JSON format (no other text):
-{"hindi":"...","english":"..."}
-
-Input: ${input}`
-        }]
-      })
-    });
-
-    const data = await res.json();
-    const text = data.content[0].text.trim();
-    const parsed = JSON.parse(text);
-
-    // Show Hindi
-    const hindiBox = document.getElementById('hindiOut');
-    hindiBox.textContent = parsed.hindi;
-    hindiBox.classList.remove('empty');
-    hindiBox.dataset.raw = parsed.hindi;
-
-    // Show English
-    const engBox = document.getElementById('englishOut');
-    engBox.textContent = parsed.english;
-    engBox.classList.remove('empty');
-
-  } catch(e) {
-    alert('Error aaya! Internet check karo.\n' + e.message);
+// ── API Key Management ──
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('AIza')) {
+    document.getElementById('keyStatus').className = 'key-status err';
+    document.getElementById('keyStatus').textContent = '❌ Key galat lag rahi hai! "AIza" se shuru honi chahiye.';
+    return;
   }
-
-  // Reset button
-  btn.classList.remove('loading');
-  document.getElementById('convertIcon').textContent = '✨';
-  document.getElementById('convertLabel').textContent = 'Dobara Banao';
+  localStorage.setItem('bbn_gemini_key', key);
+  document.getElementById('keyStatus').className = 'key-status ok';
+  document.getElementById('keyStatus').textContent = '✅ Key save ho gayi! Ab convert kar sakte ho.';
 }
 
-// ── Color wrap on Hindi box (contenteditable trick) ──
-function wrapColor(cls) {
-  const box = document.getElementById('hindiOut');
-  // Make editable temporarily
-  box.contentEditable = 'true';
-  box.focus();
-  const sel = window.getSelection();
-  if (!sel.rangeCount || sel.toString().length === 0) {
-    box.contentEditable = 'false';
-    return alert('Hindi text mein se kuch select karo pehle!');
-  }
-  const range = sel.getRangeAt(0);
-  const span = document.createElement('span');
-  span.className = cls;
-  const colorMap = { 'hl-red':'#CC0000', 'hl-gold':'#D4A520', 'hl-white':'#ffffff' };
-  span.style.color = colorMap[cls] || '#fff';
-  range.surroundContents(span);
-  sel.removeAllRanges();
-  box.contentEditable = 'false';
+function getApiKey() {
+  return localStorage.getItem('bbn_gemini_key') || '';
 }
 
-// ── Copy ──
-function copyHindi() {
-  const box = document.getElementById('hindiOut');
-  navigator.clipboard.writeText(box.innerText).then(()=>showToast('Hindi copy ho gaya!'));
-}
-function copyEnglish() {
-  const box = document.getElementById('englishOut');
-  navigator.clipboard.writeText(box.innerText).then(()=>showToast('English copy ho gaya!'));
-}
-
-// ── Photo ──
-function previewPhoto() {
-  const url = document.getElementById('photoUrl').value.trim();
-  if (url) { const i=document.getElementById('photoPreview'); i.src=url; i.style.display='block'; }
-}
-function previewPhotoFile() {
-  const f = document.getElementById('photoFile').value.trim();
-  if (f) { const i=document.getElementById('photoPreview'); i.src=f; i.style.display='block'; }
-}
-
-// ── Save ──
-function saveNews() {
-  const hindiBox  = document.getElementById('hindiOut');
-  const headline  = hindiBox.innerHTML.trim();
-  const photoUrl  = document.getElementById('photoUrl').value.trim();
-  const photoFile = document.getElementById('photoFile').value.trim();
-  const source    = document.getElementById('sourceText').value.trim();
-  const photo     = photoUrl || photoFile || 'photos/default.jpg';
-
-  if (!headline || hindiBox.classList.contains('empty')) return alert('Pehle headline banao!');
-
-  localStorage.setItem('bbn_news', JSON.stringify({headline, photo, source}));
-  showToast('✅ Card save ho gaya!');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
-}
-
-// ── Load saved ──
+// ── Page Load ──
 window.onload = function() {
+  const key = getApiKey();
+  if (key) {
+    document.getElementById('apiKeyInput').value = key;
+    document.getElementById('keyStatus').className = 'key-status ok';
+    document.getElementById('keyStatus').textContent = '✅ Key pehle se save hai.';
+  }
+
   const saved = localStorage.getItem('bbn_news');
   if (!saved) return;
   const data = JSON.parse(saved);
@@ -367,6 +294,151 @@ window.onload = function() {
   }
   if (data.source) document.getElementById('sourceText').value = data.source;
 };
+
+// ── Convert via Google Gemini API ──
+async function convertNews() {
+  const input = document.getElementById('inputText').value.trim();
+  if (!input) return alert('Kuch likho pehle!');
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    alert('Pehle Gemini API Key daalo aur Save karo! (Upar wala section dekho 🔑)');
+    return;
+  }
+
+  // Show loading
+  const btn = document.getElementById('convertBtn');
+  btn.classList.add('loading');
+  document.getElementById('convertIcon').innerHTML = '<span class="spinner"></span>';
+  document.getElementById('convertLabel').textContent = 'Ban raha hai...';
+
+  try {
+    const prompt = `You are a Hindi news headline converter. The user will give you a news headline in Hinglish (Roman Hindi), Hindi, or English.
+
+Your job:
+1. Convert it to proper formal Hindi (Devanagari script) — as it would appear on a news channel
+2. Also provide a clean English translation
+
+IMPORTANT RULES:
+- Hindi output: Only the headline text, no quotes, no extra words. Formal news style.
+- English output: Only the translated headline, no extra words.
+- Keep it concise — like a TV news ticker
+
+Respond ONLY in this exact JSON format (no markdown, no backticks, no other text):
+{"hindi":"...","english":"..."}
+
+Input: ${input}`;
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 500
+          }
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'API Error: ' + res.status);
+    }
+
+    const data = await res.json();
+    let text = data.candidates[0].content.parts[0].text.trim();
+
+    // Remove markdown backticks if Gemini adds them
+    text = text.replace(/```json|```/g, '').trim();
+
+    const parsed = JSON.parse(text);
+
+    // Show Hindi
+    const hindiBox = document.getElementById('hindiOut');
+    hindiBox.textContent = parsed.hindi;
+    hindiBox.classList.remove('empty');
+
+    // Show English
+    const engBox = document.getElementById('englishOut');
+    engBox.textContent = parsed.english;
+    engBox.classList.remove('empty');
+
+    showToast('✅ Convert ho gaya!');
+
+  } catch(e) {
+    alert('❌ Error aaya!\n\n' + e.message + '\n\nAPI Key check karo:\naistudio.google.com/app/apikey');
+  }
+
+  // Reset button
+  btn.classList.remove('loading');
+  document.getElementById('convertIcon').textContent = '✨';
+  document.getElementById('convertLabel').textContent = 'Dobara Banao';
+}
+
+// ── Color wrap ──
+function wrapColor(cls) {
+  const box = document.getElementById('hindiOut');
+  box.contentEditable = 'true';
+  box.focus();
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.toString().length === 0) {
+    box.contentEditable = 'false';
+    return alert('Hindi text mein se kuch select karo pehle!');
+  }
+  const range = sel.getRangeAt(0);
+  const span = document.createElement('span');
+  const colorMap = { 'hl-red':'#CC0000', 'hl-gold':'#D4A520', 'hl-white':'#ffffff' };
+  span.style.color = colorMap[cls] || '#fff';
+  range.surroundContents(span);
+  sel.removeAllRanges();
+  box.contentEditable = 'false';
+}
+
+// ── Copy ──
+function copyHindi() {
+  navigator.clipboard.writeText(document.getElementById('hindiOut').innerText)
+    .then(() => showToast('Hindi copy ho gaya!'));
+}
+function copyEnglish() {
+  navigator.clipboard.writeText(document.getElementById('englishOut').innerText)
+    .then(() => showToast('English copy ho gaya!'));
+}
+
+// ── Photo ──
+function previewPhoto() {
+  const url = document.getElementById('photoUrl').value.trim();
+  if (url) { const i=document.getElementById('photoPreview'); i.src=url; i.style.display='block'; }
+}
+function previewPhotoFile() {
+  const f = document.getElementById('photoFile').value.trim();
+  if (f) { const i=document.getElementById('photoPreview'); i.src=f; i.style.display='block'; }
+}
+
+// ── Save ──
+function saveNews() {
+  const hindiBox = document.getElementById('hindiOut');
+  const headline = hindiBox.innerHTML.trim();
+  const photoUrl  = document.getElementById('photoUrl').value.trim();
+  const photoFile = document.getElementById('photoFile').value.trim();
+  const source    = document.getElementById('sourceText').value.trim();
+  const photo     = photoUrl || photoFile || 'photos/default.jpg';
+
+  if (!headline || hindiBox.classList.contains('empty')) return alert('Pehle headline banao!');
+
+  localStorage.setItem('bbn_news', JSON.stringify({headline, photo, source}));
+  showToast('✅ Card save ho gaya!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
 </script>
 </body>
 </html>
