@@ -13,6 +13,8 @@
     align-items:center;
     min-height:100vh;
   }
+
+  /* ── All templates share card base ── */
   .card {
     width: min(100vw, calc(100vh * 4/5));
     height: min(100vh, calc(100vw * 5/4));
@@ -22,22 +24,44 @@
     display:flex;
     flex-direction:column;
   }
-  .photo-area {
-    width:100%; height:45%;
-    flex-shrink:0;
-    position:relative;
-    overflow:hidden;
+
+  /* ── FIX 5: BBN Logo — no text clipping ── */
+  .bbn-logo {
+    position:absolute; top:1.5%; right:3%;
+    z-index:20;
+    background:rgba(10,10,10,0.75);
+    border:0.4vmin solid #D4A520;
+    border-radius:50%;
+    width:10vmin; height:10vmin;
+    display:flex; align-items:center; justify-content:center;
+    overflow:visible;
   }
-  .photo-area img {
+  .bbn-text {
+    font-family:Georgia,serif;
+    font-size:3.6vmin; font-weight:700;
+    background:linear-gradient(to bottom,#F5D77A 0%,#D4A520 55%,#8B6508 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    letter-spacing:0.2vmin;
+    line-height:1;
+    padding:0 0.3vmin; /* prevents first letter clipping */
+  }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 1: Classic (photo top, text bottom)
+  ═══════════════════════════════════ */
+  .tpl-classic .photo-area {
+    width:100%; height:45%;
+    flex-shrink:0; position:relative; overflow:hidden;
+  }
+  .tpl-classic .photo-area img {
     width:100%; height:100%;
-    object-fit:cover;
-    object-position:center 20%;
-    display:block;
+    object-fit:cover; object-position:center 20%; display:block;
   }
   .top-strip {
     position:absolute; top:0; left:0;
-    width:100%; height:1%;
-    background:#CC0000; z-index:10;
+    width:100%; height:1%; background:#CC0000; z-index:10;
   }
   .photo-fade {
     position:absolute; bottom:0; left:0;
@@ -45,45 +69,254 @@
     background:linear-gradient(to top,#0d0d0d 0%,transparent 100%);
     z-index:2;
   }
-  .bbn-logo {
-    position:absolute; top:1.5%; right:3%;
-    z-index:20;
-    background:rgba(10,10,10,0.70);
-    border:0.4vmin solid #D4A520;
-    border-radius:50%;
-    width:10vmin; height:10vmin;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .bbn-text {
-    font-family:Georgia,serif;
-    font-size:3.8vmin; font-weight:700;
-    background:linear-gradient(to bottom,#F5D77A 0%,#D4A520 55%,#8B6508 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    letter-spacing:0.4vmin; line-height:1;
-  }
-  .headline-area {
-    width:100%; flex:1;
-    background:#fff;
-    position:relative;
-    display:flex; flex-direction:column;
+  .tpl-classic .headline-area {
+    width:100%; flex:1; background:#fff;
+    position:relative; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
     padding:1.5vmin 4vmin 2vmin;
   }
-  .headline-area::before {
-    content:'';
-    position:absolute; top:0; left:0;
-    width:100%; height:1.2vmin;
-    background:#CC0000;
+  .tpl-classic .headline-area::before {
+    content:''; position:absolute; top:0; left:0;
+    width:100%; height:1.2vmin; background:#CC0000;
   }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 2: Poll
+  ═══════════════════════════════════ */
+  .tpl-poll {
+    background:#0a0a0a;
+  }
+  .tpl-poll .poll-photo {
+    width:100%; height:35%;
+    flex-shrink:0; position:relative; overflow:hidden;
+  }
+  .tpl-poll .poll-photo img {
+    width:100%; height:100%;
+    object-fit:cover; object-position:center 20%; display:block;
+    filter:brightness(0.7);
+  }
+  .tpl-poll .poll-content {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:2vmin 5vmin; background:#111;
+    position:relative;
+  }
+  .tpl-poll .poll-content::before {
+    content:''; position:absolute; top:0; left:0;
+    width:100%; height:0.8vmin; background:#CC0000;
+  }
+  .poll-badge {
+    background:#CC0000; color:#fff;
+    font-size:2.5vmin; font-weight:700;
+    padding:0.5vmin 2.5vmin; border-radius:0.5vmin;
+    margin-bottom:2vmin; letter-spacing:0.5vmin;
+    font-family:'Noto Sans Devanagari',sans-serif;
+  }
+  .poll-question {
+    font-size:5vmin; font-weight:900; color:#fff;
+    text-align:center; line-height:1.35;
+    font-family:'Noto Sans Devanagari','Mangal',sans-serif;
+    margin-bottom:3vmin;
+  }
+  .poll-options { width:100%; display:flex; flex-direction:column; gap:2vmin; }
+  .poll-opt {
+    width:100%; padding:2.5vmin;
+    border-radius:1.5vmin;
+    font-size:4vmin; font-weight:700;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    text-align:center; cursor:pointer;
+    transition:transform 0.1s;
+    border:none;
+  }
+  .poll-opt.a { background:#CC0000; color:#fff; }
+  .poll-opt.b { background:#222; color:#fff; border:1px solid #444; }
+  .poll-opt:active { transform:scale(0.97); }
+  .poll-votes {
+    font-size:2vmin; color:#555; margin-top:2.5vmin;
+    font-family:'Trebuchet MS',sans-serif; text-align:center;
+  }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 3: Big Text Only
+  ═══════════════════════════════════ */
+  .tpl-bigtext {
+    background:#fff;
+  }
+  .tpl-bigtext .bt-stripe {
+    width:100%; height:1.5vmin; background:#CC0000; flex-shrink:0;
+  }
+  .tpl-bigtext .bt-content {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:4vmin 5vmin; background:#fff;
+  }
+  .tpl-bigtext .bt-tag {
+    background:#CC0000; color:#fff;
+    font-size:2.8vmin; font-weight:700;
+    padding:0.6vmin 2.5vmin; border-radius:0.4vmin;
+    margin-bottom:3vmin;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    letter-spacing:0.5vmin;
+  }
+  .tpl-bigtext .bt-headline {
+    font-size:7.5vmin; font-weight:900;
+    line-height:1.3; text-align:center;
+    font-family:'Noto Sans Devanagari','Mangal',sans-serif;
+    color:#111;
+  }
+  .tpl-bigtext .bt-bottom {
+    display:flex; align-items:center; gap:1.5vmin;
+    margin-top:3vmin; opacity:0.3;
+  }
+  .bt-line { flex:1; height:0.25vmin; background:#333; }
+  .bt-diamond {
+    width:1.5vmin; height:1.5vmin; background:#CC0000;
+    transform:rotate(45deg); flex-shrink:0; opacity:1;
+  }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 4: Two Photos Side by Side
+  ═══════════════════════════════════ */
+  .tpl-twophoto {
+    background:#000;
+  }
+  .tpl-twophoto .tp-photos {
+    width:100%; height:45%; display:flex; flex-shrink:0; gap:0.5vmin;
+    position:relative; overflow:hidden;
+  }
+  .tpl-twophoto .tp-photos img {
+    flex:1; height:100%; object-fit:cover; object-position:center 20%;
+  }
+  .tpl-twophoto .tp-divider {
+    position:absolute; left:50%; top:0; width:0.5vmin; height:100%;
+    background:#CC0000; transform:translateX(-50%); z-index:5;
+  }
+  .tpl-twophoto .tp-top { position:absolute; top:0; left:0; width:100%; height:1vmin; background:#CC0000; z-index:10; }
+  .tpl-twophoto .tp-fade {
+    position:absolute; bottom:0; left:0; width:100%; height:30%;
+    background:linear-gradient(to top,#000,transparent); z-index:3;
+  }
+  .tpl-twophoto .headline-area {
+    flex:1; background:#fff;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:1.5vmin 4vmin 2vmin; position:relative;
+  }
+  .tpl-twophoto .headline-area::before {
+    content:''; position:absolute; top:0; left:0;
+    width:100%; height:1.2vmin; background:#CC0000;
+  }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 5: Ticker (photo + scrolling ticker bottom)
+  ═══════════════════════════════════ */
+  .tpl-ticker {
+    background:#000;
+  }
+  .tpl-ticker .photo-area {
+    width:100%; height:55%; flex-shrink:0;
+    position:relative; overflow:hidden;
+  }
+  .tpl-ticker .photo-area img {
+    width:100%; height:100%;
+    object-fit:cover; object-position:center 20%;
+  }
+  .tpl-ticker .overlay-headline {
+    position:absolute; bottom:0; left:0;
+    width:100%; padding:10vmin 4vmin 3vmin;
+    background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.6) 60%,transparent 100%);
+    z-index:10;
+  }
+  .tpl-ticker .overlay-headline .headline {
+    font-size:5.5vmin; font-weight:900; color:#fff;
+    font-family:'Noto Sans Devanagari','Mangal',sans-serif;
+    line-height:1.35; text-align:center;
+  }
+  .tpl-ticker .ticker-bar {
+    width:100%; background:#CC0000;
+    display:flex; align-items:center; flex-shrink:0;
+    height:8vmin; overflow:hidden;
+  }
+  .ticker-label {
+    background:#8B0000; color:#fff; font-size:2.5vmin;
+    font-weight:700; padding:0 2.5vmin; height:100%;
+    display:flex; align-items:center; flex-shrink:0;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    border-right:0.5vmin solid #fff3;
+    letter-spacing:0.3vmin;
+  }
+  .ticker-scroll {
+    flex:1; overflow:hidden; height:100%;
+    display:flex; align-items:center;
+  }
+  .ticker-text {
+    white-space:nowrap; font-size:3vmin; font-weight:700;
+    color:#fff; font-family:'Noto Sans Devanagari',sans-serif;
+    animation:tickerRoll 15s linear infinite;
+    padding-left:5vmin;
+  }
+  @keyframes tickerRoll {
+    from { transform:translateX(100%); }
+    to { transform:translateX(-100%); }
+  }
+  .tpl-ticker .source-bar {
+    flex:1; background:#111;
+    display:flex; align-items:center; justify-content:center;
+    font-size:2vmin; color:#555; letter-spacing:0.3vmin;
+    font-family:'Trebuchet MS',sans-serif; text-transform:uppercase;
+  }
+
+  /* ═══════════════════════════════════
+     TEMPLATE 6: Dark Headline
+  ═══════════════════════════════════ */
+  .tpl-dark {
+    background:#0d0d0d;
+  }
+  .tpl-dark .dh-photo {
+    width:100%; height:40%; flex-shrink:0;
+    position:relative; overflow:hidden;
+  }
+  .tpl-dark .dh-photo img {
+    width:100%; height:100%;
+    object-fit:cover; object-position:center 20%;
+    filter:brightness(0.55) saturate(0.7);
+  }
+  .tpl-dark .dh-photo-overlay {
+    position:absolute; inset:0; z-index:2;
+    background:linear-gradient(to top,#0d0d0d 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);
+  }
+  .tpl-dark .dh-content {
+    flex:1; background:#0d0d0d;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:2vmin 5vmin; position:relative;
+  }
+  .tpl-dark .dh-badge {
+    background:transparent; border:0.4vmin solid #D4A520;
+    color:#D4A520; font-size:2.5vmin; font-weight:700;
+    padding:0.5vmin 2.5vmin; border-radius:0.4vmin;
+    margin-bottom:2.5vmin; letter-spacing:0.5vmin;
+    font-family:'Noto Sans Devanagari',sans-serif;
+  }
+  .tpl-dark .dh-headline {
+    font-size:6.2vmin; font-weight:900;
+    line-height:1.3; text-align:center;
+    font-family:'Noto Sans Devanagari','Mangal',sans-serif;
+    color:#fff;
+  }
+  .tpl-dark .dh-line {
+    width:30%; height:0.3vmin;
+    background:linear-gradient(to right,transparent,#D4A520,transparent);
+    margin:2.5vmin auto;
+  }
+
+  /* ── Shared: Breaking badge, headline, divider, source ── */
   .breaking-badge {
     display:inline-flex; align-items:center; gap:1vmin;
     background:#CC0000; color:#fff;
     font-family:'Noto Sans Devanagari',sans-serif;
     font-size:2.8vmin; font-weight:700;
-    padding:0.6vmin 2.5vmin;
-    border-radius:0.5vmin;
+    padding:0.6vmin 2.5vmin; border-radius:0.5vmin;
     margin-bottom:1.5vmin;
   }
   .headline {
@@ -92,64 +325,193 @@
     font-family:'Noto Sans Devanagari','Mangal',sans-serif;
     color:#111;
   }
-  .hl-red { color:#CC0000; }
-  .hl-gold { color:#D4A520; }
+  .hl-red   { color:#CC0000 !important; }
+  .hl-gold  { color:#D4A520 !important; }
+  .hl-white { color:#fff    !important; }
   .divider {
     display:flex; align-items:center; gap:1.5vmin;
     margin:1vmin 0; width:80%; opacity:0.3;
   }
   .div-line { flex:1; height:0.25vmin; background:#333; }
   .div-diamond {
-    width:1.5vmin; height:1.5vmin;
-    background:#CC0000;
-    transform:rotate(45deg);
-    flex-shrink:0; opacity:1;
+    width:1.5vmin; height:1.5vmin; background:#CC0000;
+    transform:rotate(45deg); flex-shrink:0; opacity:1;
   }
   .source {
-    font-size:1.8vmin; color:#999;
-    letter-spacing:0.3vmin;
+    font-size:1.8vmin; color:#999; letter-spacing:0.3vmin;
     font-family:'Trebuchet MS',sans-serif;
     text-align:center; text-transform:uppercase;
   }
+
   .admin-link {
     position:fixed; bottom:10px; right:10px;
-    background:rgba(0,0,0,0.5);
-    color:#555; font-size:10px;
+    background:rgba(0,0,0,0.5); color:#555; font-size:10px;
     padding:4px 8px; border-radius:4px;
-    text-decoration:none;
-    font-family:monospace;
+    text-decoration:none; font-family:monospace;
   }
 </style>
 </head>
 <body>
-<div class="card">
+
+<!-- All templates — JS shows/hides based on saved template -->
+
+<!-- TEMPLATE 1: Classic -->
+<div class="card tpl-classic" id="card-classic" style="display:none;">
   <div class="photo-area">
     <div class="top-strip"></div>
-    <img id="newsPhoto" src="photos/default.jpg" alt="Photo"/>
+    <img class="newsPhoto" src="photos/default.jpg" alt="Photo"/>
     <div class="photo-fade"></div>
     <div class="bbn-logo"><span class="bbn-text">BBN</span></div>
   </div>
   <div class="headline-area">
     <div class="breaking-badge">⚡ ब्रेकिंग न्यूज़</div>
-    <div class="headline" id="newsHeadline">यहाँ खबर आएगी</div>
-    <div class="divider">
-      <div class="div-line"></div>
-      <div class="div-diamond"></div>
-      <div class="div-line"></div>
-    </div>
-    <div class="source" id="newsSource">BBN NEWS</div>
+    <div class="headline newsHeadline">यहाँ खबर आएगी</div>
+    <div class="divider"><div class="div-line"></div><div class="div-diamond"></div><div class="div-line"></div></div>
+    <div class="source newsSource">BBN NEWS</div>
   </div>
 </div>
+
+<!-- TEMPLATE 2: Poll -->
+<div class="card tpl-poll" id="card-poll" style="display:none;">
+  <div class="bbn-logo" style="top:1.5%;right:3%;"><span class="bbn-text">BBN</span></div>
+  <div class="poll-photo">
+    <div class="top-strip"></div>
+    <img class="newsPhoto" src="photos/default.jpg" alt="Photo"/>
+  </div>
+  <div class="poll-content">
+    <div class="poll-badge">📊 जनता की राय</div>
+    <div class="poll-question newsHeadline" style="color:#fff;font-size:5vmin;">यहाँ खबर आएगी</div>
+    <div class="poll-options">
+      <button class="poll-opt a" id="pollOptA" onclick="vote('a')">हाँ</button>
+      <button class="poll-opt b" id="pollOptB" onclick="vote('b')">नहीं</button>
+    </div>
+    <div class="poll-votes" id="pollVoteCount">0 votes</div>
+  </div>
+  <div class="source newsSource" style="text-align:center;font-size:2vmin;color:#444;padding:2vmin;background:#0a0a0a;">BBN NEWS</div>
+</div>
+
+<!-- TEMPLATE 3: Big Text -->
+<div class="card tpl-bigtext" id="card-bigtext" style="display:none;">
+  <div class="bbn-logo" style="top:1.5%;right:3%;"><span class="bbn-text">BBN</span></div>
+  <div class="bt-stripe"></div>
+  <div class="bt-content">
+    <div class="bt-tag">⚡ ब्रेकिंग न्यूज़</div>
+    <div class="bt-headline newsHeadline" style="font-size:7.5vmin;color:#111;">यहाँ खबर आएगी</div>
+    <div class="bt-bottom"><div class="bt-line"></div><div class="bt-diamond"></div><div class="bt-line"></div></div>
+    <div class="source newsSource" style="margin-top:1vmin;">BBN NEWS</div>
+  </div>
+</div>
+
+<!-- TEMPLATE 4: Two Photos -->
+<div class="card tpl-twophoto" id="card-twophoto" style="display:none;">
+  <div class="tp-photos">
+    <div class="tp-top"></div>
+    <img class="newsPhoto" src="photos/default.jpg" alt="Photo 1"/>
+    <img id="newsPhoto2" src="photos/default.jpg" alt="Photo 2"/>
+    <div class="tp-divider"></div>
+    <div class="tp-fade"></div>
+    <div class="bbn-logo" style="top:2%;right:2%;"><span class="bbn-text">BBN</span></div>
+  </div>
+  <div class="headline-area">
+    <div class="breaking-badge">⚡ ब्रेकिंग न्यूज़</div>
+    <div class="headline newsHeadline">यहाँ खबर आएगी</div>
+    <div class="divider"><div class="div-line"></div><div class="div-diamond"></div><div class="div-line"></div></div>
+    <div class="source newsSource">BBN NEWS</div>
+  </div>
+</div>
+
+<!-- TEMPLATE 5: Ticker -->
+<div class="card tpl-ticker" id="card-ticker" style="display:none;">
+  <div class="photo-area">
+    <div class="top-strip"></div>
+    <img class="newsPhoto" src="photos/default.jpg" alt="Photo"/>
+    <div class="overlay-headline">
+      <div class="headline newsHeadline" style="color:#fff;">यहाँ खबर आएगी</div>
+    </div>
+    <div class="bbn-logo" style="top:2%;right:3%;"><span class="bbn-text">BBN</span></div>
+  </div>
+  <div class="ticker-bar">
+    <div class="ticker-label">LIVE</div>
+    <div class="ticker-scroll">
+      <div class="ticker-text newsHeadline" style="font-size:3vmin;color:#fff;">यहाँ खबर आएगी</div>
+    </div>
+  </div>
+  <div class="source-bar newsSource">BBN NEWS</div>
+</div>
+
+<!-- TEMPLATE 6: Dark Headline -->
+<div class="card tpl-dark" id="card-dark" style="display:none;">
+  <div class="bbn-logo" style="top:1.5%;right:3%;"><span class="bbn-text">BBN</span></div>
+  <div class="dh-photo">
+    <div class="top-strip"></div>
+    <img class="newsPhoto" src="photos/default.jpg" alt="Photo"/>
+    <div class="dh-photo-overlay"></div>
+  </div>
+  <div class="dh-content">
+    <div class="dh-badge">⚡ ब्रेकिंग न्यूज़</div>
+    <div class="dh-headline newsHeadline" style="color:#fff;">यहाँ खबर आएगी</div>
+    <div class="dh-line"></div>
+    <div class="source newsSource" style="color:#555;">BBN NEWS</div>
+  </div>
+</div>
+
 <a href="admin.html" class="admin-link">⚙</a>
 
 <script>
-  // Load saved news from localStorage
+  // ── Poll vote logic ──
+  let voteData = JSON.parse(localStorage.getItem('bbn_poll_votes') || '{"a":0,"b":0}');
+  function vote(opt) {
+    voteData[opt]++;
+    localStorage.setItem('bbn_poll_votes', JSON.stringify(voteData));
+    const total = voteData.a + voteData.b;
+    const pctA = total ? Math.round(voteData.a/total*100) : 50;
+    const pctB = 100 - pctA;
+    const saved = JSON.parse(localStorage.getItem('bbn_news') || '{}');
+    document.getElementById('pollOptA').textContent = `${saved.pollA||'हाँ'} — ${pctA}%`;
+    document.getElementById('pollOptB').textContent = `${saved.pollB||'नहीं'} — ${pctB}%`;
+    document.getElementById('pollVoteCount').textContent = `${total} votes`;
+  }
+
+  // ── Load & render ──
   const saved = localStorage.getItem('bbn_news');
-  if (saved) {
-    const data = JSON.parse(saved);
-    if (data.headline) document.getElementById('newsHeadline').innerHTML = data.headline;
-    if (data.photo)    document.getElementById('newsPhoto').src = data.photo;
-    if (data.source)   document.getElementById('newsSource').textContent = data.source;
+  const data  = saved ? JSON.parse(saved) : {};
+  const template = data.template || 'classic';
+
+  // Show correct card
+  const cardEl = document.getElementById('card-' + template);
+  if (cardEl) cardEl.style.display = 'flex';
+  else document.getElementById('card-classic').style.display = 'flex';
+
+  // Fill all matching class elements
+  document.querySelectorAll('.newsHeadline').forEach(el => {
+    if (data.headline) el.innerHTML = data.headline;
+  });
+  document.querySelectorAll('.newsPhoto').forEach(el => {
+    if (data.photo) el.src = data.photo;
+  });
+  document.querySelectorAll('.newsSource').forEach(el => {
+    if (data.source) el.textContent = data.source;
+  });
+
+  // Poll specific
+  if (template === 'poll') {
+    if (data.pollA) document.getElementById('pollOptA').textContent = data.pollA;
+    if (data.pollB) document.getElementById('pollOptB').textContent = data.pollB;
+    if (data.pollQ) {
+      document.querySelectorAll('.poll-question').forEach(el => el.innerHTML = data.pollQ);
+    }
+    const total = voteData.a + voteData.b;
+    if (total > 0) {
+      const pctA = Math.round(voteData.a/total*100);
+      document.getElementById('pollOptA').textContent = `${data.pollA||'हाँ'} — ${pctA}%`;
+      document.getElementById('pollOptB').textContent = `${data.pollB||'नहीं'} — ${100-pctA}%`;
+      document.getElementById('pollVoteCount').textContent = `${total} votes`;
+    }
+  }
+
+  // Two photos specific
+  if (template === 'twophoto' && data.photo2) {
+    document.getElementById('newsPhoto2').src = data.photo2;
   }
 </script>
 </body>
