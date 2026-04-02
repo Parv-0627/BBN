@@ -6,18 +6,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
   body {
-    background:#111;
+    background:#000;
     display:flex; flex-direction:column;
-    align-items:center; min-height:100vh;
+    align-items:center;
+    height:100vh; width:100vw;
   }
 
   /* ── Top bar ── */
   .dl-bar {
-    width:100%; max-width:480px;
+    width:100%;
     background:#1a1a1a; border-bottom:1px solid #2a2a2a;
     display:flex; align-items:center; justify-content:space-between;
-    padding:8px 12px; gap:10px; flex-shrink:0;
+    padding:6px 12px; gap:10px; flex-shrink:0;
+    height:44px;
+    z-index:100;
   }
   .dl-info { font-size:11px; color:#555; font-family:sans-serif; line-height:1.5; }
   .dl-info b { color:#D4A520; }
@@ -41,15 +45,19 @@
   }
   @keyframes sp { to { transform:rotate(360deg); } }
 
-  /* ── Card container ── */
+  /* ── Card container — fills remaining screen ── */
   #cardWrap {
-    width:100%; max-width:480px;
-    /* 4:5 ratio enforced by aspect-ratio inside .card */
+    flex:1; width:100%;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; background:#000;
   }
   .card {
-    width:100%; aspect-ratio:4/5;
+    /* Fit inside available space keeping 4:5 — never overflow or cut */
+    width:  min(100vw, calc((100vh - 44px) * 4 / 5));
+    height: min(calc(100vh - 44px), calc(100vw * 5 / 4));
     position:relative; overflow:hidden;
     background:#000; display:flex; flex-direction:column;
+    flex-shrink:0;
   }
 
   /* BBN Logo */
@@ -81,8 +89,9 @@
     padding:0.6vmin 2.5vmin; border-radius:0.5vmin; margin-bottom:1.5vmin;
   }
   .headline {
-    font-size:6vmin; font-weight:900; line-height:1.35; text-align:center;
+    font-size:clamp(12px, 5.5vmin, 36px); font-weight:900; line-height:1.3; text-align:center;
     font-family:'Noto Sans Devanagari','Mangal',sans-serif; color:#111;
+    word-break:break-word; overflow-wrap:break-word;
   }
   .hl-red   { color:#CC0000 !important; }
   .hl-gold  { color:#D4A520 !important; }
@@ -98,15 +107,21 @@
   /* ── T1: Classic ── */
   #card-classic { display:none; }
   .tpl-classic .photo-area {
-    width:100%; height:45%; flex-shrink:0; position:relative; overflow:hidden;
+    /* Fixed 50% of card height — photo never cuts */
+    width:100%; flex:0 0 50%; position:relative; overflow:hidden;
   }
-  .tpl-classic .photo-area img { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
+  .tpl-classic .photo-area img {
+    width:100%; height:100%;
+    object-fit:cover; object-position:center top; display:block;
+  }
   .tpl-classic .headline-area {
-    width:100%; flex:1; background:#fff; position:relative;
+    width:100%; flex:0 0 50%; background:#fff; position:relative;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:1.5vmin 4vmin 2vmin;
+    padding:1.5vmin 4vmin 2vmin; overflow:hidden;
   }
   .tpl-classic .headline-area::before { content:''; position:absolute; top:0; left:0; width:100%; height:1.2vmin; background:#CC0000; }
+  /* Scale down headline font if text is long */
+  .tpl-classic .headline { font-size:clamp(12px, 5.5vmin, 38px); }
 
   /* ── T2: Poll ── */
   #card-poll { display:none; background:#0a0a0a; }
