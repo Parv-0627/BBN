@@ -11,17 +11,14 @@
     font-family:'Noto Sans Devanagari', sans-serif;
     color:#eee; min-height:100vh; padding:8px;
   }
-  .container { max-width:380px; margin:0 auto; }
+  .container { max-width:420px; margin:0 auto; padding-bottom:20px; }
 
-  /* ── FIX 5: BBN Logo — letter-spacing removed, padding balanced ── */
   .logo { text-align:center; padding:10px 0 14px; }
   .logo span {
     font-family:Georgia,serif; font-size:28px; font-weight:700;
     background:linear-gradient(to bottom,#F5D77A,#D4A520,#8B6508);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text;
-    letter-spacing:2px;
-    padding-left:2px; /* balances letter-spacing so no overflow */
+    background-clip:text; letter-spacing:2px; padding-left:2px;
   }
   .logo p { font-size:12px; color:#555; letter-spacing:2px; margin-top:4px; }
 
@@ -31,188 +28,159 @@
   }
   .section-title {
     font-size:12px; color:#D4A520; letter-spacing:1px;
-    text-transform:uppercase; margin-bottom:8px; font-weight:700;
+    text-transform:uppercase; margin-bottom:10px; font-weight:700;
   }
-  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:12px; }
+  .step-badge {
+    display:inline-block; background:#CC0000; color:#fff;
+    font-size:11px; font-weight:700; border-radius:50%;
+    width:20px; height:20px; text-align:center; line-height:20px; margin-right:6px;
+  }
+  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:10px; }
   label:first-of-type { margin-top:0; }
-
-  input, textarea, select {
+  input[type=text], textarea {
     width:100%; background:#111; border:1px solid #333; border-radius:6px;
     color:#fff; font-size:13px; font-family:'Noto Sans Devanagari',sans-serif;
     padding:8px 10px; outline:none; transition:border 0.2s;
   }
-  input:focus, textarea:focus, select:focus { border-color:#D4A520; }
-  textarea { resize:vertical; min-height:55px; line-height:1.5; }
-  select option { background:#1a1a1a; }
+  input[type=text]:focus, textarea:focus { border-color:#D4A520; }
+  textarea { resize:vertical; min-height:50px; line-height:1.5; }
 
-  .step-badge {
-    display:inline-block; background:#CC0000; color:#fff;
-    font-size:11px; font-weight:700; border-radius:50%;
-    width:20px; height:20px; text-align:center; line-height:20px;
-    margin-right:6px;
-  }
-
-  /* ── FIX 1: Two-column translate buttons ── */
-  .translate-row { display:flex; gap:8px; margin-top:10px; }
-  .btn-translate {
-    flex:1; background:linear-gradient(135deg,#1a2a3a,#0f1a2a);
-    border:1px solid #4285F4; border-radius:8px;
-    color:#4285F4; font-size:12px; font-weight:700;
-    font-family:'Noto Sans Devanagari',sans-serif;
-    padding:10px 6px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    transition:all 0.2s;
-  }
-  .btn-translate:hover { background:#001a3a; }
-  .btn-translate.loading { opacity:0.7; pointer-events:none; }
-  .btn-translate.green {
-    background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
-    border-color:#4CAF50; color:#4CAF50;
-  }
-  .btn-translate.green:hover { background:#1f3f1f; }
-
-  .out-box {
-    background:#111; border:1px solid #2a2a2a; border-radius:8px;
-    padding:12px 14px; min-height:48px; line-height:1.6;
-    font-family:'Noto Sans Devanagari',sans-serif;
-    word-break:break-word; margin-top:8px;
-  }
-  .out-box.hindi { color:#fff; font-size:13px; font-weight:700; }
-  .out-box.english { color:#aaa; font-size:13px; font-family:sans-serif; }
-  .out-box.empty { color:#444; font-style:italic; }
-
-  /* ── FIX 2: Hindi paste box ── */
-  .paste-row { display:flex; gap:8px; align-items:stretch; margin-top:8px; }
-  .paste-row textarea { flex:1; min-height:42px; margin:0; }
-  .btn-paste-hindi {
-    background:#222; border:1px solid #D4A520; border-radius:6px;
-    color:#D4A520; font-size:11px; padding:8px 10px;
-    cursor:pointer; white-space:nowrap; flex-shrink:0;
-    font-family:'Noto Sans Devanagari',sans-serif;
-  }
-  .btn-paste-hindi:hover { background:#2a2000; }
-
-  .out-label {
-    font-size:11px; margin-top:12px; margin-bottom:4px;
-    display:flex; align-items:center; gap:6px;
-  }
-  .out-label .flag { font-size:14px; }
-  .out-label span { color:#666; }
-
-  /* ── FIX 2 & 3: Color palette — more colors + mobile-friendly tap targets ── */
-  .color-wrap { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  .color-btn {
-    padding:8px 12px; border-radius:6px; border:none; cursor:pointer;
-    font-size:12px; font-family:'Noto Sans Devanagari',sans-serif; font-weight:700;
-    min-width:56px; text-align:center;
-    /* FIX 3: larger tap target for mobile */
-    min-height:38px;
-    -webkit-tap-highlight-color:transparent;
-    user-select:none;
-  }
-  .color-btn.red    { background:#CC0000; color:#fff; }
-  .color-btn.gold   { background:#D4A520; color:#000; }
-  .color-btn.white  { background:#fff; color:#111; border:1px solid #333; }
-  .color-btn.green  { background:#2E7D32; color:#fff; }
-  .color-btn.orange { background:#E65100; color:#fff; }
-  .color-btn.blue   { background:#0D47A1; color:#fff; }
-  .color-btn.pink   { background:#AD1457; color:#fff; }
-  .color-btn.reset  { background:#222; color:#888; border:1px solid #444; }
-
-  /* FIX 3: Mobile color — tap-to-select mode */
-  .mobile-color-hint {
-    font-size:11px; color:#555; margin-top:6px; line-height:1.5;
-    background:#161616; border-radius:6px; padding:8px;
-  }
-  .color-mode-row { display:flex; gap:8px; margin-top:8px; }
-  .mode-btn {
-    flex:1; padding:7px; border-radius:6px; border:1px solid #333;
-    background:#161616; color:#666; font-size:11px; cursor:pointer;
-    font-family:'Noto Sans Devanagari',sans-serif; text-align:center;
-  }
-  .mode-btn.active { border-color:#D4A520; color:#D4A520; background:#1a1500; }
-
-  .hint { font-size:11px; color:#444; margin-top:8px; line-height:1.6; }
-
-  .btn-copy {
-    background:#222; border:1px solid #333; border-radius:6px;
-    color:#888; font-size:11px; padding:5px 10px;
-    cursor:pointer; margin-top:0; float:right;
-  }
-  .btn-copy:hover { color:#D4A520; border-color:#D4A520; }
-
-  .photo-preview {
-    width:100%; height:90px; object-fit:cover;
-    border-radius:8px; margin-top:8px; display:block;
-  }
-
-  /* ── FIX 4: Template selector ── */
-  .template-grid {
-    display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px;
+  /* ── Template grid ── */
+  .tpl-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:8px;
   }
   .tpl-btn {
     background:#111; border:1px solid #333; border-radius:8px;
-    padding:8px 4px; cursor:pointer; text-align:center;
+    padding:10px 6px; cursor:pointer; text-align:center;
     transition:all 0.2s; display:flex; flex-direction:column;
-    align-items:center; gap:4px;
+    align-items:center; gap:5px;
   }
-  .tpl-btn:hover { border-color:#D4A520; }
+  .tpl-btn:hover { border-color:#888; }
   .tpl-btn.active { border-color:#D4A520; background:#1a1500; }
-  .tpl-icon { font-size:20px; }
-  .tpl-name { font-size:10px; color:#888; font-family:sans-serif; }
+  .tpl-icon { font-size:22px; }
+  .tpl-name { font-size:10px; color:#888; font-family:sans-serif; line-height:1.4; }
   .tpl-btn.active .tpl-name { color:#D4A520; }
 
-  .btn-save {
+  /* Template mini-preview diagram */
+  .tpl-diagram {
+    width:56px; height:40px; border-radius:4px;
+    overflow:hidden; border:1px solid #333; flex-shrink:0;
+    display:flex; flex-direction:column;
+  }
+
+  /* Upload area */
+  .upload-area {
+    border:2px dashed #333; border-radius:10px;
+    padding:20px; text-align:center; cursor:pointer;
+    transition:border-color 0.2s; position:relative;
+  }
+  .upload-area:hover { border-color:#D4A520; }
+  .upload-area input[type=file] {
+    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
+  }
+  .upload-icon { font-size:32px; margin-bottom:8px; }
+  .upload-text { font-size:13px; color:#666; }
+  .upload-text b { color:#D4A520; }
+  .vid-info { font-size:11px; color:#555; margin-top:6px; font-family:monospace; text-align:center; }
+
+  /* Preview canvas */
+  .preview-wrap {
+    position:relative; margin-top:10px;
+    border-radius:8px; overflow:hidden;
+    background:#000; display:none;
+  }
+  #previewCanvas { width:100%; display:block; }
+
+  /* Overlay toggles */
+  .overlay-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .overlay-row label { margin:0; flex:1; }
+  .toggle-btn {
+    width:42px; height:24px; background:#333; border-radius:12px;
+    position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; border:none;
+  }
+  .toggle-btn::after {
+    content:''; position:absolute; top:3px; left:3px;
+    width:18px; height:18px; background:#666; border-radius:50%; transition:all 0.2s;
+  }
+  .toggle-btn.on { background:#D4A520; }
+  .toggle-btn.on::after { left:21px; background:#fff; }
+
+  /* Color swatches */
+  .swatch-row { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .swatch {
+    width:28px; height:28px; border-radius:50%; cursor:pointer;
+    border:2px solid transparent; transition:border 0.2s; flex-shrink:0;
+  }
+  .swatch.active { border-color:#fff; }
+
+  /* Text style buttons */
+  .align-btn, .bg-btn {
+    flex:1; padding:7px 4px; border-radius:6px; border:1px solid #333;
+    background:#161616; font-size:11px; cursor:pointer;
+    font-family:'Noto Sans Devanagari',sans-serif; color:#888; transition:all 0.15s;
+  }
+  .align-btn.active, .bg-btn.active { border-color:#D4A520; color:#D4A520; background:#1a1500; }
+  .tcol-btn {
+    padding:6px 10px; border-radius:6px; border:1px solid #333;
+    font-size:11px; cursor:pointer; font-weight:700; transition:all 0.15s;
+  }
+  .tcol-btn.active { outline:2px solid #fff; outline-offset:2px; }
+
+  /* Progress */
+  .prog-wrap { background:#222; border-radius:6px; height:8px; overflow:hidden; margin-top:8px; display:none; }
+  .prog-bar { height:100%; background:linear-gradient(90deg,#CC0000,#D4A520); width:0%; transition:width 0.1s; border-radius:6px; }
+  .prog-label { font-size:11px; color:#888; margin-top:4px; text-align:center; display:none; }
+
+  /* Buttons */
+  .btn-record {
+    width:100%; background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
+    border:1px solid #4CAF50; border-radius:8px;
+    color:#4CAF50; font-size:14px; font-weight:700;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:12px; cursor:pointer; margin-top:8px;
+    display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;
+  }
+  .btn-record:hover { background:#1f3f1f; }
+  .btn-record:disabled { opacity:0.4; pointer-events:none; }
+  .btn-record.recording { background:linear-gradient(135deg,#3a1a1a,#2a0f0f); border-color:#CC0000; color:#CC0000; }
+
+  .btn-download {
     width:100%; background:linear-gradient(135deg,#CC0000,#990000);
-    color:#fff; border:none; border-radius:8px;
+    border:none; border-radius:8px; color:#fff;
     font-size:14px; font-weight:900;
     font-family:'Noto Sans Devanagari',sans-serif;
-    padding:10px; cursor:pointer; margin-top:6px;
-    letter-spacing:1px; transition:opacity 0.2s;
+    padding:12px; cursor:pointer; margin-top:8px;
+    display:none; align-items:center; justify-content:center; gap:8px; letter-spacing:0.5px;
   }
-  .btn-save:active { opacity:0.8; }
+  .btn-download.show { display:flex; }
 
-  .btn-view {
+  .btn-back {
     width:100%; background:#1a1a1a; color:#D4A520;
     border:1px solid #D4A520; border-radius:8px;
     font-size:14px; font-family:'Noto Sans Devanagari',sans-serif;
-    padding:12px; cursor:pointer; margin-top:10px; letter-spacing:1px;
+    padding:12px; cursor:pointer; margin-top:8px; letter-spacing:1px;
   }
-  .btn-view:hover { background:#222; }
+
+  .rec-dot { width:10px; height:10px; background:#CC0000; border-radius:50%; animation:blink 1s ease infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .spinner { width:14px; height:14px; border:2px solid #4CAF5044; border-top-color:#4CAF50; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
   .toast {
     position:fixed; bottom:20px; left:50%;
     transform:translateX(-50%) translateY(80px);
-    background:#D4A520; color:#000;
-    padding:10px 24px; border-radius:8px;
-    font-weight:700; font-size:14px;
-    transition:transform 0.3s; z-index:999;
+    background:#D4A520; color:#000; padding:10px 24px;
+    border-radius:8px; font-weight:700; font-size:13px;
+    transition:transform 0.3s; z-index:999; white-space:nowrap;
   }
   .toast.show { transform:translateX(-50%) translateY(0); }
 
-  .spinner {
-    display:inline-block; width:14px; height:14px;
-    border:2px solid #4285F444;
-    border-top-color:#4285F4;
-    border-radius:50%; animation:spin 0.7s linear infinite;
-  }
-  .spinner.green-spin {
-    border-color:#4CAF5044;
-    border-top-color:#4CAF50;
-  }
-  @keyframes spin { to { transform:rotate(360deg); } }
-
-  .gemini-badge {
-    display:inline-block; background:#4285F4;
-    color:#fff; font-size:10px; font-weight:700;
-    border-radius:4px; padding:2px 7px; margin-left:6px;
-    vertical-align:middle;
-  }
-
-  /* Mobile touch-select color overlay */
-  #hindiOut[contenteditable="true"] {
-    border-color:#D4A520;
-    outline:2px solid #D4A52044;
+  .hint { font-size:11px; color:#444; margin-top:6px; line-height:1.6; }
+  .badge-new {
+    display:inline-block; background:#CC0000; color:#fff;
+    font-size:9px; font-weight:700; border-radius:3px;
+    padding:1px 5px; margin-left:5px; vertical-align:middle;
   }
 </style>
 </head>
@@ -221,432 +189,779 @@
 
   <div class="logo">
     <span>BBN</span>
-    <p>NEWS ADMIN PANEL</p>
+    <p>VIDEO EDITOR <span class="badge-new">NEW</span></p>
   </div>
 
+  <!-- Step 1: Template -->
   <div class="section">
-    <div class="section-title">✅ Google Translate <span class="gemini-badge" style="background:#34A853;">FREE</span></div>
-    <p style="color:#4CAF50; font-size:13px; line-height:1.6;">
-      🎉 Koi API Key nahi chahiye! Google Translate bilkul free hai.<br>
-      ✅ Hinglish/English → Hindi automatic convert hoga!
-    </p>
+    <div class="section-title"><span class="step-badge">1</span> Template Chuno</div>
+    <div class="tpl-grid">
+
+      <!-- T1: Classic -->
+      <div class="tpl-btn active" id="vt-classic" onclick="selectVTemplate('classic')">
+        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
+          <rect width="60" height="42" fill="#111"/>
+          <rect y="0" width="60" height="28" fill="#1a4a6a" rx="0"/>
+          <circle cx="50" cy="6" r="5" fill="none" stroke="#D4A520" stroke-width="1"/>
+          <text x="50" y="8" text-anchor="middle" font-size="4" fill="#D4A520" font-weight="bold">BBN</text>
+          <rect y="29" width="60" height="8" fill="#CC0000" rx="0"/>
+          <rect y="29" width="14" height="8" fill="#8B0000"/>
+          <text x="7" y="34.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
+          <text x="34" y="34.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker text...</text>
+          <rect y="37" width="60" height="5" fill="#0a0a0a"/>
+        </svg>
+        <div class="tpl-name">🎬 Classic<br>Video + Ticker</div>
+      </div>
+
+      <!-- T2: News -->
+      <div class="tpl-btn" id="vt-news" onclick="selectVTemplate('news')">
+        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
+          <rect width="60" height="42" fill="#111"/>
+          <rect y="0" width="60" height="22" fill="#1a4a6a"/>
+          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
+          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
+          <rect y="22" width="60" height="12" fill="#fff"/>
+          <rect y="22" width="60" height="1.5" fill="#CC0000"/>
+          <text x="30" y="30" text-anchor="middle" font-size="4" fill="#111" font-weight="bold">खबर का टेक्स्ट</text>
+          <rect y="34" width="60" height="8" fill="#CC0000"/>
+          <rect y="34" width="14" height="8" fill="#8B0000"/>
+          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
+          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
+        </svg>
+        <div class="tpl-name">📰 News<br>Video+Text+Ticker</div>
+      </div>
+
+      <!-- T3: Breaking -->
+      <div class="tpl-btn" id="vt-breaking" onclick="selectVTemplate('breaking')">
+        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
+          <rect width="60" height="42" fill="#111"/>
+          <rect y="0" width="60" height="42" fill="#1a3a5a"/>
+          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
+          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
+          <rect y="0" width="60" height="1.5" fill="#CC0000"/>
+          <rect y="22" width="60" height="12" fill="rgba(0,0,0,0.75)"/>
+          <rect y="22" width="10" height="5" fill="#CC0000" rx="1"/>
+          <text x="5" y="25.5" text-anchor="middle" font-size="3" fill="#fff" font-weight="bold">LIVE</text>
+          <text x="30" y="30" text-anchor="middle" font-size="4.5" fill="#fff" font-weight="bold">ब्रेकिंग...</text>
+          <rect y="34" width="60" height="8" fill="#CC0000"/>
+          <rect y="34" width="14" height="8" fill="#8B0000"/>
+          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
+          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
+        </svg>
+        <div class="tpl-name">⚡ Breaking<br>Overlay+Ticker</div>
+      </div>
+
+      <!-- T4: Split -->
+      <div class="tpl-btn" id="vt-split" onclick="selectVTemplate('split')">
+        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
+          <rect width="60" height="42" fill="#111"/>
+          <rect y="0" width="60" height="34" fill="#1a4a6a"/>
+          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
+          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
+          <rect y="0" width="60" height="1.5" fill="#CC0000"/>
+          <rect x="0" y="24" width="60" height="10" fill="rgba(0,0,0,0.82)"/>
+          <rect x="0" y="24" width="4" height="10" fill="#CC0000"/>
+          <text x="32" y="31" text-anchor="middle" font-size="3.8" fill="#fff" font-weight="bold">हेडलाइन</text>
+          <rect y="34" width="60" height="8" fill="#CC0000"/>
+          <rect y="34" width="14" height="8" fill="#8B0000"/>
+          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
+          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
+        </svg>
+        <div class="tpl-name">🗞 Headline<br>Banner+Ticker</div>
+      </div>
+
+    </div>
+
+    <!-- News template extra fields -->
+    <div id="newsTextOptions" style="display:none;margin-top:10px;">
+      <label>News Text (neeche white area mein)</label>
+      <textarea id="newsBodyText" rows="2" placeholder="Jaise: Congress ne diya bada bayan..." oninput="refreshOverlay()"></textarea>
+    </div>
   </div>
 
-  <!-- Step 1: Input -->
+  <!-- Step 2: Video -->
   <div class="section">
-    <div class="section-title">
-      <span class="step-badge">1</span> Khabr Likho (Hinglish/Hindi/English)
+    <div class="section-title"><span class="step-badge">2</span> Video Choose Karo</div>
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="videoFile" accept="video/*" onchange="loadVideo(this)"/>
+      <div class="upload-icon">🎬</div>
+      <div class="upload-text">Tap karke <b>video select karo</b><br>MP4, MOV, AVI — koi bhi chalega</div>
     </div>
-    <label>Koi bhi bhasha mein likho</label>
-    <textarea id="inputText"
-      placeholder="Jaise: Congress assam me bidesiyon ko basana chati hai... PM Modi ka bipakch par hamla"></textarea>
-
-    <!-- FIX 1: Two separate buttons -->
-    <div class="translate-row">
-      <button class="btn-translate" onclick="translateTo('en')" id="engBtn">
-        <span id="engIcon">🇬🇧</span>
-        <span id="engLabel">English Banao</span>
-      </button>
-      <button class="btn-translate green" onclick="translateTo('hi')" id="hindiBtn">
-        <span id="hindiIcon">🇮🇳</span>
-        <span id="hindiLabel">Hindi Banao</span>
-      </button>
-    </div>
+    <div class="vid-info" id="vidInfo"></div>
   </div>
 
-  <!-- Step 2: Output -->
+  <!-- Step 3: Text -->
   <div class="section">
-    <div class="section-title">
-      <span class="step-badge">2</span> Text Edit Karo
-    </div>
-
-    <!-- FIX 1: English output with copy -->
-    <div class="out-label">
-      <span class="flag">🇬🇧</span>
-      <span>English (Reference)</span>
-      <button class="btn-copy" onclick="copyText('englishOut')">Copy</button>
-    </div>
-    <div class="out-box english empty" id="englishOut">pehle "English Banao" dabao...</div>
-
-    <!-- FIX 1: Hindi output -->
-    <div class="out-label" style="margin-top:14px">
-      <span class="flag">🇮🇳</span>
-      <span>Hindi — Card par dikhega</span>
-      <button class="btn-copy" onclick="copyText('hindiOut')">Copy</button>
-    </div>
-    <div class="out-box hindi empty" id="hindiOut" contenteditable="false">pehle "Hindi Banao" dabao ya neeche paste karo...</div>
-
-    <!-- FIX 1: Hindi direct paste option -->
-    <label style="margin-top:10px;">Ya seedha Hindi paste karo:</label>
-    <div class="paste-row">
-      <textarea id="hindiPasteBox" placeholder="Hindi text yahan paste karo..."></textarea>
-      <button class="btn-paste-hindi" onclick="pasteHindiDirect()">⬆ Set<br>Hindi</button>
-    </div>
-
-    <!-- FIX 2 & 3: Color section with mobile mode -->
-    <label style="margin-top:14px;">Text ka rang badlo:</label>
-
-    <div class="color-mode-row">
-      <button class="mode-btn active" id="modeDesktop" onclick="setMode('desktop')">🖥 Desktop (Select)</button>
-      <button class="mode-btn" id="modeMobile" onclick="setMode('mobile')">📱 Mobile (Tap Word)</button>
-    </div>
-
-    <!-- FIX 2: More colors -->
-    <div class="color-wrap" id="colorWrap">
-      <button class="color-btn red"    onclick="applyColor('#CC0000')">🔴 लाल</button>
-      <button class="color-btn gold"   onclick="applyColor('#D4A520')">🟡 सोना</button>
-      <button class="color-btn white"  onclick="applyColor('#ffffff')">⬜ सफेद</button>
-      <button class="color-btn green"  onclick="applyColor('#4CAF50')">🟢 हरा</button>
-      <button class="color-btn orange" onclick="applyColor('#FF6D00')">🟠 नारंगी</button>
-      <button class="color-btn blue"   onclick="applyColor('#2196F3')">🔵 नीला</button>
-      <button class="color-btn pink"   onclick="applyColor('#E91E63')">🩷 गुलाबी</button>
-      <button class="color-btn reset"  onclick="removeColor()">✕ हटाओ</button>
-    </div>
-
-    <div class="mobile-color-hint" id="mobileHint" style="display:none;">
-      📱 <strong>Mobile Mode:</strong> Hindi box mein kisi <em>word par tap karo</em> → word select ho jayega → phir upar rang dabao.<br>
-      <span style="color:#D4A520;">Ya: Text ko long-press karke manually select karo → rang dabao.</span>
-    </div>
-    <div class="hint" id="desktopHint">
-      💡 Hindi box mein text select karo (mouse se drag) → upar rang dabao → rang lag jayega
-    </div>
+    <div class="section-title"><span class="step-badge">3</span> Ticker / Headline Text</div>
+    <label>Scrolling ticker text</label>
+    <textarea id="headlineText" rows="2" placeholder="Jaise: मोदी सरकार का बड़ा फैसला..." oninput="refreshOverlay()"></textarea>
+    <label>Source / Channel</label>
+    <input type="text" id="sourceText" value="BBN NEWS" oninput="refreshOverlay()"/>
   </div>
 
-  <!-- FIX 4: Template selector -->
+  <!-- Step 4: Text Style -->
   <div class="section">
-    <div class="section-title">
-      <span class="step-badge">3</span> Card Template Chuno
-    </div>
-    <div class="template-grid">
-      <div class="tpl-btn active" onclick="selectTemplate('classic')" id="tpl-classic">
-        <div class="tpl-icon">📰</div>
-        <div class="tpl-name">Classic<br>Photo+News</div>
-      </div>
-      <div class="tpl-btn" onclick="selectTemplate('poll')" id="tpl-poll">
-        <div class="tpl-icon">📊</div>
-        <div class="tpl-name">Poll<br>Vote Karo</div>
-      </div>
-      <div class="tpl-btn" onclick="selectTemplate('bigtext')" id="tpl-bigtext">
-        <div class="tpl-icon">📢</div>
-        <div class="tpl-name">Big Text<br>Only</div>
-      </div>
-      <div class="tpl-btn" onclick="selectTemplate('twophoto')" id="tpl-twophoto">
-        <div class="tpl-icon">🖼️</div>
-        <div class="tpl-name">2 Photos<br>Side</div>
-      </div>
-      <div class="tpl-btn" onclick="selectTemplate('ticker')" id="tpl-ticker">
-        <div class="tpl-icon">📡</div>
-        <div class="tpl-name">Ticker<br>Bottom</div>
-      </div>
-      <div class="tpl-btn" onclick="selectTemplate('dark')" id="tpl-dark">
-        <div class="tpl-icon">🌙</div>
-        <div class="tpl-name">Dark<br>Headline</div>
-      </div>
+    <div class="section-title"><span class="step-badge" style="background:#D4A520;color:#000;">4</span> Text Style</div>
+
+    <label>Font Size (Ticker)</label>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      <input type="range" id="textSize" min="8" max="22" value="11" oninput="updateTextStyle()" style="flex:1;"/>
+      <span id="textSizeVal" style="color:#D4A520;font-size:13px;min-width:32px;text-align:right;">11px</span>
     </div>
 
-    <!-- Poll options — shown only for poll template -->
-    <div id="pollOptions" style="display:none; margin-top:10px;">
-      <label>Poll Question</label>
-      <input type="text" id="pollQ" placeholder="Jaise: Kya aap Modi ki niti se sahmat hain?"/>
-      <label style="margin-top:8px;">Option A</label>
-      <input type="text" id="pollA" placeholder="Haan"/>
-      <label>Option B</label>
-      <input type="text" id="pollB" placeholder="Nahi"/>
+    <label style="margin-top:10px;">Text Align</label>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button onclick="setTextAlign('left',this)"   class="align-btn active">⬅ Left</button>
+      <button onclick="setTextAlign('center',this)" class="align-btn">↔ Center</button>
+      <button onclick="setTextAlign('right',this)"  class="align-btn">➡ Right</button>
     </div>
 
-    <!-- Two photo — shown only for twophoto template -->
-    <div id="twoPhotoOptions" style="display:none; margin-top:10px;">
-      <label>📸 Photo 1 URL (baayein / left)</label>
-      <input type="text" id="photoUrl1b" placeholder="https://...photo1.jpg" oninput="previewPhoto1b()"/>
-      <img id="photoPreview1b" class="photo-preview" src="" alt="" style="display:none; height:60px;"/>
-      <label style="margin-top:8px;">📸 Photo 2 URL (daayein / right)</label>
-      <input type="text" id="photoUrl2" placeholder="https://...photo2.jpg" oninput="previewPhoto2()"/>
-      <img id="photoPreview2" class="photo-preview" src="" alt="" style="display:none; height:60px;"/>
+    <label style="margin-top:10px;">Text Colour</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+      <button onclick="setTextColor('#ffffff',this)" class="tcol-btn active" style="background:#fff;color:#000;">⬜ Safed</button>
+      <button onclick="setTextColor('#FFFF00',this)" class="tcol-btn" style="background:#FFFF00;color:#000;">🟡 Peela</button>
+      <button onclick="setTextColor('#CC0000',this)" class="tcol-btn" style="background:#CC0000;color:#fff;">🔴 Laal</button>
+      <button onclick="setTextColor('#D4A520',this)" class="tcol-btn" style="background:#D4A520;color:#000;">✨ Sona</button>
+      <button onclick="setTextColor('#4CAF50',this)" class="tcol-btn" style="background:#4CAF50;color:#fff;">🟢 Hara</button>
+      <button onclick="setTextColor('#111111',this)" class="tcol-btn" style="background:#333;color:#fff;border:1px solid #555;">⚫ Kala</button>
+    </div>
+
+    <label style="margin-top:10px;">Ticker Bar Background</label>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button onclick="setBarBg('solid',this)"        class="bg-btn active">🟥 Solid</button>
+      <button onclick="setBarBg('transparent',this)"  class="bg-btn">🔲 Transparent</button>
+      <button onclick="setBarBg('gradient',this)"     class="bg-btn">🌈 Gradient</button>
+    </div>
+
+    <label style="margin-top:10px;">Ticker Bar Colour</label>
+    <div class="swatch-row">
+      <div class="swatch active" style="background:#CC0000;" onclick="setBarColor('#CC0000',this)"></div>
+      <div class="swatch" style="background:#1a237e;" onclick="setBarColor('#1a237e',this)"></div>
+      <div class="swatch" style="background:#1b5e20;" onclick="setBarColor('#1b5e20',this)"></div>
+      <div class="swatch" style="background:#212121;" onclick="setBarColor('#212121',this)"></div>
+      <div class="swatch" style="background:#D4A520;" onclick="setBarColor('#D4A520',this)"></div>
+      <div class="swatch" style="background:#4a148c;" onclick="setBarColor('#4a148c',this)"></div>
     </div>
   </div>
 
-  <!-- Step 4: Photo -->
+  <!-- Step 5: Overlay toggles -->
   <div class="section">
-    <div class="section-title">
-      <span class="step-badge">4</span> Photo
+    <div class="section-title"><span class="step-badge">5</span> Overlay On/Off</div>
+    <div class="overlay-row">
+      <label>BBN Logo (upar right)</label>
+      <button class="toggle-btn on" id="toggleLogo" onclick="toggle('logo')"></button>
     </div>
-    <label>Photo ka internet link (URL)</label>
-    <input type="text" id="photoUrl" placeholder="https://...photo.jpg" oninput="previewPhoto()"/>
-    <label>Ya GitHub photos/ folder se</label>
-    <input type="text" id="photoFile" placeholder="photos/modi.jpg" oninput="previewPhotoFile()"/>
-    <img id="photoPreview" class="photo-preview" src="" alt="" style="display:none"/>
+    <div class="overlay-row">
+      <label>Ticker bar (bilkul neeche)</label>
+      <button class="toggle-btn on" id="toggleBar" onclick="toggle('bar')"></button>
+    </div>
+    <div class="overlay-row">
+      <label>Top laal strip</label>
+      <button class="toggle-btn on" id="toggleStrip" onclick="toggle('strip')"></button>
+    </div>
   </div>
 
-  <!-- Step 5: Source -->
+  <!-- Step 6: Preview -->
   <div class="section">
-    <div class="section-title">
-      <span class="step-badge">5</span> Channel / Source
+    <div class="section-title"><span class="step-badge">6</span> Preview</div>
+    <div class="preview-wrap" id="previewWrap">
+      <canvas id="previewCanvas"></canvas>
     </div>
-    <input type="text" id="sourceText" value="BBN NEWS"/>
+    <p class="hint" id="previewHint">Video load hone ke baad yahan preview dikhega</p>
   </div>
 
-  <button class="btn-save" onclick="saveNews()">💾 CARD SAVE KARO</button>
-  <button class="btn-view" onclick="window.location='index.html'">👁️ Card Dekho</button>
-  <button class="btn-view" onclick="window.location='Video.html'" style="margin-top:8px;border-color:#CC0000;color:#CC0000;">🎬 Video Editor <span style="background:#CC0000;color:#fff;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;margin-left:4px;vertical-align:middle;">NEW</span></button>
+  <!-- Step 7: Record & Download -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">7</span> Video Banao & Download Karo</div>
 
+    <button class="btn-record" id="recordBtn" onclick="startRecording()" disabled>
+      <span id="recIcon">⏺</span>
+      <span id="recLabel">Video Record Karo</span>
+    </button>
+
+    <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
+    <div class="prog-label" id="progLabel"></div>
+
+    <button class="btn-download" id="dlWebmBtn" onclick="downloadWebm()">
+      ⬇️ WEBM Download (Fast)
+    </button>
+    <button class="btn-download" id="dlMp4Btn" onclick="convertToMp4()" style="background:linear-gradient(135deg,#1a3a1a,#0f2a0f);border:1.5px solid #4CAF50;color:#4CAF50;margin-top:6px;">
+      🎬 MP4 Convert & Download
+    </button>
+
+    <div id="ffmpegStatus" style="display:none;margin-top:8px;background:#111;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:12px;color:#4CAF50;margin-bottom:6px;" id="ffmpegMsg">⏳ ffmpeg load ho raha hai...</div>
+      <div style="background:#222;border-radius:4px;height:6px;overflow:hidden;">
+        <div id="ffmpegBar" style="height:100%;background:linear-gradient(90deg,#4CAF50,#D4A520);width:0%;transition:width 0.3s;"></div>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:8px;">
+      💡 <b style="color:#D4A520;">WEBM</b> — turant, WhatsApp/Facebook chalti hai<br>
+      💡 <b style="color:#4CAF50;">MP4</b> — 1-2 min, sabse compatible<br>
+      ⚠️ Phone lock mat karo recording ke dauraan
+    </div>
+  </div>
+
+  <button class="btn-back" onclick="window.location='admin.html'">← Admin Panel</button>
 </div>
-<div class="toast" id="toast">✅ Card save ho gaya!</div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ── State ──
-let colorMode = 'desktop';
-let selectedTemplate = 'classic';
+let videoEl        = null;
+let animFrame      = null;
+let mediaRec       = null;
+let recordedChunks = [];
+let isRecording    = false;
+let tickerX        = 0;
+let overlayState   = { logo:true, bar:true, strip:true };
+let textColor      = '#ffffff';
+let textAlign      = 'left';
+let textBg         = 'solid';
+let barColor       = '#CC0000';
+let videoDuration  = 0;
+let blobUrl        = null;
+let vTemplate      = 'classic';  // current video template
 
-// ── Page Load ──
-window.onload = function() {
+// Load saved headline from admin
+window.onload = () => {
   const saved = localStorage.getItem('bbn_news');
-  if (!saved) return;
-  try {
-    const data = JSON.parse(saved);
-    if (data.headline) {
-      const box = document.getElementById('hindiOut');
-      box.innerHTML = data.headline;
-      box.classList.remove('empty');
-    }
-    if (data.photo) {
-      if (data.photo.startsWith('http')) document.getElementById('photoUrl').value = data.photo;
-      else document.getElementById('photoFile').value = data.photo;
-      const i = document.getElementById('photoPreview');
-      i.src = data.photo; i.style.display = 'block';
-    }
-    if (data.source) document.getElementById('sourceText').value = data.source;
-    if (data.template) selectTemplate(data.template, true);
-    if (data.pollQ) document.getElementById('pollQ').value = data.pollQ;
-    if (data.pollA) document.getElementById('pollA').value = data.pollA;
-    if (data.pollB) document.getElementById('pollB').value = data.pollB;
-    if (data.photo && data.template === 'twophoto') {
-      document.getElementById('photoUrl1b').value = data.photo;
-      const i1b = document.getElementById('photoPreview1b');
-      i1b.src = data.photo; i1b.style.display = 'block';
-    }
-    if (data.photo2) {
-      document.getElementById('photoUrl2').value = data.photo2;
-      const i2 = document.getElementById('photoPreview2');
-      i2.src = data.photo2; i2.style.display = 'block';
-    }
-  } catch(e) {}
+  if (saved) {
+    const d = JSON.parse(saved);
+    if (d.headline) document.getElementById('headlineText').value = d.headline.replace(/<[^>]*>/g,'');
+    if (d.source)   document.getElementById('sourceText').value   = d.source;
+  }
 };
 
-// ── FIX 1: Separate translate functions ──
-async function translateTo(lang) {
-  const input = document.getElementById('inputText').value.trim();
-  if (!input) return alert('Kuch likho pehle!');
-
-  const isHindi = lang === 'hi';
-  const btnId = isHindi ? 'hindiBtn' : 'engBtn';
-  const iconId = isHindi ? 'hindiIcon' : 'engIcon';
-  const labelId = isHindi ? 'hindiLabel' : 'engLabel';
-  const btn = document.getElementById(btnId);
-
-  btn.classList.add('loading');
-  document.getElementById(iconId).innerHTML = `<span class="spinner${isHindi?' green-spin':''}"></span>`;
-  document.getElementById(labelId).textContent = 'Ban raha hai...';
-
-  try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${lang}&dt=t&q=${encodeURIComponent(input)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const text = data[0].map(x => x[0]).join('');
-
-    if (isHindi) {
-      const box = document.getElementById('hindiOut');
-      box.textContent = text;
-      box.classList.remove('empty');
-      showToast('🇮🇳 Hindi ready!');
-    } else {
-      const box = document.getElementById('englishOut');
-      box.textContent = text;
-      box.classList.remove('empty');
-      showToast('🇬🇧 English ready!');
-    }
-  } catch(e) {
-    alert('❌ Error aaya!\n\n' + e.message + '\n\nInternet connection check karo.');
-  }
-
-  btn.classList.remove('loading');
-  document.getElementById(iconId).textContent = isHindi ? '🇮🇳' : '🇬🇧';
-  document.getElementById(labelId).textContent = isHindi ? 'Dobara Hindi' : 'Dobara English';
-}
-
-// ── FIX 1: Direct Hindi paste ──
-function pasteHindiDirect() {
-  const text = document.getElementById('hindiPasteBox').value.trim();
-  if (!text) return alert('Pehle Hindi text paste karo!');
-  const box = document.getElementById('hindiOut');
-  box.textContent = text;
-  box.classList.remove('empty');
-  document.getElementById('hindiPasteBox').value = '';
-  showToast('✅ Hindi set ho gaya!');
-}
-
-// ── FIX 3: Color mode toggle ──
-function setMode(mode) {
-  colorMode = mode;
-  document.getElementById('modeDesktop').classList.toggle('active', mode==='desktop');
-  document.getElementById('modeMobile').classList.toggle('active', mode==='mobile');
-  document.getElementById('mobileHint').style.display = mode==='mobile' ? 'block' : 'none';
-  document.getElementById('desktopHint').style.display = mode==='desktop' ? 'block' : 'none';
-
-  const box = document.getElementById('hindiOut');
-  if (mode === 'mobile') {
-    // Enable contenteditable so user can position cursor/tap
-    box.contentEditable = 'true';
-    box.addEventListener('click', handleMobileTap);
-  } else {
-    box.contentEditable = 'false';
-    box.removeEventListener('click', handleMobileTap);
-  }
-}
-
-// ── FIX 3: Mobile tap-to-select word ──
-function handleMobileTap(e) {
-  const box = document.getElementById('hindiOut');
-  // Get caret position and select the tapped word
-  const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
-  const range = sel.getRangeAt(0);
-  // Expand range to select full word
-  const node = range.startContainer;
-  if (node.nodeType === Node.TEXT_NODE) {
-    const text = node.textContent;
-    let start = range.startOffset;
-    let end = range.startOffset;
-    // Expand left
-    while (start > 0 && !/\s/.test(text[start-1])) start--;
-    // Expand right
-    while (end < text.length && !/\s/.test(text[end])) end++;
-    const newRange = document.createRange();
-    newRange.setStart(node, start);
-    newRange.setEnd(node, end);
-    sel.removeAllRanges();
-    sel.addRange(newRange);
-  }
-}
-
-// ── FIX 2: Apply color ──
-function applyColor(color) {
-  const box = document.getElementById('hindiOut');
-
-  if (colorMode === 'desktop') {
-    // Standard selection-based color
-    const prevEditable = box.contentEditable;
-    box.contentEditable = 'true';
-    box.focus();
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) {
-      box.contentEditable = prevEditable;
-      showToast('⚠️ Pehle text select karo!');
-      return;
-    }
-    document.execCommand('foreColor', false, color);
-    box.contentEditable = 'false';
-  } else {
-    // Mobile mode — apply to current selection (which was set by tap)
-    box.contentEditable = 'true';
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) {
-      showToast('⚠️ Pehle koi word tap karo!');
-      return;
-    }
-    document.execCommand('foreColor', false, color);
-    // Keep editable in mobile mode
-  }
-  showToast('✅ Rang lag gaya!');
-}
-
-// ── Remove color ──
-function removeColor() {
-  const box = document.getElementById('hindiOut');
-  const prevEditable = box.contentEditable;
-  box.contentEditable = 'true';
-  box.focus();
-  const sel = window.getSelection();
-  if (sel && sel.rangeCount > 0 && sel.toString().length > 0) {
-    document.execCommand('removeFormat', false, null);
-  } else {
-    // Remove all colors from entire box
-    const plain = box.innerText;
-    box.textContent = plain;
-  }
-  if (colorMode === 'desktop') box.contentEditable = 'false';
-  showToast('✅ Rang hata diya!');
-}
-
-// ── Copy ──
-function copyText(id) {
-  navigator.clipboard.writeText(document.getElementById(id).innerText)
-    .then(() => showToast('✅ Copy ho gaya!'));
-}
-
-// ── Photo ──
-function previewPhoto() {
-  const url = document.getElementById('photoUrl').value.trim();
-  if (url) { const i=document.getElementById('photoPreview'); i.src=url; i.style.display='block'; }
-}
-function previewPhotoFile() {
-  const f = document.getElementById('photoFile').value.trim();
-  if (f) { const i=document.getElementById('photoPreview'); i.src=f; i.style.display='block'; }
-}
-function previewPhoto1b() {
-  const url = document.getElementById('photoUrl1b').value.trim();
-  if (url) { const i=document.getElementById('photoPreview1b'); i.src=url; i.style.display='block'; }
-}
-function previewPhoto2() {
-  const url = document.getElementById('photoUrl2').value.trim();
-  if (url) { const i=document.getElementById('photoPreview2'); i.src=url; i.style.display='block'; }
-}
-
-// ── FIX 4: Template selection ──
-function selectTemplate(name, silent=false) {
-  selectedTemplate = name;
+// ── Template select ──
+function selectVTemplate(name) {
+  vTemplate = name;
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('tpl-'+name);
-  if (btn) btn.classList.add('active');
-
-  document.getElementById('pollOptions').style.display    = name==='poll'     ? 'block' : 'none';
-  document.getElementById('twoPhotoOptions').style.display= name==='twophoto' ? 'block' : 'none';
-
-  if (!silent) showToast('Template: ' + name);
+  document.getElementById('vt-' + name).classList.add('active');
+  document.getElementById('newsTextOptions').style.display = (name === 'news') ? 'block' : 'none';
 }
 
-// ── Save ──
-function saveNews() {
-  const hindiBox = document.getElementById('hindiOut');
-  const headline = hindiBox.innerHTML.trim();
-  const photoUrl  = document.getElementById('photoUrl').value.trim();
-  const photoFile = document.getElementById('photoFile').value.trim();
-  const source    = document.getElementById('sourceText').value.trim();
-  const photo     = photoUrl || photoFile || 'photos/default.jpg';
+// ── Load video ──
+function loadVideo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  videoEl = document.createElement('video');
+  videoEl.src = url;
+  videoEl.muted = true;
+  videoEl.playsInline = true;
+  videoEl.crossOrigin = 'anonymous';
+  videoEl.onloadedmetadata = () => {
+    videoDuration = videoEl.duration;
+    const w = videoEl.videoWidth, h = videoEl.videoHeight;
+    const sz = (file.size/1024/1024).toFixed(1);
+    document.getElementById('vidInfo').textContent = `${w}×${h} · ${videoDuration.toFixed(1)}s · ${sz} MB`;
+    const canvas = document.getElementById('previewCanvas');
+    canvas.width = w; canvas.height = h;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('previewHint').style.display = 'none';
+    document.getElementById('recordBtn').disabled = false;
+    videoEl.loop = true;
+    videoEl.play();
+    startPreviewLoop();
+    showToast('✅ Video load ho gayi!');
+  };
+  videoEl.onerror = () => showToast('❌ Video load nahi hui');
+}
 
-  if (!headline || hindiBox.classList.contains('empty')) return alert('Pehle headline banao!');
-
-  const saveData = { headline, photo, source, template: selectedTemplate };
-
-  if (selectedTemplate === 'poll') {
-    saveData.pollQ = document.getElementById('pollQ').value.trim();
-    saveData.pollA = document.getElementById('pollA').value.trim() || 'हाँ';
-    saveData.pollB = document.getElementById('pollB').value.trim() || 'नहीं';
+// ── Preview loop ──
+function startPreviewLoop() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  const canvas = document.getElementById('previewCanvas');
+  const ctx    = canvas.getContext('2d');
+  function draw() {
+    if (!videoEl) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawTemplate(ctx, canvas.width, canvas.height);
+    tickerX -= 2;
+    animFrame = requestAnimationFrame(draw);
   }
-  if (selectedTemplate === 'twophoto') {
-    const p1b = document.getElementById('photoUrl1b').value.trim();
-    if (p1b) saveData.photo = p1b;  // override main photo with left photo
-    saveData.photo2 = document.getElementById('photoUrl2').value.trim();
+  draw();
+}
+
+// ── MASTER DRAW — all 4 templates ──
+function drawTemplate(ctx, W, H) {
+  const scale = W / 400;
+
+  if (vTemplate === 'classic') {
+    drawClassic(ctx, W, H, scale);
+  } else if (vTemplate === 'news') {
+    drawNews(ctx, W, H, scale);
+  } else if (vTemplate === 'breaking') {
+    drawBreaking(ctx, W, H, scale);
+  } else if (vTemplate === 'split') {
+    drawSplit(ctx, W, H, scale);
+  }
+}
+
+// ── T1: Classic — full video + logo + ticker ──
+function drawClassic(ctx, W, H, scale) {
+  // Video full
+  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
+
+  // Top strip
+  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
+
+  // Logo
+  if (overlayState.logo) drawLogo(ctx, W, scale);
+
+  // Ticker bottom
+  if (overlayState.bar) drawTicker(ctx, W, H, scale);
+}
+
+// ── T2: News — video top 55%, white text area, ticker bottom ──
+function drawNews(ctx, W, H, scale) {
+  const videoH  = Math.floor(H * 0.52);
+  const textH   = Math.floor(H * 0.30);
+  const tickerH = H - videoH - textH;
+
+  // Video top portion
+  if (videoEl) {
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, W, videoH); ctx.clip();
+    ctx.drawImage(videoEl, 0, 0, W, videoH);
+    ctx.restore();
   }
 
-  localStorage.setItem('bbn_news', JSON.stringify(saveData));
-  showToast('✅ Card save ho gaya!');
+  // Red divider strip
+  ctx.fillStyle = '#CC0000';
+  ctx.fillRect(0, videoH, W, 3*scale);
+
+  // White news text area
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, videoH + 3*scale, W, textH);
+
+  // Breaking badge
+  const badgeY = videoH + 3*scale + 10*scale;
+  ctx.fillStyle = '#CC0000';
+  const badgeTxt = '⚡ ब्रेकिंग न्यूज़';
+  ctx.font = `700 ${9*scale}px 'Noto Sans Devanagari', sans-serif`;
+  const bW = ctx.measureText(badgeTxt).width + 16*scale;
+  const bH = 14*scale;
+  roundRect(ctx, W/2 - bW/2, badgeY, bW, bH, 3*scale);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(badgeTxt, W/2, badgeY + bH/2);
+
+  // News body text (from newsBodyText or headline)
+  const bodyTxt = (document.getElementById('newsBodyText') && document.getElementById('newsBodyText').value)
+    || document.getElementById('headlineText').value || 'खबर यहाँ आएगी';
+  const bodyFontSize = Math.min(14, Math.max(10, (W * 0.038)));
+  ctx.font = `900 ${bodyFontSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
+  ctx.fillStyle = '#111111';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  // Word wrap
+  wrapText(ctx, bodyTxt, W/2, badgeY + bH + (textH - bH - 16*scale)/2 + 6*scale, W - 24*scale, bodyFontSize*scale*1.4);
+
+  // Source
+  ctx.font = `700 ${7*scale}px 'Trebuchet MS', sans-serif`;
+  ctx.fillStyle = '#aaa';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  const srcTxt = document.getElementById('sourceText').value || 'BBN NEWS';
+  ctx.fillText(srcTxt.toUpperCase(), W/2, videoH + 3*scale + textH - 4*scale);
+
+  // Ticker at bottom
+  if (overlayState.bar) drawTicker(ctx, W, H, scale);
+
+  // Top strip
+  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
+
+  // Logo
+  if (overlayState.logo) drawLogo(ctx, W, scale);
+}
+
+// ── T3: Breaking — full video, dark overlay with big headline + ticker ──
+function drawBreaking(ctx, W, H, scale) {
+  // Video full
+  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
+
+  // Top strip
+  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
+
+  // Dark overlay across middle-lower area
+  const tickerH = Math.max(30, (parseInt(document.getElementById('textSize').value)||11) * 3.2) * scale;
+  const overlayY = H * 0.42;
+  const overlayH = H - overlayY - tickerH;
+  const grad = ctx.createLinearGradient(0, overlayY, 0, overlayY + overlayH);
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(0.3, 'rgba(0,0,0,0.82)');
+  grad.addColorStop(1,   'rgba(0,0,0,0.92)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, overlayY, W, overlayH);
+
+  // LIVE badge
+  const liveY = overlayY + 14*scale;
+  ctx.fillStyle = '#CC0000';
+  const liveTxt = '⚡ LIVE  ब्रेकिंग न्यूज़';
+  ctx.font = `700 ${9*scale}px 'Noto Sans Devanagari', sans-serif`;
+  const lW = ctx.measureText(liveTxt).width + 14*scale;
+  roundRect(ctx, 10*scale, liveY, lW, 14*scale, 3*scale);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(liveTxt, 17*scale, liveY + 7*scale);
+
+  // Big headline
+  const hlTxt = document.getElementById('headlineText').value || 'ब्रेकिंग खबर यहाँ आएगी';
+  const hlFontSize = Math.min(20, Math.max(12, W * 0.045));
+  ctx.font = `900 ${hlFontSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'left';
+  wrapTextLeft(ctx, hlTxt, 10*scale, liveY + 22*scale, W - 20*scale, hlFontSize*scale*1.4);
+
+  // Ticker
+  if (overlayState.bar) drawTicker(ctx, W, H, scale);
+
+  // Logo
+  if (overlayState.logo) drawLogo(ctx, W, scale);
+}
+
+// ── T4: Split — full video, bottom headline banner + ticker ──
+function drawSplit(ctx, W, H, scale) {
+  // Video full
+  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
+
+  // Top strip
+  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
+
+  // Bottom banner area
+  const tickerH  = Math.max(30, (parseInt(document.getElementById('textSize').value)||11) * 3.2) * scale;
+  const bannerH  = 48*scale;
+  const bannerY  = H - tickerH - bannerH;
+
+  // Semi-transparent dark banner
+  ctx.fillStyle = 'rgba(0,0,0,0.86)';
+  ctx.fillRect(0, bannerY, W, bannerH);
+
+  // Red left accent bar
+  ctx.fillStyle = '#CC0000';
+  ctx.fillRect(0, bannerY, 5*scale, bannerH);
+
+  // Source label (small, top of banner)
+  const srcTxt = document.getElementById('sourceText').value || 'BBN NEWS';
+  ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
+  ctx.fillStyle = '#D4A520';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(srcTxt.toUpperCase(), 12*scale, bannerY + 5*scale);
+
+  // Headline text in banner
+  const hlTxt = document.getElementById('headlineText').value || 'ब्रेकिंग खबर यहाँ आएगी';
+  const hlSize = Math.min(15, Math.max(9, W * 0.035));
+  ctx.font = `900 ${hlSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  wrapTextLeft(ctx, hlTxt, 12*scale, bannerY + bannerH * 0.62, W - 20*scale, hlSize*scale*1.35);
+
+  // Ticker at very bottom
+  if (overlayState.bar) drawTicker(ctx, W, H, scale);
+
+  // Logo
+  if (overlayState.logo) drawLogo(ctx, W, scale);
+}
+
+// ── Shared: Draw BBN Logo ──
+function drawLogo(ctx, W, scale) {
+  const lx = W - 44*scale, ly = 10*scale, lr = 20*scale;
+  ctx.save();
+  ctx.globalAlpha = 0.88;
+  ctx.fillStyle = '#0a0a0a';
+  ctx.beginPath(); ctx.arc(lx+lr, ly+lr, lr, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#D4A520'; ctx.lineWidth = 1.2*scale; ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.font = `900 ${13*scale}px Georgia, serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const grd = ctx.createLinearGradient(lx+lr, ly, lx+lr, ly+lr*2);
+  grd.addColorStop(0,'#F5D77A'); grd.addColorStop(0.55,'#D4A520'); grd.addColorStop(1,'#8B6508');
+  ctx.fillStyle = grd;
+  ctx.fillText('BBN', lx+lr, ly+lr+0.5);
+  ctx.restore();
+}
+
+// ── Shared: Draw Ticker ──
+function drawTicker(ctx, W, H, scale) {
+  const userSize = parseInt(document.getElementById('textSize').value) || 11;
+  const fontSize = userSize * scale;
+  const barH     = Math.max(30, userSize * 3.2) * scale;
+  const barY     = H - barH;
+  const headline = document.getElementById('headlineText').value || 'ब्रेकिंग न्यूज़';
+  const source   = document.getElementById('sourceText').value   || 'BBN NEWS';
+
+  // Bar bg
+  if (textBg === 'solid') {
+    ctx.fillStyle = barColor; ctx.fillRect(0, barY, W, barH);
+  } else if (textBg === 'gradient') {
+    const gBar = ctx.createLinearGradient(0, barY, W, barY+barH);
+    gBar.addColorStop(0, barColor); gBar.addColorStop(1,'rgba(0,0,0,0.9)');
+    ctx.fillStyle = gBar; ctx.fillRect(0, barY, W, barH);
+  }
+
+  // LIVE pill
+  let pillW = 0;
+  if (textBg !== 'transparent') {
+    pillW = 46*scale;
+    ctx.fillStyle = '#8B0000'; ctx.fillRect(0, barY, pillW, barH);
+    ctx.save();
+    ctx.font = `700 ${9*scale}px 'Trebuchet MS', sans-serif`;
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('LIVE', pillW/2, barY+barH/2);
+    ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillRect(pillW, barY+4*scale, 1*scale, barH-8*scale);
+  }
+
+  // Ticker text
+  ctx.save();
+  ctx.beginPath(); ctx.rect(pillW+4*scale, barY, W-pillW-8*scale, barH); ctx.clip();
+  ctx.font = `700 ${fontSize}px 'Noto Sans Devanagari', sans-serif`;
+  ctx.fillStyle = textColor; ctx.textBaseline = 'middle';
+  if (textAlign === 'center') {
+    ctx.textAlign = 'center'; ctx.fillText(headline, (pillW+W)/2, barY+barH/2);
+  } else if (textAlign === 'right') {
+    ctx.textAlign = 'right'; ctx.fillText(headline, W-8*scale, barY+barH/2);
+  } else {
+    ctx.textAlign = 'left';
+    const txtW  = ctx.measureText(headline).width;
+    const baseX = pillW+8*scale;
+    const drawX = baseX + (tickerX % (txtW+W));
+    ctx.fillText(headline, drawX, barY+barH/2);
+    ctx.fillText(headline, drawX+txtW+80*scale, barY+barH/2);
+  }
+  ctx.restore();
+
+  // Source above bar
+  ctx.save();
+  ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+  ctx.fillText(source, W-6*scale, barY-3*scale);
+  ctx.restore();
+}
+
+// ── Helpers: text wrap ──
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '', lines = [];
+  for (let w of words) {
+    const test = line ? line+' '+w : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  const totalH = lines.length * lineH;
+  let startY = y - totalH/2;
+  for (let l of lines) { ctx.fillText(l, x, startY + lineH/2); startY += lineH; }
+}
+
+function wrapTextLeft(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '', lines = [];
+  for (let w of words) {
+    const test = line ? line+' '+w : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  for (let i=0; i<lines.length; i++) ctx.fillText(lines[i], x, y + i*lineH);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath();
+}
+
+// ── Controls ──
+function toggle(which) {
+  overlayState[which] = !overlayState[which];
+  document.getElementById('toggle'+which.charAt(0).toUpperCase()+which.slice(1))
+    .classList.toggle('on', overlayState[which]);
+}
+function setBarColor(color, el) {
+  barColor = color;
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+function updateTextStyle() {
+  document.getElementById('textSizeVal').textContent = document.getElementById('textSize').value + 'px';
+}
+function setTextAlign(val, el) {
+  textAlign = val;
+  document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setTextColor(val, el) {
+  textColor = val;
+  document.querySelectorAll('.tcol-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setBarBg(val, el) {
+  textBg = val;
+  document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function refreshOverlay() {}
+
+// ── Recording ──
+async function startRecording() {
+  if (isRecording) { stopRecording(); return; }
+  if (!videoEl) return;
+  recordedChunks = []; blobUrl = null;
+  document.getElementById('dlWebmBtn').classList.remove('show');
+  document.getElementById('dlMp4Btn').classList.remove('show');
+  document.getElementById('ffmpegStatus').style.display = 'none';
+
+  const canvas = document.getElementById('previewCanvas');
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  videoEl.pause(); videoEl.loop = false; videoEl.muted = true; videoEl.currentTime = 0;
+  const ctx = canvas.getContext('2d');
+  tickerX = 0;
+
+  function recDraw() {
+    if (!isRecording) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawTemplate(ctx, canvas.width, canvas.height);
+    tickerX -= 2;
+    animFrame = requestAnimationFrame(recDraw);
+  }
+
+  const mimeTypes = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'];
+  const mimeType = mimeTypes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
+  const stream = canvas.captureStream(30);
+  mediaRec = new MediaRecorder(stream, { mimeType, videoBitsPerSecond:4_000_000 });
+  mediaRec.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+  mediaRec.onstop = () => {
+    isRecording = false; cancelAnimationFrame(animFrame);
+    const blob = new Blob(recordedChunks, { type:mimeType });
+    blobUrl = URL.createObjectURL(blob);
+    document.getElementById('recIcon').textContent = '⏺';
+    document.getElementById('recLabel').textContent = 'Dobara Record Karo';
+    document.getElementById('recordBtn').classList.remove('recording');
+    document.getElementById('progWrap').style.display = 'none';
+    document.getElementById('progLabel').style.display = 'none';
+    document.getElementById('dlWebmBtn').classList.add('show');
+    document.getElementById('dlMp4Btn').classList.add('show');
+    showToast('✅ Video ready! Download karo 🎉');
+    videoEl.loop = true; videoEl.play(); startPreviewLoop();
+  };
+
+  const progWrap = document.getElementById('progWrap');
+  const progBar  = document.getElementById('progBar');
+  const progLabel= document.getElementById('progLabel');
+  progWrap.style.display = 'block'; progLabel.style.display = 'block';
+  let progInt = setInterval(() => {
+    if(!isRecording){clearInterval(progInt);return;}
+    const pct = Math.min((videoEl.currentTime/videoDuration)*100,100);
+    progBar.style.width = pct+'%';
+    progLabel.textContent = `${videoEl.currentTime.toFixed(1)}s / ${videoDuration.toFixed(1)}s`;
+  },200);
+
+  isRecording = true; mediaRec.start(100); videoEl.play(); recDraw();
+  document.getElementById('recIcon').innerHTML = '<span class="rec-dot"></span>';
+  document.getElementById('recLabel').textContent = 'Recording... (Roko)';
+  document.getElementById('recordBtn').classList.add('recording');
+  showToast('🔴 Recording shuru!');
+  videoEl.onended = () => { if(isRecording) stopRecording(); };
+}
+
+function stopRecording() {
+  if(!mediaRec||mediaRec.state==='inactive') return;
+  isRecording = false; mediaRec.stop(); videoEl.pause();
+  document.getElementById('recIcon').innerHTML = '<span class="spinner"></span>';
+  document.getElementById('recLabel').textContent = 'Process ho raha hai...';
+  document.getElementById('recordBtn').disabled = true;
+  setTimeout(()=>{ document.getElementById('recordBtn').disabled=false; },1500);
+}
+
+// ── Download ──
+function getFilename(ext) {
+  const h = document.getElementById('headlineText').value
+    .replace(/<[^>]*>/g,'').substring(0,20).trim()
+    .replace(/\s+/g,'_').replace(/[^\w_]/g,'') || 'bbn_video';
+  return 'BBN_'+vTemplate+'_'+h+'.'+ext;
+}
+function triggerDownload(url, filename) {
+  const a=document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function downloadWebm() {
+  if(!blobUrl) return showToast('⚠️ Pehle record karo!');
+  triggerDownload(blobUrl, getFilename('webm'));
+  showToast('⬇️ WEBM download shuru!');
+}
+
+let ffmpegLoaded=false, ffmpegInstance=null;
+async function convertToMp4() {
+  if(!blobUrl) return showToast('⚠️ Pehle record karo!');
+  const statusDiv=document.getElementById('ffmpegStatus');
+  const msgEl=document.getElementById('ffmpegMsg');
+  const barEl=document.getElementById('ffmpegBar');
+  const btn=document.getElementById('dlMp4Btn');
+  statusDiv.style.display='block'; btn.style.opacity='0.5'; btn.style.pointerEvents='none';
+  try {
+    if(!ffmpegLoaded) {
+      msgEl.textContent='⏳ ffmpeg.wasm load ho raha hai (~25MB)...'; barEl.style.width='10%';
+      const s1=document.createElement('script');
+      s1.src='https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
+      document.head.appendChild(s1);
+      await new Promise((res,rej)=>{s1.onload=res;s1.onerror=rej;});
+      const s2=document.createElement('script');
+      s2.src='https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
+      document.head.appendChild(s2);
+      await new Promise((res,rej)=>{s2.onload=res;s2.onerror=rej;});
+      barEl.style.width='30%'; msgEl.textContent='⚙️ Initialize ho raha hai...';
+      const {FFmpeg}=FFmpegWASM; ffmpegInstance=new FFmpeg();
+      ffmpegInstance.on('progress',({progress})=>{
+        barEl.style.width=Math.round(progress*70+30)+'%';
+        msgEl.textContent=`🔄 Convert: ${Math.round(progress*100)}%`;
+      });
+      await ffmpegInstance.load({coreURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'});
+      ffmpegLoaded=true; barEl.style.width='35%';
+    }
+    msgEl.textContent='📦 Data prepare...'; barEl.style.width='40%';
+    const resp=await fetch(blobUrl);
+    const buf=await resp.arrayBuffer();
+    await ffmpegInstance.writeFile('input.webm', new Uint8Array(buf));
+    msgEl.textContent='🎬 MP4 ban rahi hai...'; barEl.style.width='45%';
+    await ffmpegInstance.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-movflags','+faststart','output.mp4']);
+    barEl.style.width='90%'; msgEl.textContent='✅ Download ho rahi hai...';
+    const data=await ffmpegInstance.readFile('output.mp4');
+    const mp4Blob=new Blob([data.buffer],{type:'video/mp4'});
+    const mp4Url=URL.createObjectURL(mp4Blob);
+    triggerDownload(mp4Url, getFilename('mp4'));
+    URL.revokeObjectURL(mp4Url);
+    await ffmpegInstance.deleteFile('input.webm');
+    await ffmpegInstance.deleteFile('output.mp4');
+    barEl.style.width='100%'; msgEl.textContent='🎉 MP4 download ho gayi!';
+    showToast('✅ MP4 ready! 🎉');
+  } catch(err) {
+    msgEl.textContent='❌ '+err.message; msgEl.style.color='#CC0000';
+    showToast('❌ Error — WEBM try karo');
+  }
+  btn.style.opacity=''; btn.style.pointerEvents='';
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 </script>
 </body>
