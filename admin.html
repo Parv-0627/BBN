@@ -356,7 +356,10 @@
 
     <!-- Two photo — shown only for twophoto template -->
     <div id="twoPhotoOptions" style="display:none; margin-top:10px;">
-      <label>Photo 2 URL (doosri photo)</label>
+      <label>📸 Photo 1 URL (baayein / left)</label>
+      <input type="text" id="photoUrl1b" placeholder="https://...photo1.jpg" oninput="previewPhoto1b()"/>
+      <img id="photoPreview1b" class="photo-preview" src="" alt="" style="display:none; height:60px;"/>
+      <label style="margin-top:8px;">📸 Photo 2 URL (daayein / right)</label>
       <input type="text" id="photoUrl2" placeholder="https://...photo2.jpg" oninput="previewPhoto2()"/>
       <img id="photoPreview2" class="photo-preview" src="" alt="" style="display:none; height:60px;"/>
     </div>
@@ -416,6 +419,11 @@ window.onload = function() {
     if (data.pollQ) document.getElementById('pollQ').value = data.pollQ;
     if (data.pollA) document.getElementById('pollA').value = data.pollA;
     if (data.pollB) document.getElementById('pollB').value = data.pollB;
+    if (data.photo && data.template === 'twophoto') {
+      document.getElementById('photoUrl1b').value = data.photo;
+      const i1b = document.getElementById('photoPreview1b');
+      i1b.src = data.photo; i1b.style.display = 'block';
+    }
     if (data.photo2) {
       document.getElementById('photoUrl2').value = data.photo2;
       const i2 = document.getElementById('photoPreview2');
@@ -584,6 +592,10 @@ function previewPhotoFile() {
   const f = document.getElementById('photoFile').value.trim();
   if (f) { const i=document.getElementById('photoPreview'); i.src=f; i.style.display='block'; }
 }
+function previewPhoto1b() {
+  const url = document.getElementById('photoUrl1b').value.trim();
+  if (url) { const i=document.getElementById('photoPreview1b'); i.src=url; i.style.display='block'; }
+}
 function previewPhoto2() {
   const url = document.getElementById('photoUrl2').value.trim();
   if (url) { const i=document.getElementById('photoPreview2'); i.src=url; i.style.display='block'; }
@@ -621,6 +633,8 @@ function saveNews() {
     saveData.pollB = document.getElementById('pollB').value.trim() || 'नहीं';
   }
   if (selectedTemplate === 'twophoto') {
+    const p1b = document.getElementById('photoUrl1b').value.trim();
+    if (p1b) saveData.photo = p1b;  // override main photo with left photo
     saveData.photo2 = document.getElementById('photoUrl2').value.trim();
   }
 
