@@ -172,6 +172,20 @@
     font-size:9px; font-weight:700; border-radius:3px;
     padding:1px 5px; margin-left:5px; vertical-align:middle;
   }
+
+  .align-btn, .bg-btn {
+    flex:1; padding:7px 4px; border-radius:6px; border:1px solid #333;
+    background:#161616; font-size:11px; cursor:pointer;
+    font-family:'Noto Sans Devanagari',sans-serif; color:#888;
+    transition:all 0.15s;
+  }
+  .align-btn.active, .bg-btn.active { border-color:#D4A520; color:#D4A520; background:#1a1500; }
+  .tcol-btn {
+    padding:6px 10px; border-radius:6px; border:1px solid #333;
+    font-size:11px; cursor:pointer; font-weight:700;
+    transition:all 0.15s;
+  }
+  .tcol-btn.active { outline:2px solid #fff; outline-offset:2px; }
 </style>
 </head>
 <body>
@@ -200,6 +214,42 @@
     <textarea id="headlineText" placeholder="Jaise: मोदी सरकार का बड़ा फैसला..." rows="2" oninput="refreshOverlay()"></textarea>
     <label>Source / Channel</label>
     <input type="text" id="sourceText" value="BBN NEWS" oninput="refreshOverlay()"/>
+  </div>
+
+  <!-- Step 2b: Text Style Controls -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge" style="background:#D4A520;color:#000;">2b</span> Text Style (Bar ke liye)</div>
+
+    <label>Font Size</label>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      <input type="range" id="textSize" min="8" max="22" value="11" oninput="updateTextStyle()" style="flex:1;"/>
+      <span id="textSizeVal" style="color:#D4A520;font-size:13px;min-width:32px;text-align:right;">11px</span>
+    </div>
+
+    <label style="margin-top:10px;">Text Align</label>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button onclick="setTextAlign('left',this)"   class="align-btn active">⬅ Left</button>
+      <button onclick="setTextAlign('center',this)" class="align-btn">↔ Center</button>
+      <button onclick="setTextAlign('right',this)"  class="align-btn">➡ Right</button>
+    </div>
+
+    <label style="margin-top:10px;">Text Colour</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+      <button onclick="setTextColor('#ffffff',this)" class="tcol-btn active" style="background:#fff;color:#000;">⬜ Safed</button>
+      <button onclick="setTextColor('#FFFF00',this)" class="tcol-btn" style="background:#FFFF00;color:#000;">🟡 Peela</button>
+      <button onclick="setTextColor('#CC0000',this)" class="tcol-btn" style="background:#CC0000;color:#fff;">🔴 Laal</button>
+      <button onclick="setTextColor('#D4A520',this)" class="tcol-btn" style="background:#D4A520;color:#000;">✨ Sona</button>
+      <button onclick="setTextColor('#4CAF50',this)" class="tcol-btn" style="background:#4CAF50;color:#fff;">🟢 Hara</button>
+      <button onclick="setTextColor('#111111',this)" class="tcol-btn" style="background:#333;color:#fff;border:1px solid #555;">⚫ Kala</button>
+    </div>
+
+    <label style="margin-top:10px;">Bar Background</label>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button onclick="setBarBg('solid',this)"        class="bg-btn active">🟥 Solid</button>
+      <button onclick="setBarBg('transparent',this)"  class="bg-btn">🔲 Transparent</button>
+      <button onclick="setBarBg('gradient',this)"     class="bg-btn">🌈 Gradient</button>
+    </div>
+    <p class="hint" style="margin-top:6px;">Transparent = sirf text dikhega, koi bar background nahi</p>
   </div>
 
   <!-- Step 3: Overlay settings -->
@@ -292,6 +342,9 @@ let recordedChunks = [];
 let isRecording  = false;
 let tickerX      = 0;
 let overlayState = { logo:true, bar:true, strip:true };
+let textColor    = '#ffffff';
+let textAlign    = 'left';
+let textBg       = 'solid';
 let barColor     = '#CC0000';
 let videoDuration = 0;
 let blobUrl      = null;
@@ -421,51 +474,70 @@ function drawOverlay(ctx, W, H) {
 
   // Breaking bar (bottom)
   if (overlayState.bar) {
-    const barH  = 36*scale;
-    const barY  = H - barH;
+    const userSize = parseInt(document.getElementById('textSize').value) || 11;
+    const fontSize = userSize * scale;
+    const barH     = Math.max(30, userSize * 3.2) * scale;
+    const barY     = H - barH;
     const headline = document.getElementById('headlineText').value || 'ब्रेकिंग न्यूज़';
     const source   = document.getElementById('sourceText').value   || 'BBN NEWS';
 
     // Bar background
-    ctx.fillStyle = barColor;
-    ctx.fillRect(0, barY, W, barH);
+    if (textBg === 'solid') {
+      ctx.fillStyle = barColor;
+      ctx.fillRect(0, barY, W, barH);
+    } else if (textBg === 'gradient') {
+      const gBar = ctx.createLinearGradient(0, barY, W, barY + barH);
+      gBar.addColorStop(0, barColor);
+      gBar.addColorStop(1, 'rgba(0,0,0,0.9)');
+      ctx.fillStyle = gBar;
+      ctx.fillRect(0, barY, W, barH);
+    }
+    // transparent = no background drawn
 
-    // "LIVE" label pill
-    const pillW = 46*scale;
-    ctx.fillStyle = '#8B0000';
-    ctx.fillRect(0, barY, pillW, barH);
+    // LIVE pill — only for solid/gradient
+    let pillW = 0;
+    if (textBg !== 'transparent') {
+      pillW = 46*scale;
+      ctx.fillStyle = '#8B0000';
+      ctx.fillRect(0, barY, pillW, barH);
+      ctx.save();
+      ctx.font = `700 ${9*scale}px 'Trebuchet MS', sans-serif`;
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('LIVE', pillW/2, barY + barH/2);
+      ctx.restore();
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.fillRect(pillW, barY+4*scale, 1*scale, barH-8*scale);
+    }
 
+    // Headline text with align support
     ctx.save();
-    ctx.font = `700 ${9*scale}px 'Trebuchet MS', sans-serif`;
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('LIVE', pillW/2, barY + barH/2);
-    ctx.restore();
-
-    // Divider
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.fillRect(pillW, barY+4*scale, 1*scale, barH-8*scale);
-
-    // Scrolling headline text — clip to bar area
-    ctx.save();
-    ctx.rect(pillW+4*scale, barY, W - pillW - 4*scale, barH);
+    ctx.beginPath();
+    ctx.rect(pillW + 4*scale, barY, W - pillW - 8*scale, barH);
     ctx.clip();
-    ctx.font = `700 ${11*scale}px 'Noto Sans Devanagari', sans-serif`;
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'left';
+    ctx.font = `700 ${fontSize}px 'Noto Sans Devanagari', sans-serif`;
+    ctx.fillStyle = textColor;
     ctx.textBaseline = 'middle';
 
-    // Measure text width to loop it
-    const txtW = ctx.measureText(headline).width;
-    const startX = pillW + 8*scale;
-    const drawX  = startX + (tickerX % (txtW + W));
-    // Draw twice for seamless loop
-    ctx.fillText(headline, drawX, barY + barH/2);
-    ctx.fillText(headline, drawX + txtW + 80*scale, barY + barH/2);
+    if (textAlign === 'center') {
+      ctx.textAlign = 'center';
+      ctx.fillText(headline, (pillW + W)/2, barY + barH/2);
+    } else if (textAlign === 'right') {
+      ctx.textAlign = 'right';
+      ctx.fillText(headline, W - 8*scale, barY + barH/2);
+    } else {
+      // left — scrolling ticker
+      ctx.textAlign = 'left';
+      const txtW  = ctx.measureText(headline).width;
+      const baseX = pillW + 8*scale;
+      const drawX = baseX + (tickerX % (txtW + W));
+      ctx.fillText(headline, drawX, barY + barH/2);
+      ctx.fillText(headline, drawX + txtW + 80*scale, barY + barH/2);
+    }
     ctx.restore();
 
-    // Source tag (right side, above bar)
+    // Source above bar
     ctx.save();
     ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
@@ -739,6 +811,26 @@ async function convertToMp4() {
 
   btn.style.opacity = '';
   btn.style.pointerEvents = '';
+}
+
+function updateTextStyle() {
+  const sz = document.getElementById('textSize').value;
+  document.getElementById('textSizeVal').textContent = sz + 'px';
+}
+function setTextAlign(val, el) {
+  textAlign = val;
+  document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setTextColor(val, el) {
+  textColor = val;
+  document.querySelectorAll('.tcol-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setBarBg(val, el) {
+  textBg = val;
+  document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
 }
 
 function showToast(msg) {
