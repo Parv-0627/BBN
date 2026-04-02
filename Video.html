@@ -1,967 +1,1491 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BBN Studio — Pro Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background:#0f0f0f;
-    font-family:'Noto Sans Devanagari', sans-serif;
-    color:#eee; min-height:100vh; padding:8px;
-  }
-  .container { max-width:420px; margin:0 auto; padding-bottom:20px; }
+:root {
+  --bg-deep:    #0c0c0e;
+  --bg-base:    #111114;
+  --bg-panel:   #16161a;
+  --bg-card:    #1c1c21;
+  --bg-hover:   #22222a;
+  --bg-active:  #28282f;
+  --border:     #2a2a35;
+  --border-hi:  #3a3a48;
+  --accent:     #e8a020;
+  --accent2:    #cc2200;
+  --accent3:    #4caf50;
+  --txt-hi:     #f0f0f5;
+  --txt-md:     #9090a0;
+  --txt-lo:     #55556a;
+  --red:        #cc2200;
+  --green:      #3a9c3a;
+  --gold:       #e8a020;
+  --panel-hdr:  #13131a;
+}
 
-  .logo { text-align:center; padding:10px 0 14px; }
-  .logo span {
-    font-family:Georgia,serif; font-size:28px; font-weight:700;
-    background:linear-gradient(to bottom,#F5D77A,#D4A520,#8B6508);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text; letter-spacing:2px; padding-left:2px;
-  }
-  .logo p { font-size:12px; color:#555; letter-spacing:2px; margin-top:4px; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-  .section {
-    background:#1a1a1a; border:1px solid #2a2a2a;
-    border-radius:10px; padding:12px; margin-bottom:8px;
-  }
-  .section-title {
-    font-size:12px; color:#D4A520; letter-spacing:1px;
-    text-transform:uppercase; margin-bottom:10px; font-weight:700;
-  }
-  .step-badge {
-    display:inline-block; background:#CC0000; color:#fff;
-    font-size:11px; font-weight:700; border-radius:50%;
-    width:20px; height:20px; text-align:center; line-height:20px; margin-right:6px;
-  }
-  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:10px; }
-  label:first-of-type { margin-top:0; }
-  input[type=text], textarea {
-    width:100%; background:#111; border:1px solid #333; border-radius:6px;
-    color:#fff; font-size:13px; font-family:'Noto Sans Devanagari',sans-serif;
-    padding:8px 10px; outline:none; transition:border 0.2s;
-  }
-  input[type=text]:focus, textarea:focus { border-color:#D4A520; }
-  textarea { resize:vertical; min-height:50px; line-height:1.5; }
+body {
+  background: var(--bg-deep);
+  font-family: 'Barlow Condensed', 'Noto Sans Devanagari', sans-serif;
+  color: var(--txt-hi);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* ── Template grid ── */
-  .tpl-grid {
-    display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:8px;
-  }
-  .tpl-btn {
-    background:#111; border:1px solid #333; border-radius:8px;
-    padding:10px 6px; cursor:pointer; text-align:center;
-    transition:all 0.2s; display:flex; flex-direction:column;
-    align-items:center; gap:5px;
-  }
-  .tpl-btn:hover { border-color:#888; }
-  .tpl-btn.active { border-color:#D4A520; background:#1a1500; }
-  .tpl-icon { font-size:22px; }
-  .tpl-name { font-size:10px; color:#888; font-family:sans-serif; line-height:1.4; }
-  .tpl-btn.active .tpl-name { color:#D4A520; }
+/* ═══════════════ TOP BAR ═══════════════ */
+.topbar {
+  height: 46px;
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-logo {
+  font-family: 'Barlow Condensed', serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #F5D77A, #D4A520, #8B6508);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding-right: 14px;
+  border-right: 1px solid var(--border);
+  margin-right: 12px;
+  white-space: nowrap;
+}
+.topbar-sub {
+  font-size: 10px;
+  color: var(--txt-lo);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-right: 1px solid var(--border);
+  padding-right: 12px;
+  margin-right: 12px;
+}
+.topbar-tabs {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+.tab-btn {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: var(--txt-lo);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tab-btn:hover  { color: var(--txt-md); background: var(--bg-hover); }
+.tab-btn.active { color: var(--accent); background: rgba(232,160,32,0.08); }
 
-  /* Template mini-preview diagram */
-  .tpl-diagram {
-    width:56px; height:40px; border-radius:4px;
-    overflow:hidden; border:1px solid #333; flex-shrink:0;
-    display:flex; flex-direction:column;
-  }
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--txt-lo);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--txt-lo);
+  transition: background 0.3s;
+}
+.status-dot.ready  { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+.status-dot.rec    { background: var(--red); box-shadow: 0 0 8px var(--red); animation: pulse 1s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* Upload area */
-  .upload-area {
-    border:2px dashed #333; border-radius:10px;
-    padding:20px; text-align:center; cursor:pointer;
-    transition:border-color 0.2s; position:relative;
-  }
-  .upload-area:hover { border-color:#D4A520; }
-  .upload-area input[type=file] {
-    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
-  }
-  .upload-icon { font-size:32px; margin-bottom:8px; }
-  .upload-text { font-size:13px; color:#666; }
-  .upload-text b { color:#D4A520; }
-  .vid-info { font-size:11px; color:#555; margin-top:6px; font-family:monospace; text-align:center; }
+/* ═══════════════ MAIN LAYOUT ═══════════════ */
+.workspace {
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 8px 8px 24px;
+  gap: 6px;
+}
 
-  /* Preview canvas */
-  .preview-wrap {
-    position:relative; margin-top:10px;
-    border-radius:8px; overflow:hidden;
-    background:#000; display:none;
-  }
-  #previewCanvas { width:100%; display:block; }
+/* ═══════════════ PREVIEW MONITOR ═══════════════ */
+.monitor-wrap {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.monitor-hdr {
+  height: 32px;
+  background: var(--panel-hdr);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+}
+.monitor-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--txt-lo);
+  text-transform: uppercase;
+  flex: 1;
+}
+.monitor-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--txt-lo);
+}
+.monitor-body {
+  background: #000;
+  position: relative;
+  aspect-ratio: 9/5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.monitor-canvas-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#previewCanvas { max-width:100%; max-height:100%; display:block; }
+.monitor-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--txt-lo);
+}
+.monitor-empty-icon {
+  width: 52px; height: 52px;
+  border: 2px solid var(--border-hi);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.monitor-empty p { font-size: 11px; letter-spacing: 1px; text-align:center; }
+.monitor-timecode {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-shadow: 0 1px 4px #000;
+  letter-spacing: 1px;
+}
 
-  /* Overlay toggles */
-  .overlay-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
-  .overlay-row label { margin:0; flex:1; }
-  .toggle-btn {
-    width:42px; height:24px; background:#333; border-radius:12px;
-    position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; border:none;
-  }
-  .toggle-btn::after {
-    content:''; position:absolute; top:3px; left:3px;
-    width:18px; height:18px; background:#666; border-radius:50%; transition:all 0.2s;
-  }
-  .toggle-btn.on { background:#D4A520; }
-  .toggle-btn.on::after { left:21px; background:#fff; }
+/* ═══════════════ TRANSPORT BAR ═══════════════ */
+.transport {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prog-track {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-active);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--accent));
+  width: 0%;
+  transition: width 0.15s;
+  border-radius: 2px;
+}
+.transport-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--txt-md);
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+}
+.rec-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--border-hi);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-size: 0;
+}
+.rec-btn::after {
+  content: '';
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.rec-btn:hover { border-color: var(--red); }
+.rec-btn.armed { border-color: var(--red); background: rgba(204,34,0,0.12); animation: pulse 1s ease infinite; }
+.rec-btn.armed::after { box-shadow: 0 0 8px var(--red); }
+.rec-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  /* Color swatches */
-  .swatch-row { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  .swatch {
-    width:28px; height:28px; border-radius:50%; cursor:pointer;
-    border:2px solid transparent; transition:border 0.2s; flex-shrink:0;
-  }
-  .swatch.active { border-color:#fff; }
+.webm-btn, .mp4-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  border: none;
+}
+.webm-btn { background: rgba(232,160,32,0.15); color: var(--accent); border: 1px solid rgba(232,160,32,0.3); }
+.mp4-btn  { background: rgba(76,175,80,0.15);  color: var(--accent3); border: 1px solid rgba(76,175,80,0.3); }
+.webm-btn:hover { background: rgba(232,160,32,0.25); }
+.mp4-btn:hover  { background: rgba(76,175,80,0.25); }
+.webm-btn.show, .mp4-btn.show { display: flex; }
 
-  /* Text style buttons */
-  .align-btn, .bg-btn {
-    flex:1; padding:7px 4px; border-radius:6px; border:1px solid #333;
-    background:#161616; font-size:11px; cursor:pointer;
-    font-family:'Noto Sans Devanagari',sans-serif; color:#888; transition:all 0.15s;
-  }
-  .align-btn.active, .bg-btn.active { border-color:#D4A520; color:#D4A520; background:#1a1500; }
-  .tcol-btn {
-    padding:6px 10px; border-radius:6px; border:1px solid #333;
-    font-size:11px; cursor:pointer; font-weight:700; transition:all 0.15s;
-  }
-  .tcol-btn.active { outline:2px solid #fff; outline-offset:2px; }
+/* ═══════════════ PANEL SYSTEM ═══════════════ */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.panel-hdr {
+  height: 36px;
+  background: var(--panel-hdr);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  user-select: none;
+  gap: 8px;
+  transition: background 0.15s;
+}
+.panel-hdr:hover { background: var(--bg-hover); }
+.panel-icon {
+  width: 18px; height: 18px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--txt-md);
+  flex: 1;
+}
+.panel-hdr.open .panel-title { color: var(--txt-hi); }
+.panel-chevron {
+  font-size: 9px;
+  color: var(--txt-lo);
+  transition: transform 0.2s;
+}
+.panel-hdr.open .panel-chevron { transform: rotate(180deg); }
+.panel-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.badge-red  { background: rgba(204,34,0,0.2); color: var(--red); }
+.badge-gold { background: rgba(232,160,32,0.2); color: var(--accent); }
+.badge-green{ background: rgba(76,175,80,0.2); color: var(--accent3); }
 
-  /* Progress */
-  .prog-wrap { background:#222; border-radius:6px; height:8px; overflow:hidden; margin-top:8px; display:none; }
-  .prog-bar { height:100%; background:linear-gradient(90deg,#CC0000,#D4A520); width:0%; transition:width 0.1s; border-radius:6px; }
-  .prog-label { font-size:11px; color:#888; margin-top:4px; text-align:center; display:none; }
+.panel-body { display: none; padding: 12px; }
+.panel-body.open { display: block; }
 
-  /* Buttons */
-  .btn-record {
-    width:100%; background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
-    border:1px solid #4CAF50; border-radius:8px;
-    color:#4CAF50; font-size:14px; font-weight:700;
-    font-family:'Noto Sans Devanagari',sans-serif;
-    padding:12px; cursor:pointer; margin-top:8px;
-    display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;
-  }
-  .btn-record:hover { background:#1f3f1f; }
-  .btn-record:disabled { opacity:0.4; pointer-events:none; }
-  .btn-record.recording { background:linear-gradient(135deg,#3a1a1a,#2a0f0f); border-color:#CC0000; color:#CC0000; }
+/* ═══════════════ UPLOAD ZONE ═══════════════ */
+.upload-zone {
+  border: 1.5px dashed var(--border-hi);
+  border-radius: 6px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  background: var(--bg-deep);
+}
+.upload-zone:hover { border-color: var(--accent); background: rgba(232,160,32,0.04); }
+.upload-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-zone-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+  filter: grayscale(1);
+  transition: filter 0.2s;
+}
+.upload-zone:hover .upload-zone-icon { filter: none; }
+.upload-zone-text { font-size: 12px; color: var(--txt-lo); }
+.upload-zone-text b { color: var(--accent); font-weight: 700; }
 
-  .btn-download {
-    width:100%; background:linear-gradient(135deg,#CC0000,#990000);
-    border:none; border-radius:8px; color:#fff;
-    font-size:14px; font-weight:900;
-    font-family:'Noto Sans Devanagari',sans-serif;
-    padding:12px; cursor:pointer; margin-top:8px;
-    display:none; align-items:center; justify-content:center; gap:8px; letter-spacing:0.5px;
-  }
-  .btn-download.show { display:flex; }
+.vid-meta {
+  margin-top: 8px;
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.vid-meta.show { display: flex; }
+.vid-meta-icon { font-size: 18px; }
+.vid-meta-info { flex: 1; }
+.vid-meta-name { font-size: 12px; font-weight: 700; color: var(--txt-hi); }
+.vid-meta-detail { font-size: 10px; color: var(--txt-lo); font-family: 'JetBrains Mono', monospace; margin-top:2px; }
+.vid-meta-audio {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.has-audio  { background: rgba(76,175,80,0.2); color: var(--accent3); }
+.no-audio   { background: rgba(100,100,100,0.2); color: var(--txt-lo); }
 
-  .btn-back {
-    width:100%; background:#1a1a1a; color:#D4A520;
-    border:1px solid #D4A520; border-radius:8px;
-    font-size:14px; font-family:'Noto Sans Devanagari',sans-serif;
-    padding:12px; cursor:pointer; margin-top:8px; letter-spacing:1px;
-  }
+/* ═══════════════ TEMPLATE SELECTOR ═══════════════ */
+.tpl-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.tpl-card {
+  background: var(--bg-deep);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.tpl-card:hover { border-color: var(--border-hi); background: var(--bg-hover); }
+.tpl-card.active { border-color: var(--accent); background: rgba(232,160,32,0.06); }
+.tpl-card-name {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--txt-lo);
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.tpl-card.active .tpl-card-name { color: var(--accent); }
 
-  .rec-dot { width:10px; height:10px; background:#CC0000; border-radius:50%; animation:blink 1s ease infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+/* ═══════════════ CONTROL ROWS ═══════════════ */
+.ctrl-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--txt-lo);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctrl-label:first-child { margin-top: 0; }
+.ctrl-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
-  .spinner { width:14px; height:14px; border:2px solid #4CAF5044; border-top-color:#4CAF50; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
-  @keyframes spin { to { transform:rotate(360deg); } }
+/* Sliders */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.slider-name {
+  font-size: 11px;
+  color: var(--txt-md);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+.slider-track {
+  flex: 1;
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+.slider-track input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--bg-active);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.slider-track input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--txt-hi);
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.slider-track input[type=range]::-webkit-slider-thumb:active { transform: scale(1.3); }
+.slider-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  min-width: 36px;
+  text-align: right;
+  font-weight: 600;
+}
 
-  .toast {
-    position:fixed; bottom:20px; left:50%;
-    transform:translateX(-50%) translateY(80px);
-    background:#D4A520; color:#000; padding:10px 24px;
-    border-radius:8px; font-weight:700; font-size:13px;
-    transition:transform 0.3s; z-index:999; white-space:nowrap;
-  }
-  .toast.show { transform:translateX(-50%) translateY(0); }
+/* Toggle switches */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
+.toggle-lbl { font-size: 12px; color: var(--txt-md); flex: 1; }
+.toggle-sw {
+  width: 38px; height: 20px;
+  background: var(--bg-active);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle-sw::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  background: var(--txt-lo);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.toggle-sw.on { background: rgba(232,160,32,0.25); }
+.toggle-sw.on::after { left: 21px; background: var(--accent); }
 
-  .hint { font-size:11px; color:#444; margin-top:6px; line-height:1.6; }
-  .badge-new {
-    display:inline-block; background:#CC0000; color:#fff;
-    font-size:9px; font-weight:700; border-radius:3px;
-    padding:1px 5px; margin-left:5px; vertical-align:middle;
-  }
+/* Segment buttons */
+.seg-group {
+  display: flex;
+  gap: 1px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px;
+  margin-top: 4px;
+}
+.seg-btn {
+  flex: 1;
+  padding: 5px 4px;
+  border: none;
+  background: transparent;
+  color: var(--txt-lo);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.seg-btn:hover { color: var(--txt-md); background: var(--bg-hover); }
+.seg-btn.active { color: var(--txt-hi); background: var(--bg-active); }
+
+/* Color swatches */
+.swatch-grid {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.sw {
+  width: 24px; height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.sw:hover { transform: scale(1.15); }
+.sw.active { border-color: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,0.3); }
+
+/* Text color buttons */
+.tcol-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.tcol {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.tcol:hover { border-color: var(--border-hi); }
+.tcol.active { border-color: rgba(255,255,255,0.5); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); }
+
+/* Textarea / input */
+.pro-input, .pro-textarea {
+  width: 100%;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--txt-hi);
+  font-size: 13px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  padding: 8px 10px;
+  outline: none;
+  transition: border 0.2s;
+  margin-top: 4px;
+}
+.pro-input:focus, .pro-textarea:focus { border-color: var(--accent); }
+.pro-textarea { resize: vertical; min-height: 50px; line-height: 1.5; }
+
+/* MP4 panel */
+.mp4-panel {
+  display: none;
+  background: var(--bg-deep);
+  border: 1px solid rgba(76,175,80,0.2);
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 6px;
+}
+.mp4-method {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--txt-md);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-align: left;
+  transition: all 0.15s;
+}
+.mp4-method:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(76,175,80,0.06); }
+
+/* Ffmpeg progress */
+.ffmpeg-bar-wrap {
+  display: none;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-top: 6px;
+}
+.ffmpeg-msg { font-size: 11px; color: var(--accent3); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+.ffmpeg-track {
+  height: 4px;
+  background: var(--bg-active);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ffmpeg-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent3), var(--accent));
+  width: 0%;
+  transition: width 0.3s;
+  border-radius: 2px;
+}
+
+/* Live ticker preview */
+.ticker-demo {
+  background: var(--red);
+  border-radius: 4px;
+  padding: 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+.ticker-demo-live {
+  background: #8B0000;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.ticker-demo-scroll {
+  padding-left: 52px;
+  display: inline-block;
+  animation: tickScroll 12s linear infinite;
+}
+@keyframes tickScroll { from{transform:translateX(100vw)} to{transform:translateX(-100%)} }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-hi);
+  color: var(--txt-hi);
+  padding: 9px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: transform 0.3s;
+  z-index: 999;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.gold  { border-color: var(--accent); color: var(--accent); }
+.toast.green { border-color: var(--accent3); color: var(--accent3); }
+.toast.red   { border-color: var(--red); color: #ff6655; }
+
+/* Spinner */
+.spin { animation: spinAnim 0.7s linear infinite; display: inline-block; }
+@keyframes spinAnim { to { transform: rotate(360deg); } }
+
+/* Rec indicator */
+.rec-blink { animation: recBlink 1s ease infinite; }
+@keyframes recBlink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+
+/* News extra field */
+#newsBodyWrap { display: none; }
+
+/* Section divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
 </style>
 </head>
 <body>
-<div class="container">
 
-  <div class="logo">
-    <span>BBN</span>
-    <p>VIDEO EDITOR <span class="badge-new">NEW</span></p>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">BBN</div>
+  <div class="topbar-sub">Studio Pro</div>
+  <div class="topbar-tabs">
+    <button class="tab-btn active">Edit</button>
+    <button class="tab-btn" onclick="showToast('Coming soon...','gold')">Export</button>
   </div>
-
-  <!-- Step 1: Template -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">1</span> Template Chuno</div>
-    <div class="tpl-grid">
-
-      <!-- T1: Classic -->
-      <div class="tpl-btn active" id="vt-classic" onclick="selectVTemplate('classic')">
-        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
-          <rect width="60" height="42" fill="#111"/>
-          <rect y="0" width="60" height="28" fill="#1a4a6a" rx="0"/>
-          <circle cx="50" cy="6" r="5" fill="none" stroke="#D4A520" stroke-width="1"/>
-          <text x="50" y="8" text-anchor="middle" font-size="4" fill="#D4A520" font-weight="bold">BBN</text>
-          <rect y="29" width="60" height="8" fill="#CC0000" rx="0"/>
-          <rect y="29" width="14" height="8" fill="#8B0000"/>
-          <text x="7" y="34.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
-          <text x="34" y="34.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker text...</text>
-          <rect y="37" width="60" height="5" fill="#0a0a0a"/>
-        </svg>
-        <div class="tpl-name">🎬 Classic<br>Video + Ticker</div>
-      </div>
-
-      <!-- T2: News -->
-      <div class="tpl-btn" id="vt-news" onclick="selectVTemplate('news')">
-        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
-          <rect width="60" height="42" fill="#111"/>
-          <rect y="0" width="60" height="22" fill="#1a4a6a"/>
-          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
-          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
-          <rect y="22" width="60" height="12" fill="#fff"/>
-          <rect y="22" width="60" height="1.5" fill="#CC0000"/>
-          <text x="30" y="30" text-anchor="middle" font-size="4" fill="#111" font-weight="bold">खबर का टेक्स्ट</text>
-          <rect y="34" width="60" height="8" fill="#CC0000"/>
-          <rect y="34" width="14" height="8" fill="#8B0000"/>
-          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
-          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
-        </svg>
-        <div class="tpl-name">📰 News<br>Video+Text+Ticker</div>
-      </div>
-
-      <!-- T3: Breaking -->
-      <div class="tpl-btn" id="vt-breaking" onclick="selectVTemplate('breaking')">
-        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
-          <rect width="60" height="42" fill="#111"/>
-          <rect y="0" width="60" height="42" fill="#1a3a5a"/>
-          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
-          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
-          <rect y="0" width="60" height="1.5" fill="#CC0000"/>
-          <rect y="22" width="60" height="12" fill="rgba(0,0,0,0.75)"/>
-          <rect y="22" width="10" height="5" fill="#CC0000" rx="1"/>
-          <text x="5" y="25.5" text-anchor="middle" font-size="3" fill="#fff" font-weight="bold">LIVE</text>
-          <text x="30" y="30" text-anchor="middle" font-size="4.5" fill="#fff" font-weight="bold">ब्रेकिंग...</text>
-          <rect y="34" width="60" height="8" fill="#CC0000"/>
-          <rect y="34" width="14" height="8" fill="#8B0000"/>
-          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
-          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
-        </svg>
-        <div class="tpl-name">⚡ Breaking<br>Overlay+Ticker</div>
-      </div>
-
-      <!-- T4: Split -->
-      <div class="tpl-btn" id="vt-split" onclick="selectVTemplate('split')">
-        <svg width="60" height="42" viewBox="0 0 60 42" style="border-radius:3px;border:1px solid #333;">
-          <rect width="60" height="42" fill="#111"/>
-          <rect y="0" width="60" height="34" fill="#1a4a6a"/>
-          <circle cx="50" cy="5" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
-          <text x="50" y="7" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
-          <rect y="0" width="60" height="1.5" fill="#CC0000"/>
-          <rect x="0" y="24" width="60" height="10" fill="rgba(0,0,0,0.82)"/>
-          <rect x="0" y="24" width="4" height="10" fill="#CC0000"/>
-          <text x="32" y="31" text-anchor="middle" font-size="3.8" fill="#fff" font-weight="bold">हेडलाइन</text>
-          <rect y="34" width="60" height="8" fill="#CC0000"/>
-          <rect y="34" width="14" height="8" fill="#8B0000"/>
-          <text x="7" y="39.5" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
-          <text x="36" y="39.5" text-anchor="middle" font-size="3.5" fill="#fff">ticker...</text>
-        </svg>
-        <div class="tpl-name">🗞 Headline<br>Banner+Ticker</div>
-      </div>
-
-    </div>
-
-    <!-- News template extra fields -->
-    <div id="newsTextOptions" style="display:none;margin-top:10px;">
-      <label>News Text (neeche white area mein)</label>
-      <textarea id="newsBodyText" rows="2" placeholder="Jaise: Congress ne diya bada bayan..." oninput="refreshOverlay()"></textarea>
-    </div>
+  <div class="topbar-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusTxt">STANDBY</span>
   </div>
-
-  <!-- Step 2: Video -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">2</span> Video Choose Karo</div>
-    <div class="upload-area" id="uploadArea">
-      <input type="file" id="videoFile" accept="video/*" onchange="loadVideo(this)"/>
-      <div class="upload-icon">🎬</div>
-      <div class="upload-text">Tap karke <b>video select karo</b><br>MP4, MOV, AVI — koi bhi chalega</div>
-    </div>
-    <div class="vid-info" id="vidInfo"></div>
-  </div>
-
-  <!-- Step 3: Text -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">3</span> Ticker / Headline Text</div>
-    <label>Scrolling ticker text</label>
-    <textarea id="headlineText" rows="2" placeholder="Jaise: मोदी सरकार का बड़ा फैसला..." oninput="refreshOverlay()"></textarea>
-    <label>Source / Channel</label>
-    <input type="text" id="sourceText" value="BBN NEWS" oninput="refreshOverlay()"/>
-  </div>
-
-  <!-- Step 4: Text Style -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge" style="background:#D4A520;color:#000;">4</span> Text Style</div>
-
-    <label>Font Size (Ticker)</label>
-    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-      <input type="range" id="textSize" min="8" max="22" value="11" oninput="updateTextStyle()" style="flex:1;"/>
-      <span id="textSizeVal" style="color:#D4A520;font-size:13px;min-width:32px;text-align:right;">11px</span>
-    </div>
-
-    <label style="margin-top:10px;">Text Align</label>
-    <div style="display:flex;gap:6px;margin-top:4px;">
-      <button onclick="setTextAlign('left',this)"   class="align-btn active">⬅ Left</button>
-      <button onclick="setTextAlign('center',this)" class="align-btn">↔ Center</button>
-      <button onclick="setTextAlign('right',this)"  class="align-btn">➡ Right</button>
-    </div>
-
-    <label style="margin-top:10px;">Text Colour</label>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-      <button onclick="setTextColor('#ffffff',this)" class="tcol-btn active" style="background:#fff;color:#000;">⬜ Safed</button>
-      <button onclick="setTextColor('#FFFF00',this)" class="tcol-btn" style="background:#FFFF00;color:#000;">🟡 Peela</button>
-      <button onclick="setTextColor('#CC0000',this)" class="tcol-btn" style="background:#CC0000;color:#fff;">🔴 Laal</button>
-      <button onclick="setTextColor('#D4A520',this)" class="tcol-btn" style="background:#D4A520;color:#000;">✨ Sona</button>
-      <button onclick="setTextColor('#4CAF50',this)" class="tcol-btn" style="background:#4CAF50;color:#fff;">🟢 Hara</button>
-      <button onclick="setTextColor('#111111',this)" class="tcol-btn" style="background:#333;color:#fff;border:1px solid #555;">⚫ Kala</button>
-    </div>
-
-    <label style="margin-top:10px;">Ticker Bar Background</label>
-    <div style="display:flex;gap:6px;margin-top:4px;">
-      <button onclick="setBarBg('solid',this)"        class="bg-btn active">🟥 Solid</button>
-      <button onclick="setBarBg('transparent',this)"  class="bg-btn">🔲 Transparent</button>
-      <button onclick="setBarBg('gradient',this)"     class="bg-btn">🌈 Gradient</button>
-    </div>
-
-    <label style="margin-top:10px;">Ticker Bar Colour</label>
-    <div class="swatch-row">
-      <div class="swatch active" style="background:#CC0000;" onclick="setBarColor('#CC0000',this)"></div>
-      <div class="swatch" style="background:#1a237e;" onclick="setBarColor('#1a237e',this)"></div>
-      <div class="swatch" style="background:#1b5e20;" onclick="setBarColor('#1b5e20',this)"></div>
-      <div class="swatch" style="background:#212121;" onclick="setBarColor('#212121',this)"></div>
-      <div class="swatch" style="background:#D4A520;" onclick="setBarColor('#D4A520',this)"></div>
-      <div class="swatch" style="background:#4a148c;" onclick="setBarColor('#4a148c',this)"></div>
-    </div>
-  </div>
-
-  <!-- Step 5: Overlay toggles -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">5</span> Overlay On/Off</div>
-    <div class="overlay-row">
-      <label>BBN Logo (upar right)</label>
-      <button class="toggle-btn on" id="toggleLogo" onclick="toggle('logo')"></button>
-    </div>
-    <div class="overlay-row">
-      <label>Ticker bar (bilkul neeche)</label>
-      <button class="toggle-btn on" id="toggleBar" onclick="toggle('bar')"></button>
-    </div>
-    <div class="overlay-row">
-      <label>Top laal strip</label>
-      <button class="toggle-btn on" id="toggleStrip" onclick="toggle('strip')"></button>
-    </div>
-  </div>
-
-  <!-- Step 6: Preview -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">6</span> Preview</div>
-    <div class="preview-wrap" id="previewWrap">
-      <canvas id="previewCanvas"></canvas>
-    </div>
-    <p class="hint" id="previewHint">Video load hone ke baad yahan preview dikhega</p>
-  </div>
-
-  <!-- Step 7: Record & Download -->
-  <div class="section">
-    <div class="section-title"><span class="step-badge">7</span> Video Banao & Download Karo</div>
-
-    <button class="btn-record" id="recordBtn" onclick="startRecording()" disabled>
-      <span id="recIcon">⏺</span>
-      <span id="recLabel">Video Record Karo</span>
-    </button>
-
-    <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
-    <div class="prog-label" id="progLabel"></div>
-
-    <button class="btn-download" id="dlWebmBtn" onclick="downloadWebm()">
-      ⬇️ WEBM Download (Fast)
-    </button>
-    <button class="btn-download" id="dlMp4Btn" onclick="convertToMp4()" style="background:linear-gradient(135deg,#1a3a1a,#0f2a0f);border:1.5px solid #4CAF50;color:#4CAF50;margin-top:6px;">
-      🎬 MP4 Convert & Download
-    </button>
-
-    <div id="ffmpegStatus" style="display:none;margin-top:8px;background:#111;border-radius:8px;padding:10px 12px;">
-      <div style="font-size:12px;color:#4CAF50;margin-bottom:6px;" id="ffmpegMsg">⏳ ffmpeg load ho raha hai...</div>
-      <div style="background:#222;border-radius:4px;height:6px;overflow:hidden;">
-        <div id="ffmpegBar" style="height:100%;background:linear-gradient(90deg,#4CAF50,#D4A520);width:0%;transition:width 0.3s;"></div>
-      </div>
-    </div>
-
-    <div class="hint" style="margin-top:8px;">
-      💡 <b style="color:#D4A520;">WEBM</b> — turant, WhatsApp/Facebook chalti hai<br>
-      💡 <b style="color:#4CAF50;">MP4</b> — 1-2 min, sabse compatible<br>
-      ⚠️ Phone lock mat karo recording ke dauraan
-    </div>
-  </div>
-
-  <button class="btn-back" onclick="window.location='admin.html'">← Admin Panel</button>
 </div>
+
+<div class="workspace">
+
+  <!-- ── MONITOR ── -->
+  <div class="monitor-wrap">
+    <div class="monitor-hdr">
+      <div class="monitor-label">Program Monitor</div>
+      <div class="monitor-meta" id="monMeta">No Clip</div>
+    </div>
+    <div class="monitor-body">
+      <div class="monitor-canvas-wrap">
+        <canvas id="previewCanvas" style="display:none;"></canvas>
+        <div class="monitor-empty" id="monEmpty">
+          <div class="monitor-empty-icon">▶</div>
+          <p>Koi video load nahi hai<br>Neeche "Media" panel mein<br>video select karo</p>
+        </div>
+      </div>
+      <div class="monitor-timecode" id="timecode">00:00:00:00</div>
+    </div>
+  </div>
+
+  <!-- ── TRANSPORT ── -->
+  <div class="transport">
+    <button class="rec-btn" id="recordBtn" onclick="toggleRec()" disabled title="Record"></button>
+    <div class="prog-track">
+      <div class="prog-fill" id="progBar"></div>
+    </div>
+    <div class="transport-time" id="transportTime">00.0 / 00.0s</div>
+    <button class="webm-btn" id="dlWebmBtn" onclick="downloadWebm()">⬇ WEBM</button>
+    <button class="mp4-btn"  id="dlMp4Btn"  onclick="toggleMp4Panel()">🎬 MP4</button>
+  </div>
+
+  <!-- MP4 Options -->
+  <div class="mp4-panel" id="mp4Panel">
+    <button class="mp4-method" onclick="convertToMp4Fast()">⚡ FFmpeg WASM — Full Quality MP4 (Browser)</button>
+    <button class="mp4-method" onclick="convertToMp4Blob()">🔄 Direct .mp4 Rename — Phone ke liye Best</button>
+    <div style="font-size:10px;color:var(--txt-lo);margin-top:4px;line-height:1.6;">
+      💡 Phone par <b style="color:var(--accent)">Direct .mp4 Rename</b> seedha kaam karta hai, instant download
+    </div>
+  </div>
+
+  <!-- FFmpeg progress -->
+  <div class="ffmpeg-bar-wrap" id="ffmpegStatus">
+    <div class="ffmpeg-msg" id="ffmpegMsg">Processing...</div>
+    <div class="ffmpeg-track"><div class="ffmpeg-fill" id="ffmpegBar"></div></div>
+  </div>
+
+  <!-- ═════════ PANEL: MEDIA ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr open" id="ph-media" onclick="togglePanel('media')">
+      <div class="panel-icon" style="background:rgba(232,160,32,0.1);color:var(--accent);">📁</div>
+      <div class="panel-title">Media</div>
+      <span class="panel-badge badge-red">REQUIRED</span>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body open" id="pb-media">
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="videoFile" accept="video/*" onchange="loadVideo(this)"/>
+        <div class="upload-zone-icon">🎬</div>
+        <div class="upload-zone-text">Tap karke <b>video select karo</b><br>MP4 · MOV · AVI · WebM</div>
+      </div>
+      <div class="vid-meta" id="vidMeta">
+        <div class="vid-meta-icon">🎞</div>
+        <div class="vid-meta-info">
+          <div class="vid-meta-name" id="vidName">—</div>
+          <div class="vid-meta-detail" id="vidDetail">—</div>
+        </div>
+        <div class="vid-meta-audio" id="audioBadge">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ PANEL: TEMPLATE ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr open" id="ph-template" onclick="togglePanel('template')">
+      <div class="panel-icon" style="background:rgba(76,175,80,0.1);color:var(--accent3);">🎨</div>
+      <div class="panel-title">Template</div>
+      <span class="panel-badge badge-gold" id="tplBadge">CLASSIC</span>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body open" id="pb-template">
+      <div class="tpl-strip">
+        <div class="tpl-card active" id="vt-classic" onclick="selectVTemplate('classic')">
+          <svg width="58" height="38" viewBox="0 0 58 38">
+            <rect width="58" height="38" fill="#111" rx="2"/>
+            <rect width="58" height="25" fill="#1a3a5a" rx="2"/>
+            <circle cx="50" cy="6" r="4" fill="none" stroke="#D4A520" stroke-width="1"/>
+            <text x="50" y="7.5" text-anchor="middle" font-size="3.5" fill="#D4A520" font-weight="bold">BBN</text>
+            <rect y="26" width="58" height="8" fill="#CC0000"/>
+            <rect y="26" width="13" height="8" fill="#8B0000"/>
+            <text x="6.5" y="31" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">LIVE</text>
+            <text x="34" y="31" text-anchor="middle" font-size="3" fill="#fff">ticker text</text>
+          </svg>
+          <div class="tpl-card-name">Classic</div>
+        </div>
+        <div class="tpl-card" id="vt-news" onclick="selectVTemplate('news')">
+          <svg width="58" height="38" viewBox="0 0 58 38">
+            <rect width="58" height="38" fill="#111" rx="2"/>
+            <rect width="58" height="20" fill="#1a3a5a" rx="2"/>
+            <circle cx="50" cy="5" r="3.5" fill="none" stroke="#D4A520" stroke-width="0.8"/>
+            <text x="50" y="6.5" text-anchor="middle" font-size="3" fill="#D4A520" font-weight="bold">BBN</text>
+            <rect y="20" width="58" height="11" fill="#fff"/>
+            <rect y="20" width="58" height="1.5" fill="#CC0000"/>
+            <text x="29" y="27" text-anchor="middle" font-size="3.5" fill="#111" font-weight="bold">खबर टेक्स्ट</text>
+            <rect y="31" width="58" height="7" fill="#CC0000"/>
+            <rect y="31" width="13" height="7" fill="#8B0000"/>
+            <text x="6.5" y="35.5" text-anchor="middle" font-size="3.5" fill="#fff" font-weight="bold">LIVE</text>
+            <text x="34" y="35.5" text-anchor="middle" font-size="3" fill="#fff">ticker</text>
+          </svg>
+          <div class="tpl-card-name">News</div>
+        </div>
+        <div class="tpl-card" id="vt-breaking" onclick="selectVTemplate('breaking')">
+          <svg width="58" height="38" viewBox="0 0 58 38">
+            <rect width="58" height="38" fill="#111" rx="2"/>
+            <rect width="58" height="38" fill="#1a3050" rx="2"/>
+            <rect y="0" width="58" height="1.5" fill="#CC0000"/>
+            <circle cx="50" cy="5" r="3.5" fill="none" stroke="#D4A520" stroke-width="0.8"/>
+            <text x="50" y="6.5" text-anchor="middle" font-size="3" fill="#D4A520" font-weight="bold">BBN</text>
+            <rect y="21" width="58" height="10" fill="rgba(0,0,0,0.75)"/>
+            <rect y="21" width="11" height="5" fill="#CC0000" rx="1"/>
+            <text x="5.5" y="24.5" text-anchor="middle" font-size="3" fill="#fff" font-weight="bold">LIVE</text>
+            <text x="29" y="28" text-anchor="middle" font-size="4" fill="#fff" font-weight="bold">ब्रेकिंग</text>
+            <rect y="31" width="58" height="7" fill="#CC0000"/>
+            <rect y="31" width="13" height="7" fill="#8B0000"/>
+            <text x="6.5" y="35.5" text-anchor="middle" font-size="3.5" fill="#fff" font-weight="bold">LIVE</text>
+            <text x="34" y="35.5" text-anchor="middle" font-size="3" fill="#fff">ticker</text>
+          </svg>
+          <div class="tpl-card-name">Breaking</div>
+        </div>
+        <div class="tpl-card" id="vt-split" onclick="selectVTemplate('split')">
+          <svg width="58" height="38" viewBox="0 0 58 38">
+            <rect width="58" height="38" fill="#111" rx="2"/>
+            <rect width="58" height="38" fill="#1a3a5a" rx="2"/>
+            <rect y="0" width="58" height="1.5" fill="#CC0000"/>
+            <circle cx="50" cy="5" r="3.5" fill="none" stroke="#D4A520" stroke-width="0.8"/>
+            <text x="50" y="6.5" text-anchor="middle" font-size="3" fill="#D4A520" font-weight="bold">BBN</text>
+            <rect y="23" width="58" height="8" fill="rgba(0,0,0,0.85)"/>
+            <rect y="23" width="4" height="8" fill="#CC0000"/>
+            <text x="31" y="28.5" text-anchor="middle" font-size="3.8" fill="#fff" font-weight="bold">हेडलाइन</text>
+            <rect y="31" width="58" height="7" fill="#CC0000"/>
+            <rect y="31" width="13" height="7" fill="#8B0000"/>
+            <text x="6.5" y="35.5" text-anchor="middle" font-size="3.5" fill="#fff" font-weight="bold">LIVE</text>
+            <text x="34" y="35.5" text-anchor="middle" font-size="3" fill="#fff">ticker</text>
+          </svg>
+          <div class="tpl-card-name">Headline</div>
+        </div>
+      </div>
+      <div id="newsBodyWrap" style="margin-top:10px;">
+        <div class="ctrl-label">News Body Text</div>
+        <textarea class="pro-textarea" id="newsBodyText" rows="2" placeholder="Jaise: Congress ne diya bada bayan..." oninput="refreshOverlay()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ PANEL: TEXT ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr open" id="ph-text" onclick="togglePanel('text')">
+      <div class="panel-icon" style="background:rgba(100,100,220,0.1);color:#8888ff;">T</div>
+      <div class="panel-title">Text &amp; Ticker</div>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body open" id="pb-text">
+      <div class="ctrl-label">Scrolling Ticker</div>
+      <textarea class="pro-textarea" id="headlineText" rows="2" placeholder="मोदी सरकार का बड़ा फैसला..." oninput="refreshTicker()"></textarea>
+      <div class="ticker-demo" id="tickerDemo">
+        <div class="ticker-demo-live">LIVE</div>
+        <span class="ticker-demo-scroll" id="tickerDemoTxt">टिकर यहाँ चलेगा...</span>
+      </div>
+
+      <div class="ctrl-label" style="margin-top:12px;">Channel / Source</div>
+      <input class="pro-input" type="text" id="sourceText" value="BBN NEWS" oninput="refreshOverlay()"/>
+    </div>
+  </div>
+
+  <!-- ═════════ PANEL: LAYOUT ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr" id="ph-layout" onclick="togglePanel('layout')">
+      <div class="panel-icon" style="background:rgba(232,100,20,0.1);color:#e86420;">⊞</div>
+      <div class="panel-title">Layout Controls</div>
+      <span class="panel-badge badge-gold">NEW</span>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body" id="pb-layout">
+
+      <div class="ctrl-label">Composition</div>
+      <div class="slider-row">
+        <div class="slider-name">Video Height</div>
+        <div class="slider-track">
+          <input type="range" id="videoPart" min="30" max="80" value="52" oninput="document.getElementById('vpVal').textContent=this.value+'%'">
+        </div>
+        <div class="slider-val" id="vpVal">52%</div>
+      </div>
+      <div class="slider-row">
+        <div class="slider-name">Text Area Height</div>
+        <div class="slider-track">
+          <input type="range" id="newsPart" min="15" max="45" value="30" oninput="document.getElementById('npVal').textContent=this.value+'%'">
+        </div>
+        <div class="slider-val" id="npVal">30%</div>
+      </div>
+
+      <div class="ctrl-label">Typography</div>
+      <div class="slider-row">
+        <div class="slider-name">Headline Size</div>
+        <div class="slider-track">
+          <input type="range" id="headlineSize" min="8" max="30" value="16" oninput="document.getElementById('hsVal').textContent=this.value+'px'">
+        </div>
+        <div class="slider-val" id="hsVal">16px</div>
+      </div>
+      <div class="slider-row">
+        <div class="slider-name">Ticker Font</div>
+        <div class="slider-track">
+          <input type="range" id="textSize" min="8" max="24" value="12" oninput="document.getElementById('tsVal').textContent=this.value+'px'">
+        </div>
+        <div class="slider-val" id="tsVal">12px</div>
+      </div>
+
+      <div class="ctrl-label">Ticker</div>
+      <div class="slider-row">
+        <div class="slider-name">Bar Height</div>
+        <div class="slider-track">
+          <input type="range" id="tickerHeight" min="24" max="60" value="36" oninput="document.getElementById('thVal').textContent=this.value+'px'">
+        </div>
+        <div class="slider-val" id="thVal">36px</div>
+      </div>
+      <div class="slider-row">
+        <div class="slider-name">Scroll Speed</div>
+        <div class="slider-track">
+          <input type="range" id="tickerSpeed" min="1" max="8" value="2" oninput="document.getElementById('spVal').textContent=['Slow×1','Slow×2','Normal','Fast×4','Fast×5','Turbo','Ultra','MAX'][this.value-1]">
+        </div>
+        <div class="slider-val" style="font-size:9px;min-width:50px;" id="spVal">Normal</div>
+      </div>
+
+      <div class="ctrl-label">Alignment</div>
+      <div class="seg-group">
+        <button class="seg-btn active" onclick="setTextAlign('left',this)">◀ Scroll</button>
+        <button class="seg-btn" onclick="setTextAlign('center',this)">Center</button>
+        <button class="seg-btn" onclick="setTextAlign('right',this)">Right ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ PANEL: COLOUR ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr" id="ph-colour" onclick="togglePanel('colour')">
+      <div class="panel-icon" style="background:rgba(160,80,200,0.1);color:#b060e0;">◑</div>
+      <div class="panel-title">Colour &amp; Style</div>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body" id="pb-colour">
+
+      <div class="ctrl-label">Text Colour</div>
+      <div class="tcol-row">
+        <button class="tcol active" onclick="setTextColor('#ffffff',this)" style="background:#fff;color:#111;">White</button>
+        <button class="tcol" onclick="setTextColor('#FFFF00',this)" style="background:#FFFF00;color:#111;">Yellow</button>
+        <button class="tcol" onclick="setTextColor('#CC0000',this)" style="background:#CC0000;color:#fff;">Red</button>
+        <button class="tcol" onclick="setTextColor('#D4A520',this)" style="background:#D4A520;color:#111;">Gold</button>
+        <button class="tcol" onclick="setTextColor('#4CAF50',this)" style="background:#4CAF50;color:#fff;">Green</button>
+        <button class="tcol" onclick="setTextColor('#111',this)" style="background:#333;color:#fff;">Black</button>
+      </div>
+
+      <div class="ctrl-label">Ticker Background</div>
+      <div class="seg-group">
+        <button class="seg-btn active" onclick="setBarBg('solid',this)">Solid</button>
+        <button class="seg-btn" onclick="setBarBg('transparent',this)">Clear</button>
+        <button class="seg-btn" onclick="setBarBg('gradient',this)">Gradient</button>
+      </div>
+
+      <div class="ctrl-label">Bar Colour</div>
+      <div class="swatch-grid">
+        <div class="sw active" style="background:#CC0000;" onclick="setBarColor('#CC0000',this)" title="Red"></div>
+        <div class="sw" style="background:#1a237e;" onclick="setBarColor('#1a237e',this)" title="Navy"></div>
+        <div class="sw" style="background:#1b5e20;" onclick="setBarColor('#1b5e20',this)" title="Green"></div>
+        <div class="sw" style="background:#1a1a1a;" onclick="setBarColor('#1a1a1a',this)" title="Black"></div>
+        <div class="sw" style="background:#D4A520;" onclick="setBarColor('#D4A520',this)" title="Gold"></div>
+        <div class="sw" style="background:#4a148c;" onclick="setBarColor('#4a148c',this)" title="Purple"></div>
+        <div class="sw" style="background:#e65100;" onclick="setBarColor('#e65100',this)" title="Orange"></div>
+        <div class="sw" style="background:#006064;" onclick="setBarColor('#006064',this)" title="Teal"></div>
+        <div class="sw" style="background:#880e4f;" onclick="setBarColor('#880e4f',this)" title="Pink"></div>
+        <div class="sw" style="background:#263238;" onclick="setBarColor('#263238',this)" title="Steel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════ PANEL: OVERLAY ═════════ -->
+  <div class="panel">
+    <div class="panel-hdr" id="ph-overlay" onclick="togglePanel('overlay')">
+      <div class="panel-icon" style="background:rgba(20,180,180,0.1);color:#20c0c0;">⊕</div>
+      <div class="panel-title">Overlay Elements</div>
+      <span class="panel-chevron">▼</span>
+    </div>
+    <div class="panel-body" id="pb-overlay">
+      <div class="toggle-row">
+        <div class="toggle-icon">🔵</div>
+        <div class="toggle-lbl">BBN Logo Badge</div>
+        <button class="toggle-sw on" id="toggleLogo" onclick="toggle('logo')"></button>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-icon">📊</div>
+        <div class="toggle-lbl">Ticker Bar (Bottom)</div>
+        <button class="toggle-sw on" id="toggleBar" onclick="toggle('bar')"></button>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-icon">🔴</div>
+        <div class="toggle-lbl">Top Red Strip</div>
+        <button class="toggle-sw on" id="toggleStrip" onclick="toggle('strip')"></button>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-icon">📡</div>
+        <div class="toggle-lbl">LIVE Badge</div>
+        <button class="toggle-sw on" id="toggleLive" onclick="toggle('live')"></button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /workspace -->
+
 <div class="toast" id="toast"></div>
 
+<!-- ════════════════════════════════ JAVASCRIPT ════════════════════════════════ -->
 <script>
 // ── State ──
-let videoEl        = null;
-let animFrame      = null;
-let mediaRec       = null;
-let recordedChunks = [];
-let isRecording    = false;
-let tickerX        = 0;
-let overlayState   = { logo:true, bar:true, strip:true };
-let textColor      = '#ffffff';
-let textAlign      = 'left';
-let textBg         = 'solid';
-let barColor       = '#CC0000';
-let videoDuration  = 0;
-let blobUrl        = null;
-let vTemplate      = 'classic';  // current video template
+let videoEl=null, animFrame=null, mediaRec=null;
+let recordedChunks=[], isRecording=false;
+let tickerX=0;
+let overlayState={logo:true,bar:true,strip:true,live:true};
+let textColor='#ffffff', textAlign='left', textBg='solid', barColor='#CC0000';
+let videoDuration=0, blobUrl=null, vTemplate='classic';
+let ffmpegLoaded=false, ffmpegInstance=null;
 
-// Load saved headline from admin
-window.onload = () => {
-  const saved = localStorage.getItem('bbn_news');
-  if (saved) {
-    const d = JSON.parse(saved);
-    if (d.headline) document.getElementById('headlineText').value = d.headline.replace(/<[^>]*>/g,'');
-    if (d.source)   document.getElementById('sourceText').value   = d.source;
-  }
+window.onload=()=>{
+  try {
+    const d=JSON.parse(localStorage.getItem('bbn_news')||'{}');
+    if(d.headline) document.getElementById('headlineText').value=d.headline.replace(/<[^>]*>/g,'');
+    if(d.source)   document.getElementById('sourceText').value=d.source;
+  } catch(e){}
+  refreshTicker();
 };
 
-// ── Template select ──
-function selectVTemplate(name) {
-  vTemplate = name;
-  document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('vt-' + name).classList.add('active');
-  document.getElementById('newsTextOptions').style.display = (name === 'news') ? 'block' : 'none';
+// ── Panel toggle ──
+function togglePanel(id){
+  const hdr=document.getElementById('ph-'+id);
+  const body=document.getElementById('pb-'+id);
+  const isOpen=hdr.classList.contains('open');
+  hdr.classList.toggle('open',!isOpen);
+  body.classList.toggle('open',!isOpen);
 }
+
+// ── Template select ──
+function selectVTemplate(name){
+  vTemplate=name;
+  document.querySelectorAll('.tpl-card').forEach(b=>b.classList.remove('active'));
+  document.getElementById('vt-'+name).classList.add('active');
+  document.getElementById('tplBadge').textContent=name.toUpperCase();
+  document.getElementById('newsBodyWrap').style.display=(name==='news')?'block':'none';
+}
+
+// ── Ticker preview ──
+function refreshTicker(){
+  const txt=document.getElementById('headlineText').value||'टिकर यहाँ चलेगा...';
+  document.getElementById('tickerDemoTxt').textContent=txt+'   ●   '+txt;
+  refreshOverlay();
+}
+function refreshOverlay(){}
 
 // ── Load video ──
-function loadVideo(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  videoEl = document.createElement('video');
-  videoEl.src = url;
-  videoEl.muted = true;
-  videoEl.playsInline = true;
-  videoEl.crossOrigin = 'anonymous';
-  videoEl.onloadedmetadata = () => {
-    videoDuration = videoEl.duration;
-    const w = videoEl.videoWidth, h = videoEl.videoHeight;
-    const sz = (file.size/1024/1024).toFixed(1);
-    document.getElementById('vidInfo').textContent = `${w}×${h} · ${videoDuration.toFixed(1)}s · ${sz} MB`;
-    const canvas = document.getElementById('previewCanvas');
-    canvas.width = w; canvas.height = h;
-    document.getElementById('previewWrap').style.display = 'block';
-    document.getElementById('previewHint').style.display = 'none';
-    document.getElementById('recordBtn').disabled = false;
-    videoEl.loop = true;
-    videoEl.play();
+function loadVideo(input){
+  const file=input.files[0]; if(!file) return;
+  const url=URL.createObjectURL(file);
+  videoEl=document.createElement('video');
+  videoEl.src=url; videoEl.muted=false; videoEl.volume=1;
+  videoEl.playsInline=true; videoEl.crossOrigin='anonymous';
+  videoEl.onloadedmetadata=()=>{
+    videoDuration=videoEl.duration;
+    const w=videoEl.videoWidth, h=videoEl.videoHeight;
+    const sz=(file.size/1024/1024).toFixed(1);
+    const canvas=document.getElementById('previewCanvas');
+    canvas.width=w; canvas.height=h;
+    canvas.style.display='block';
+    document.getElementById('monEmpty').style.display='none';
+    document.getElementById('monMeta').textContent=`${w}×${h}  ${videoDuration.toFixed(1)}s  ${sz}MB`;
+    document.getElementById('recordBtn').disabled=false;
+    document.getElementById('statusDot').className='status-dot ready';
+    document.getElementById('statusTxt').textContent='READY';
+    // Meta card
+    const nm=file.name.length>22?file.name.substring(0,20)+'…':file.name;
+    document.getElementById('vidName').textContent=nm;
+    document.getElementById('vidDetail').textContent=`${w}×${h} · ${videoDuration.toFixed(1)}s · ${sz} MB`;
+    document.getElementById('vidMeta').classList.add('show');
+    // Audio check
+    try {
+      const ac=new (window.AudioContext||window.webkitAudioContext)();
+      const src=ac.createMediaElementSource(videoEl);
+      src.connect(ac.destination);
+      document.getElementById('audioBadge').className='vid-meta-audio has-audio';
+      document.getElementById('audioBadge').textContent='🔊 Audio';
+    } catch(e){
+      document.getElementById('audioBadge').className='vid-meta-audio no-audio';
+      document.getElementById('audioBadge').textContent='🔇 Mute';
+    }
+    videoEl.loop=true;
+    videoEl.play().catch(()=>{videoEl.muted=true;videoEl.play();});
     startPreviewLoop();
-    showToast('✅ Video load ho gayi!');
+    showToast('✅ Video load ho gayi','green');
   };
-  videoEl.onerror = () => showToast('❌ Video load nahi hui');
+  videoEl.onerror=()=>showToast('❌ Video load error','red');
 }
 
-// ── Preview loop ──
-function startPreviewLoop() {
-  if (animFrame) cancelAnimationFrame(animFrame);
-  const canvas = document.getElementById('previewCanvas');
-  const ctx    = canvas.getContext('2d');
-  function draw() {
-    if (!videoEl) return;
+// ── Preview ──
+function startPreviewLoop(){
+  if(animFrame) cancelAnimationFrame(animFrame);
+  const canvas=document.getElementById('previewCanvas');
+  const ctx=canvas.getContext('2d');
+  function draw(){
+    if(!videoEl) return;
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawTemplate(ctx, canvas.width, canvas.height);
-    tickerX -= 2;
-    animFrame = requestAnimationFrame(draw);
+    drawTemplate(ctx,canvas.width,canvas.height);
+    tickerX-=parseInt(document.getElementById('tickerSpeed').value)||2;
+    // Timecode
+    const t=videoEl.currentTime;
+    const h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=Math.floor(t%60), f=Math.floor((t%1)*30);
+    document.getElementById('timecode').textContent=
+      `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}:${String(f).padStart(2,'0')}`;
+    animFrame=requestAnimationFrame(draw);
   }
   draw();
 }
 
-// ── MASTER DRAW — all 4 templates ──
-function drawTemplate(ctx, W, H) {
-  const scale = W / 400;
+// ── Draw ──
+function drawTemplate(ctx,W,H){
+  const sc=W/400;
+  if(vTemplate==='classic')  drawClassic(ctx,W,H,sc);
+  else if(vTemplate==='news') drawNews(ctx,W,H,sc);
+  else if(vTemplate==='breaking') drawBreaking(ctx,W,H,sc);
+  else if(vTemplate==='split') drawSplit(ctx,W,H,sc);
+}
 
-  if (vTemplate === 'classic') {
-    drawClassic(ctx, W, H, scale);
-  } else if (vTemplate === 'news') {
-    drawNews(ctx, W, H, scale);
-  } else if (vTemplate === 'breaking') {
-    drawBreaking(ctx, W, H, scale);
-  } else if (vTemplate === 'split') {
-    drawSplit(ctx, W, H, scale);
+function getTickerH(sc){return (parseInt(document.getElementById('tickerHeight').value)||36)*sc;}
+
+function drawClassic(ctx,W,H,sc){
+  if(videoEl) ctx.drawImage(videoEl,0,0,W,H);
+  if(overlayState.strip){ctx.fillStyle='#CC0000';ctx.fillRect(0,0,W,4*sc);}
+  if(overlayState.logo) drawLogo(ctx,W,sc);
+  if(overlayState.bar)  drawTicker(ctx,W,H,sc);
+}
+
+function drawNews(ctx,W,H,sc){
+  const vpct=(parseInt(document.getElementById('videoPart').value)||52)/100;
+  const tpct=(parseInt(document.getElementById('newsPart').value)||30)/100;
+  const tH=getTickerH(sc);
+  const vH=Math.floor((H-tH)*vpct);
+  const txH=Math.floor((H-tH)*tpct);
+  if(videoEl){ctx.save();ctx.beginPath();ctx.rect(0,0,W,vH);ctx.clip();ctx.drawImage(videoEl,0,0,W,vH);ctx.restore();}
+  ctx.fillStyle='#CC0000'; ctx.fillRect(0,vH,W,3*sc);
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,vH+3*sc,W,txH);
+  const by=vH+3*sc+10*sc;
+  ctx.fillStyle='#CC0000';
+  const bt='⚡ ब्रेकिंग न्यूज़';
+  ctx.font=`700 ${9*sc}px 'Noto Sans Devanagari',sans-serif`;
+  const bW=ctx.measureText(bt).width+16*sc, bH=14*sc;
+  roundRect(ctx,W/2-bW/2,by,bW,bH,3*sc); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(bt,W/2,by+bH/2);
+  const bd=document.getElementById('newsBodyText').value||document.getElementById('headlineText').value||'खबर यहाँ';
+  const hs=parseInt(document.getElementById('headlineSize').value)||16;
+  ctx.font=`900 ${hs*sc}px 'Noto Sans Devanagari',sans-serif`;
+  ctx.fillStyle='#111'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  wrapText(ctx,bd,W/2,by+bH+(txH-bH-16*sc)/2+6*sc,W-24*sc,hs*sc*1.4);
+  ctx.font=`700 ${7*sc}px 'Trebuchet MS',sans-serif`;
+  ctx.fillStyle='#aaa'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+  ctx.fillText((document.getElementById('sourceText').value||'BBN NEWS').toUpperCase(),W/2,vH+3*sc+txH-4*sc);
+  if(overlayState.bar) drawTicker(ctx,W,H,sc);
+  if(overlayState.strip){ctx.fillStyle='#CC0000';ctx.fillRect(0,0,W,4*sc);}
+  if(overlayState.logo) drawLogo(ctx,W,sc);
+}
+
+function drawBreaking(ctx,W,H,sc){
+  if(videoEl) ctx.drawImage(videoEl,0,0,W,H);
+  if(overlayState.strip){ctx.fillStyle='#CC0000';ctx.fillRect(0,0,W,4*sc);}
+  const tH=getTickerH(sc);
+  const oY=H*0.42, oH=H-oY-tH;
+  const g=ctx.createLinearGradient(0,oY,0,oY+oH);
+  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(0.3,'rgba(0,0,0,0.82)'); g.addColorStop(1,'rgba(0,0,0,0.92)');
+  ctx.fillStyle=g; ctx.fillRect(0,oY,W,oH);
+  const lY=oY+14*sc;
+  if(overlayState.live){
+    ctx.fillStyle='#CC0000';
+    const lt='⚡ LIVE  ब्रेकिंग न्यूज़';
+    ctx.font=`700 ${9*sc}px 'Noto Sans Devanagari',sans-serif`;
+    const lW=ctx.measureText(lt).width+14*sc;
+    roundRect(ctx,10*sc,lY,lW,14*sc,3*sc); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText(lt,17*sc,lY+7*sc);
   }
+  const ht=document.getElementById('headlineText').value||'ब्रेकिंग खबर';
+  const hs=parseInt(document.getElementById('headlineSize').value)||16;
+  ctx.font=`900 ${Math.min(hs,20)*sc}px 'Noto Sans Devanagari',sans-serif`;
+  ctx.fillStyle='#fff'; ctx.textAlign='left';
+  wrapTextLeft(ctx,ht,10*sc,lY+22*sc,W-20*sc,Math.min(hs,20)*sc*1.4);
+  if(overlayState.bar) drawTicker(ctx,W,H,sc);
+  if(overlayState.logo) drawLogo(ctx,W,sc);
 }
 
-// ── T1: Classic — full video + logo + ticker ──
-function drawClassic(ctx, W, H, scale) {
-  // Video full
-  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
-
-  // Top strip
-  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
-
-  // Logo
-  if (overlayState.logo) drawLogo(ctx, W, scale);
-
-  // Ticker bottom
-  if (overlayState.bar) drawTicker(ctx, W, H, scale);
+function drawSplit(ctx,W,H,sc){
+  if(videoEl) ctx.drawImage(videoEl,0,0,W,H);
+  if(overlayState.strip){ctx.fillStyle='#CC0000';ctx.fillRect(0,0,W,4*sc);}
+  const tH=getTickerH(sc), bH=48*sc, bY=H-tH-bH;
+  ctx.fillStyle='rgba(0,0,0,0.86)'; ctx.fillRect(0,bY,W,bH);
+  ctx.fillStyle='#CC0000'; ctx.fillRect(0,bY,5*sc,bH);
+  const src=document.getElementById('sourceText').value||'BBN NEWS';
+  ctx.font=`700 ${7.5*sc}px 'Trebuchet MS',sans-serif`;
+  ctx.fillStyle='#D4A520'; ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.fillText(src.toUpperCase(),12*sc,bY+5*sc);
+  const ht=document.getElementById('headlineText').value||'ब्रेकिंग खबर';
+  const hs=parseInt(document.getElementById('headlineSize').value)||16;
+  ctx.font=`900 ${Math.min(hs,15)*sc}px 'Noto Sans Devanagari',sans-serif`;
+  ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.textBaseline='middle';
+  wrapTextLeft(ctx,ht,12*sc,bY+bH*0.62,W-20*sc,Math.min(hs,15)*sc*1.35);
+  if(overlayState.bar) drawTicker(ctx,W,H,sc);
+  if(overlayState.logo) drawLogo(ctx,W,sc);
 }
 
-// ── T2: News — video top 55%, white text area, ticker bottom ──
-function drawNews(ctx, W, H, scale) {
-  const videoH  = Math.floor(H * 0.52);
-  const textH   = Math.floor(H * 0.30);
-  const tickerH = H - videoH - textH;
+function drawLogo(ctx,W,sc){
+  const lx=W-44*sc,ly=10*sc,lr=20*sc;
+  ctx.save(); ctx.globalAlpha=0.88;
+  ctx.fillStyle='#0a0a0a';
+  ctx.beginPath(); ctx.arc(lx+lr,ly+lr,lr,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#D4A520'; ctx.lineWidth=1.2*sc; ctx.stroke();
+  ctx.restore(); ctx.save();
+  ctx.font=`900 ${13*sc}px Georgia,serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  const g=ctx.createLinearGradient(lx+lr,ly,lx+lr,ly+lr*2);
+  g.addColorStop(0,'#F5D77A'); g.addColorStop(0.55,'#D4A520'); g.addColorStop(1,'#8B6508');
+  ctx.fillStyle=g; ctx.fillText('BBN',lx+lr,ly+lr+0.5); ctx.restore();
+}
 
-  // Video top portion
-  if (videoEl) {
-    ctx.save();
-    ctx.beginPath(); ctx.rect(0, 0, W, videoH); ctx.clip();
-    ctx.drawImage(videoEl, 0, 0, W, videoH);
-    ctx.restore();
+function drawTicker(ctx,W,H,sc){
+  const fs=parseInt(document.getElementById('textSize').value)||12;
+  const bH=getTickerH(sc), bY=H-bH;
+  const hl=document.getElementById('headlineText').value||'ब्रेकिंग न्यूज़';
+  const src=document.getElementById('sourceText').value||'BBN NEWS';
+  if(textBg==='solid'){ctx.fillStyle=barColor;ctx.fillRect(0,bY,W,bH);}
+  else if(textBg==='gradient'){
+    const g=ctx.createLinearGradient(0,bY,W,bY+bH);
+    g.addColorStop(0,barColor);g.addColorStop(1,'rgba(0,0,0,0.9)');
+    ctx.fillStyle=g;ctx.fillRect(0,bY,W,bH);
   }
-
-  // Red divider strip
-  ctx.fillStyle = '#CC0000';
-  ctx.fillRect(0, videoH, W, 3*scale);
-
-  // White news text area
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, videoH + 3*scale, W, textH);
-
-  // Breaking badge
-  const badgeY = videoH + 3*scale + 10*scale;
-  ctx.fillStyle = '#CC0000';
-  const badgeTxt = '⚡ ब्रेकिंग न्यूज़';
-  ctx.font = `700 ${9*scale}px 'Noto Sans Devanagari', sans-serif`;
-  const bW = ctx.measureText(badgeTxt).width + 16*scale;
-  const bH = 14*scale;
-  roundRect(ctx, W/2 - bW/2, badgeY, bW, bH, 3*scale);
-  ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(badgeTxt, W/2, badgeY + bH/2);
-
-  // News body text (from newsBodyText or headline)
-  const bodyTxt = (document.getElementById('newsBodyText') && document.getElementById('newsBodyText').value)
-    || document.getElementById('headlineText').value || 'खबर यहाँ आएगी';
-  const bodyFontSize = Math.min(14, Math.max(10, (W * 0.038)));
-  ctx.font = `900 ${bodyFontSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
-  ctx.fillStyle = '#111111';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  // Word wrap
-  wrapText(ctx, bodyTxt, W/2, badgeY + bH + (textH - bH - 16*scale)/2 + 6*scale, W - 24*scale, bodyFontSize*scale*1.4);
-
-  // Source
-  ctx.font = `700 ${7*scale}px 'Trebuchet MS', sans-serif`;
-  ctx.fillStyle = '#aaa';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'bottom';
-  const srcTxt = document.getElementById('sourceText').value || 'BBN NEWS';
-  ctx.fillText(srcTxt.toUpperCase(), W/2, videoH + 3*scale + textH - 4*scale);
-
-  // Ticker at bottom
-  if (overlayState.bar) drawTicker(ctx, W, H, scale);
-
-  // Top strip
-  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
-
-  // Logo
-  if (overlayState.logo) drawLogo(ctx, W, scale);
-}
-
-// ── T3: Breaking — full video, dark overlay with big headline + ticker ──
-function drawBreaking(ctx, W, H, scale) {
-  // Video full
-  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
-
-  // Top strip
-  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
-
-  // Dark overlay across middle-lower area
-  const tickerH = Math.max(30, (parseInt(document.getElementById('textSize').value)||11) * 3.2) * scale;
-  const overlayY = H * 0.42;
-  const overlayH = H - overlayY - tickerH;
-  const grad = ctx.createLinearGradient(0, overlayY, 0, overlayY + overlayH);
-  grad.addColorStop(0, 'rgba(0,0,0,0)');
-  grad.addColorStop(0.3, 'rgba(0,0,0,0.82)');
-  grad.addColorStop(1,   'rgba(0,0,0,0.92)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, overlayY, W, overlayH);
-
-  // LIVE badge
-  const liveY = overlayY + 14*scale;
-  ctx.fillStyle = '#CC0000';
-  const liveTxt = '⚡ LIVE  ब्रेकिंग न्यूज़';
-  ctx.font = `700 ${9*scale}px 'Noto Sans Devanagari', sans-serif`;
-  const lW = ctx.measureText(liveTxt).width + 14*scale;
-  roundRect(ctx, 10*scale, liveY, lW, 14*scale, 3*scale);
-  ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(liveTxt, 17*scale, liveY + 7*scale);
-
-  // Big headline
-  const hlTxt = document.getElementById('headlineText').value || 'ब्रेकिंग खबर यहाँ आएगी';
-  const hlFontSize = Math.min(20, Math.max(12, W * 0.045));
-  ctx.font = `900 ${hlFontSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'left';
-  wrapTextLeft(ctx, hlTxt, 10*scale, liveY + 22*scale, W - 20*scale, hlFontSize*scale*1.4);
-
-  // Ticker
-  if (overlayState.bar) drawTicker(ctx, W, H, scale);
-
-  // Logo
-  if (overlayState.logo) drawLogo(ctx, W, scale);
-}
-
-// ── T4: Split — full video, bottom headline banner + ticker ──
-function drawSplit(ctx, W, H, scale) {
-  // Video full
-  if (videoEl) ctx.drawImage(videoEl, 0, 0, W, H);
-
-  // Top strip
-  if (overlayState.strip) { ctx.fillStyle='#CC0000'; ctx.fillRect(0,0,W,4*scale); }
-
-  // Bottom banner area
-  const tickerH  = Math.max(30, (parseInt(document.getElementById('textSize').value)||11) * 3.2) * scale;
-  const bannerH  = 48*scale;
-  const bannerY  = H - tickerH - bannerH;
-
-  // Semi-transparent dark banner
-  ctx.fillStyle = 'rgba(0,0,0,0.86)';
-  ctx.fillRect(0, bannerY, W, bannerH);
-
-  // Red left accent bar
-  ctx.fillStyle = '#CC0000';
-  ctx.fillRect(0, bannerY, 5*scale, bannerH);
-
-  // Source label (small, top of banner)
-  const srcTxt = document.getElementById('sourceText').value || 'BBN NEWS';
-  ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
-  ctx.fillStyle = '#D4A520';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(srcTxt.toUpperCase(), 12*scale, bannerY + 5*scale);
-
-  // Headline text in banner
-  const hlTxt = document.getElementById('headlineText').value || 'ब्रेकिंग खबर यहाँ आएगी';
-  const hlSize = Math.min(15, Math.max(9, W * 0.035));
-  ctx.font = `900 ${hlSize*scale}px 'Noto Sans Devanagari', 'Mangal', sans-serif`;
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  wrapTextLeft(ctx, hlTxt, 12*scale, bannerY + bannerH * 0.62, W - 20*scale, hlSize*scale*1.35);
-
-  // Ticker at very bottom
-  if (overlayState.bar) drawTicker(ctx, W, H, scale);
-
-  // Logo
-  if (overlayState.logo) drawLogo(ctx, W, scale);
-}
-
-// ── Shared: Draw BBN Logo ──
-function drawLogo(ctx, W, scale) {
-  const lx = W - 44*scale, ly = 10*scale, lr = 20*scale;
-  ctx.save();
-  ctx.globalAlpha = 0.88;
-  ctx.fillStyle = '#0a0a0a';
-  ctx.beginPath(); ctx.arc(lx+lr, ly+lr, lr, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = '#D4A520'; ctx.lineWidth = 1.2*scale; ctx.stroke();
-  ctx.restore();
-  ctx.save();
-  ctx.font = `900 ${13*scale}px Georgia, serif`;
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const grd = ctx.createLinearGradient(lx+lr, ly, lx+lr, ly+lr*2);
-  grd.addColorStop(0,'#F5D77A'); grd.addColorStop(0.55,'#D4A520'); grd.addColorStop(1,'#8B6508');
-  ctx.fillStyle = grd;
-  ctx.fillText('BBN', lx+lr, ly+lr+0.5);
-  ctx.restore();
-}
-
-// ── Shared: Draw Ticker ──
-function drawTicker(ctx, W, H, scale) {
-  const userSize = parseInt(document.getElementById('textSize').value) || 11;
-  const fontSize = userSize * scale;
-  const barH     = Math.max(30, userSize * 3.2) * scale;
-  const barY     = H - barH;
-  const headline = document.getElementById('headlineText').value || 'ब्रेकिंग न्यूज़';
-  const source   = document.getElementById('sourceText').value   || 'BBN NEWS';
-
-  // Bar bg
-  if (textBg === 'solid') {
-    ctx.fillStyle = barColor; ctx.fillRect(0, barY, W, barH);
-  } else if (textBg === 'gradient') {
-    const gBar = ctx.createLinearGradient(0, barY, W, barY+barH);
-    gBar.addColorStop(0, barColor); gBar.addColorStop(1,'rgba(0,0,0,0.9)');
-    ctx.fillStyle = gBar; ctx.fillRect(0, barY, W, barH);
+  let pW=0;
+  if(textBg!=='transparent'&&overlayState.live){
+    pW=46*sc; ctx.fillStyle='#8B0000'; ctx.fillRect(0,bY,pW,bH);
+    ctx.save(); ctx.font=`700 ${9*sc}px 'Trebuchet MS',sans-serif`;
+    ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('LIVE',pW/2,bY+bH/2); ctx.restore();
+    ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.fillRect(pW,bY+4*sc,1*sc,bH-8*sc);
   }
-
-  // LIVE pill
-  let pillW = 0;
-  if (textBg !== 'transparent') {
-    pillW = 46*scale;
-    ctx.fillStyle = '#8B0000'; ctx.fillRect(0, barY, pillW, barH);
-    ctx.save();
-    ctx.font = `700 ${9*scale}px 'Trebuchet MS', sans-serif`;
-    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('LIVE', pillW/2, barY+barH/2);
-    ctx.restore();
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.fillRect(pillW, barY+4*scale, 1*scale, barH-8*scale);
-  }
-
-  // Ticker text
-  ctx.save();
-  ctx.beginPath(); ctx.rect(pillW+4*scale, barY, W-pillW-8*scale, barH); ctx.clip();
-  ctx.font = `700 ${fontSize}px 'Noto Sans Devanagari', sans-serif`;
-  ctx.fillStyle = textColor; ctx.textBaseline = 'middle';
-  if (textAlign === 'center') {
-    ctx.textAlign = 'center'; ctx.fillText(headline, (pillW+W)/2, barY+barH/2);
-  } else if (textAlign === 'right') {
-    ctx.textAlign = 'right'; ctx.fillText(headline, W-8*scale, barY+barH/2);
-  } else {
-    ctx.textAlign = 'left';
-    const txtW  = ctx.measureText(headline).width;
-    const baseX = pillW+8*scale;
-    const drawX = baseX + (tickerX % (txtW+W));
-    ctx.fillText(headline, drawX, barY+barH/2);
-    ctx.fillText(headline, drawX+txtW+80*scale, barY+barH/2);
+  ctx.save(); ctx.beginPath(); ctx.rect(pW+4*sc,bY,W-pW-8*sc,bH); ctx.clip();
+  ctx.font=`700 ${fs*sc}px 'Noto Sans Devanagari',sans-serif`;
+  ctx.fillStyle=textColor; ctx.textBaseline='middle';
+  if(textAlign==='center'){ctx.textAlign='center';ctx.fillText(hl,(pW+W)/2,bY+bH/2);}
+  else if(textAlign==='right'){ctx.textAlign='right';ctx.fillText(hl,W-8*sc,bY+bH/2);}
+  else {
+    ctx.textAlign='left';
+    const tW=ctx.measureText(hl).width;
+    const bx=pW+8*sc, dx=bx+(tickerX%(tW+W));
+    ctx.fillText(hl,dx,bY+bH/2);
+    ctx.fillText(hl,dx+tW+80*sc,bY+bH/2);
   }
   ctx.restore();
-
-  // Source above bar
-  ctx.save();
-  ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-  ctx.fillText(source, W-6*scale, barY-3*scale);
-  ctx.restore();
+  ctx.save(); ctx.font=`700 ${7.5*sc}px 'Trebuchet MS',sans-serif`;
+  ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='right'; ctx.textBaseline='bottom';
+  ctx.fillText(src,W-6*sc,bY-3*sc); ctx.restore();
 }
 
-// ── Helpers: text wrap ──
-function wrapText(ctx, text, x, y, maxW, lineH) {
-  const words = text.split(' ');
-  let line = '', lines = [];
-  for (let w of words) {
-    const test = line ? line+' '+w : w;
-    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
-    else line = test;
-  }
-  if (line) lines.push(line);
-  const totalH = lines.length * lineH;
-  let startY = y - totalH/2;
-  for (let l of lines) { ctx.fillText(l, x, startY + lineH/2); startY += lineH; }
+function wrapText(ctx,text,x,y,mW,lH){
+  const words=text.split(' ');let line='',lines=[];
+  for(let w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mW&&line){lines.push(line);line=w;}else line=t;}
+  if(line)lines.push(line);
+  const tot=lines.length*lH;let sY=y-tot/2;
+  for(let l of lines){ctx.fillText(l,x,sY+lH/2);sY+=lH;}
 }
-
-function wrapTextLeft(ctx, text, x, y, maxW, lineH) {
-  const words = text.split(' ');
-  let line = '', lines = [];
-  for (let w of words) {
-    const test = line ? line+' '+w : w;
-    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
-    else line = test;
-  }
-  if (line) lines.push(line);
-  for (let i=0; i<lines.length; i++) ctx.fillText(lines[i], x, y + i*lineH);
+function wrapTextLeft(ctx,text,x,y,mW,lH){
+  const words=text.split(' ');let line='',lines=[];
+  for(let w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mW&&line){lines.push(line);line=w;}else line=t;}
+  if(line)lines.push(line);
+  for(let i=0;i<lines.length;i++)ctx.fillText(lines[i],x,y+i*lH);
 }
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x+r, y);
-  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
-  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
-  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
-  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
-  ctx.closePath();
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
 }
 
 // ── Controls ──
-function toggle(which) {
-  overlayState[which] = !overlayState[which];
-  document.getElementById('toggle'+which.charAt(0).toUpperCase()+which.slice(1))
-    .classList.toggle('on', overlayState[which]);
+function toggle(w){
+  overlayState[w]=!overlayState[w];
+  document.getElementById('toggle'+w.charAt(0).toUpperCase()+w.slice(1)).classList.toggle('on',overlayState[w]);
 }
-function setBarColor(color, el) {
-  barColor = color;
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  el.classList.add('active');
-}
-function updateTextStyle() {
-  document.getElementById('textSizeVal').textContent = document.getElementById('textSize').value + 'px';
-}
-function setTextAlign(val, el) {
-  textAlign = val;
-  document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
-function setTextColor(val, el) {
-  textColor = val;
-  document.querySelectorAll('.tcol-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
-function setBarBg(val, el) {
-  textBg = val;
-  document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
-function refreshOverlay() {}
+function setBarColor(c,el){barColor=c;document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));el.classList.add('active');}
+function setTextAlign(v,el){textAlign=v;document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function setTextColor(v,el){textColor=v;document.querySelectorAll('.tcol').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function setBarBg(v,el){textBg=v;document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
 
 // ── Recording ──
-async function startRecording() {
-  if (isRecording) { stopRecording(); return; }
-  if (!videoEl) return;
-  recordedChunks = []; blobUrl = null;
+async function toggleRec(){
+  if(isRecording){stopRecording();return;}
+  if(!videoEl) return;
+  recordedChunks=[];blobUrl=null;
   document.getElementById('dlWebmBtn').classList.remove('show');
   document.getElementById('dlMp4Btn').classList.remove('show');
-  document.getElementById('ffmpegStatus').style.display = 'none';
-
-  const canvas = document.getElementById('previewCanvas');
-  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
-  videoEl.pause(); videoEl.loop = false; videoEl.muted = true; videoEl.currentTime = 0;
-  const ctx = canvas.getContext('2d');
-  tickerX = 0;
-
-  function recDraw() {
-    if (!isRecording) return;
+  document.getElementById('mp4Panel').style.display='none';
+  document.getElementById('ffmpegStatus').style.display='none';
+  const canvas=document.getElementById('previewCanvas');
+  if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;}
+  videoEl.loop=false; videoEl.currentTime=0;
+  const canvasStream=canvas.captureStream(30);
+  let finalStream=canvasStream;
+  try {
+    videoEl.muted=false; videoEl.volume=1;
+    const ac2=new (window.AudioContext||window.webkitAudioContext)();
+    const dest=ac2.createMediaStreamDestination();
+    const src=ac2.createMediaElementSource(videoEl);
+    src.connect(ac2.destination); src.connect(dest);
+    dest.stream.getAudioTracks().forEach(t=>finalStream.addTrack(t));
+  } catch(e){console.warn('Audio:',e.message);}
+  const ctx=canvas.getContext('2d'); tickerX=0;
+  function recDraw(){
+    if(!isRecording) return;
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawTemplate(ctx, canvas.width, canvas.height);
-    tickerX -= 2;
-    animFrame = requestAnimationFrame(recDraw);
+    drawTemplate(ctx,canvas.width,canvas.height);
+    tickerX-=parseInt(document.getElementById('tickerSpeed').value)||2;
+    animFrame=requestAnimationFrame(recDraw);
   }
-
-  const mimeTypes = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'];
-  const mimeType = mimeTypes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
-  const stream = canvas.captureStream(30);
-  mediaRec = new MediaRecorder(stream, { mimeType, videoBitsPerSecond:4_000_000 });
-  mediaRec.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
-  mediaRec.onstop = () => {
-    isRecording = false; cancelAnimationFrame(animFrame);
-    const blob = new Blob(recordedChunks, { type:mimeType });
-    blobUrl = URL.createObjectURL(blob);
-    document.getElementById('recIcon').textContent = '⏺';
-    document.getElementById('recLabel').textContent = 'Dobara Record Karo';
-    document.getElementById('recordBtn').classList.remove('recording');
-    document.getElementById('progWrap').style.display = 'none';
-    document.getElementById('progLabel').style.display = 'none';
+  const mt=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+  mediaRec=new MediaRecorder(finalStream,{mimeType:mt,videoBitsPerSecond:6_000_000});
+  mediaRec.ondataavailable=e=>{if(e.data.size>0)recordedChunks.push(e.data);};
+  mediaRec.onstop=()=>{
+    isRecording=false; cancelAnimationFrame(animFrame);
+    const blob=new Blob(recordedChunks,{type:mt});
+    blobUrl=URL.createObjectURL(blob);
+    document.getElementById('recordBtn').classList.remove('armed');
+    document.getElementById('progBar').style.width='100%';
+    setTimeout(()=>document.getElementById('progBar').style.width='0%',2000);
     document.getElementById('dlWebmBtn').classList.add('show');
     document.getElementById('dlMp4Btn').classList.add('show');
-    showToast('✅ Video ready! Download karo 🎉');
-    videoEl.loop = true; videoEl.play(); startPreviewLoop();
+    document.getElementById('statusDot').className='status-dot ready';
+    document.getElementById('statusTxt').textContent='READY';
+    showToast('✅ Video ready — Download karo','green');
+    videoEl.muted=false; videoEl.loop=true; videoEl.play();
+    startPreviewLoop();
   };
-
-  const progWrap = document.getElementById('progWrap');
-  const progBar  = document.getElementById('progBar');
-  const progLabel= document.getElementById('progLabel');
-  progWrap.style.display = 'block'; progLabel.style.display = 'block';
-  let progInt = setInterval(() => {
-    if(!isRecording){clearInterval(progInt);return;}
-    const pct = Math.min((videoEl.currentTime/videoDuration)*100,100);
-    progBar.style.width = pct+'%';
-    progLabel.textContent = `${videoEl.currentTime.toFixed(1)}s / ${videoDuration.toFixed(1)}s`;
+  // Progress
+  let pi=setInterval(()=>{
+    if(!isRecording){clearInterval(pi);return;}
+    const pct=Math.min((videoEl.currentTime/videoDuration)*100,100);
+    document.getElementById('progBar').style.width=pct+'%';
+    document.getElementById('transportTime').textContent=`${videoEl.currentTime.toFixed(1)} / ${videoDuration.toFixed(1)}s`;
   },200);
-
-  isRecording = true; mediaRec.start(100); videoEl.play(); recDraw();
-  document.getElementById('recIcon').innerHTML = '<span class="rec-dot"></span>';
-  document.getElementById('recLabel').textContent = 'Recording... (Roko)';
-  document.getElementById('recordBtn').classList.add('recording');
-  showToast('🔴 Recording shuru!');
-  videoEl.onended = () => { if(isRecording) stopRecording(); };
+  isRecording=true; mediaRec.start(100); videoEl.muted=false; videoEl.play(); recDraw();
+  document.getElementById('recordBtn').classList.add('armed');
+  document.getElementById('statusDot').className='status-dot rec';
+  document.getElementById('statusTxt').textContent='● REC';
+  showToast('🔴 Recording shuru — Audio bhi record ho rahi hai','red');
+  videoEl.onended=()=>{if(isRecording)stopRecording();};
 }
 
-function stopRecording() {
+function stopRecording(){
   if(!mediaRec||mediaRec.state==='inactive') return;
-  isRecording = false; mediaRec.stop(); videoEl.pause();
-  document.getElementById('recIcon').innerHTML = '<span class="spinner"></span>';
-  document.getElementById('recLabel').textContent = 'Process ho raha hai...';
-  document.getElementById('recordBtn').disabled = true;
-  setTimeout(()=>{ document.getElementById('recordBtn').disabled=false; },1500);
+  isRecording=false; mediaRec.stop(); videoEl.pause();
+  document.getElementById('recordBtn').innerHTML='';
+  document.getElementById('recordBtn').classList.remove('armed');
+  document.getElementById('statusTxt').textContent='PROCESSING…';
 }
 
 // ── Download ──
-function getFilename(ext) {
-  const h = document.getElementById('headlineText').value
-    .replace(/<[^>]*>/g,'').substring(0,20).trim()
-    .replace(/\s+/g,'_').replace(/[^\w_]/g,'') || 'bbn_video';
+function getFilename(ext){
+  const h=document.getElementById('headlineText').value.replace(/<[^>]*>/g,'').substring(0,18).trim().replace(/\s+/g,'_').replace(/[^\w_]/g,'')||'bbn_video';
   return 'BBN_'+vTemplate+'_'+h+'.'+ext;
 }
-function triggerDownload(url, filename) {
-  const a=document.createElement('a'); a.href=url; a.download=filename;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-function downloadWebm() {
-  if(!blobUrl) return showToast('⚠️ Pehle record karo!');
-  triggerDownload(blobUrl, getFilename('webm'));
-  showToast('⬇️ WEBM download shuru!');
-}
+function triggerDownload(url,fn){const a=document.createElement('a');a.href=url;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function downloadWebm(){if(!blobUrl)return showToast('⚠️ Pehle record karo','gold');triggerDownload(blobUrl,getFilename('webm'));showToast('⬇ WEBM download shuru','green');}
+function toggleMp4Panel(){if(!blobUrl)return showToast('⚠️ Pehle record karo','gold');const p=document.getElementById('mp4Panel');p.style.display=p.style.display==='none'?'block':'none';}
+function convertToMp4Blob(){if(!blobUrl)return;triggerDownload(blobUrl,getFilename('mp4'));showToast('⬇ MP4 download — Direct rename','green');document.getElementById('mp4Panel').style.display='none';}
 
-let ffmpegLoaded=false, ffmpegInstance=null;
-async function convertToMp4() {
-  if(!blobUrl) return showToast('⚠️ Pehle record karo!');
-  const statusDiv=document.getElementById('ffmpegStatus');
-  const msgEl=document.getElementById('ffmpegMsg');
-  const barEl=document.getElementById('ffmpegBar');
-  const btn=document.getElementById('dlMp4Btn');
-  statusDiv.style.display='block'; btn.style.opacity='0.5'; btn.style.pointerEvents='none';
+async function convertToMp4Fast(){
+  if(!blobUrl) return;
+  document.getElementById('mp4Panel').style.display='none';
+  const sd=document.getElementById('ffmpegStatus'),msg=document.getElementById('ffmpegMsg'),bar=document.getElementById('ffmpegBar');
+  sd.style.display='block';
   try {
-    if(!ffmpegLoaded) {
-      msgEl.textContent='⏳ ffmpeg.wasm load ho raha hai (~25MB)...'; barEl.style.width='10%';
-      const s1=document.createElement('script');
-      s1.src='https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
-      document.head.appendChild(s1);
-      await new Promise((res,rej)=>{s1.onload=res;s1.onerror=rej;});
-      const s2=document.createElement('script');
-      s2.src='https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
-      document.head.appendChild(s2);
-      await new Promise((res,rej)=>{s2.onload=res;s2.onerror=rej;});
-      barEl.style.width='30%'; msgEl.textContent='⚙️ Initialize ho raha hai...';
-      const {FFmpeg}=FFmpegWASM; ffmpegInstance=new FFmpeg();
-      ffmpegInstance.on('progress',({progress})=>{
-        barEl.style.width=Math.round(progress*70+30)+'%';
-        msgEl.textContent=`🔄 Convert: ${Math.round(progress*100)}%`;
-      });
+    if(!ffmpegLoaded){
+      msg.textContent='⏳ FFmpeg load ho raha hai (~25MB)…'; bar.style.width='8%';
+      const s1=document.createElement('script');s1.src='https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
+      document.head.appendChild(s1); await new Promise((r,j)=>{s1.onload=r;s1.onerror=()=>j(new Error('FFmpeg script fail'));});
+      bar.style.width='22%'; msg.textContent='📦 Util load…';
+      const s2=document.createElement('script');s2.src='https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
+      document.head.appendChild(s2); await new Promise((r,j)=>{s2.onload=r;s2.onerror=()=>j(new Error('Util fail'));});
+      bar.style.width='30%'; msg.textContent='⚙️ Initialize…';
+      const {FFmpeg}=window.FFmpegWASM||FFmpegWASM||{};
+      if(!FFmpeg) throw new Error('FFmpeg global nahi mila — Method 2 use karo');
+      ffmpegInstance=new FFmpeg();
+      ffmpegInstance.on('progress',({progress})=>{bar.style.width=Math.round(progress*60+35)+'%';msg.textContent=`🎬 Convert: ${Math.round(progress*100)}%`;});
       await ffmpegInstance.load({coreURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'});
-      ffmpegLoaded=true; barEl.style.width='35%';
+      ffmpegLoaded=true; bar.style.width='35%';
     }
-    msgEl.textContent='📦 Data prepare...'; barEl.style.width='40%';
-    const resp=await fetch(blobUrl);
-    const buf=await resp.arrayBuffer();
-    await ffmpegInstance.writeFile('input.webm', new Uint8Array(buf));
-    msgEl.textContent='🎬 MP4 ban rahi hai...'; barEl.style.width='45%';
-    await ffmpegInstance.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-movflags','+faststart','output.mp4']);
-    barEl.style.width='90%'; msgEl.textContent='✅ Download ho rahi hai...';
-    const data=await ffmpegInstance.readFile('output.mp4');
-    const mp4Blob=new Blob([data.buffer],{type:'video/mp4'});
-    const mp4Url=URL.createObjectURL(mp4Blob);
-    triggerDownload(mp4Url, getFilename('mp4'));
-    URL.revokeObjectURL(mp4Url);
-    await ffmpegInstance.deleteFile('input.webm');
-    await ffmpegInstance.deleteFile('output.mp4');
-    barEl.style.width='100%'; msgEl.textContent='🎉 MP4 download ho gayi!';
-    showToast('✅ MP4 ready! 🎉');
-  } catch(err) {
-    msgEl.textContent='❌ '+err.message; msgEl.style.color='#CC0000';
-    showToast('❌ Error — WEBM try karo');
+    msg.textContent='📦 Data load…'; bar.style.width='40%';
+    const buf=await (await fetch(blobUrl)).arrayBuffer();
+    await ffmpegInstance.writeFile('in.webm',new Uint8Array(buf));
+    msg.textContent='🎬 Converting…'; bar.style.width='45%';
+    await ffmpegInstance.exec(['-i','in.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-movflags','+faststart','out.mp4']);
+    bar.style.width='92%'; msg.textContent='⬇ Download…';
+    const data=await ffmpegInstance.readFile('out.mp4');
+    const url=URL.createObjectURL(new Blob([data.buffer],{type:'video/mp4'}));
+    triggerDownload(url,getFilename('mp4')); URL.revokeObjectURL(url);
+    await ffmpegInstance.deleteFile('in.webm'); await ffmpegInstance.deleteFile('out.mp4');
+    bar.style.width='100%'; msg.textContent='🎉 MP4 ready!';
+    showToast('✅ MP4 download ho gayi','green');
+  } catch(e){
+    msg.style.color='#ff6655'; msg.textContent='❌ '+e.message+' — Method 2 try karo';
+    showToast('❌ FFmpeg error','red');
   }
-  btn.style.opacity=''; btn.style.pointerEvents='';
 }
 
-function showToast(msg) {
+// ── Toast ──
+function showToast(msg,type=''){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  t.textContent=msg; t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),3200);
 }
 </script>
 </body>
