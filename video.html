@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0f0f0f;
+    font-family:'Noto Sans Devanagari', sans-serif;
+    color:#eee; min-height:100vh; padding:8px;
+  }
+  .container { max-width:420px; margin:0 auto; }
+
+  .logo { text-align:center; padding:10px 0 14px; }
+  .logo span {
+    font-family:Georgia,serif; font-size:28px; font-weight:700;
+    background:linear-gradient(to bottom,#F5D77A,#D4A520,#8B6508);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text; letter-spacing:2px; padding-left:2px;
+  }
+  .logo p { font-size:12px; color:#555; letter-spacing:2px; margin-top:4px; }
+
+  .section {
+    background:#1a1a1a; border:1px solid #2a2a2a;
+    border-radius:10px; padding:12px; margin-bottom:8px;
+  }
+  .section-title {
+    font-size:12px; color:#D4A520; letter-spacing:1px;
+    text-transform:uppercase; margin-bottom:10px; font-weight:700;
+  }
+  .step-badge {
+    display:inline-block; background:#CC0000; color:#fff;
+    font-size:11px; font-weight:700; border-radius:50%;
+    width:20px; height:20px; text-align:center; line-height:20px; margin-right:6px;
+  }
+  label { display:block; font-size:12px; color:#888; margin-bottom:6px; margin-top:10px; }
+  label:first-of-type { margin-top:0; }
+  input[type=text], textarea {
+    width:100%; background:#111; border:1px solid #333; border-radius:6px;
+    color:#fff; font-size:13px; font-family:'Noto Sans Devanagari',sans-serif;
+    padding:8px 10px; outline:none; transition:border 0.2s;
+  }
+  input[type=text]:focus, textarea:focus { border-color:#D4A520; }
+  textarea { resize:vertical; min-height:50px; line-height:1.5; }
+
+  /* Video upload area */
+  .upload-area {
+    border:2px dashed #333; border-radius:10px;
+    padding:20px; text-align:center; cursor:pointer;
+    transition:border-color 0.2s; position:relative;
+  }
+  .upload-area:hover, .upload-area.drag { border-color:#D4A520; }
+  .upload-area input[type=file] {
+    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
+  }
+  .upload-icon { font-size:32px; margin-bottom:8px; }
+  .upload-text { font-size:13px; color:#666; }
+  .upload-text b { color:#D4A520; }
+
+  /* Canvas preview */
+  .preview-wrap {
+    position:relative; margin-top:10px;
+    border-radius:8px; overflow:hidden;
+    background:#000; display:none;
+  }
+  #previewCanvas {
+    width:100%; display:block;
+  }
+
+  /* Video info */
+  .vid-info {
+    font-size:11px; color:#555; margin-top:6px;
+    font-family:monospace; text-align:center;
+  }
+
+  /* Overlay controls */
+  .overlay-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .overlay-row label { margin:0; flex:1; }
+  .toggle-btn {
+    width:42px; height:24px; background:#333; border-radius:12px;
+    position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; border:none;
+  }
+  .toggle-btn::after {
+    content:''; position:absolute; top:3px; left:3px;
+    width:18px; height:18px; background:#666; border-radius:50%;
+    transition:all 0.2s;
+  }
+  .toggle-btn.on { background:#D4A520; }
+  .toggle-btn.on::after { left:21px; background:#fff; }
+
+  /* Color swatches for bar */
+  .swatch-row { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .swatch {
+    width:28px; height:28px; border-radius:50%; cursor:pointer;
+    border:2px solid transparent; transition:border 0.2s; flex-shrink:0;
+  }
+  .swatch.active { border-color:#fff; }
+
+  /* Progress bar */
+  .prog-wrap {
+    background:#1a1a1a; border-radius:6px;
+    height:8px; overflow:hidden; margin-top:8px; display:none;
+  }
+  .prog-bar {
+    height:100%; background:linear-gradient(90deg,#CC0000,#D4A520);
+    width:0%; transition:width 0.1s; border-radius:6px;
+  }
+  .prog-label { font-size:11px; color:#888; margin-top:4px; text-align:center; display:none; }
+
+  /* Buttons */
+  .btn-record {
+    width:100%; background:linear-gradient(135deg,#1a3a1a,#0f2a0f);
+    border:1px solid #4CAF50; border-radius:8px;
+    color:#4CAF50; font-size:14px; font-weight:700;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:12px; cursor:pointer; margin-top:8px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:all 0.2s;
+  }
+  .btn-record:hover { background:#1f3f1f; }
+  .btn-record:disabled { opacity:0.4; pointer-events:none; }
+  .btn-record.recording {
+    background:linear-gradient(135deg,#3a1a1a,#2a0f0f);
+    border-color:#CC0000; color:#CC0000;
+  }
+
+  .btn-download {
+    width:100%; background:linear-gradient(135deg,#CC0000,#990000);
+    border:none; border-radius:8px; color:#fff;
+    font-size:14px; font-weight:900;
+    font-family:'Noto Sans Devanagari',sans-serif;
+    padding:12px; cursor:pointer; margin-top:8px;
+    display:none; align-items:center; justify-content:center; gap:8px;
+    letter-spacing:0.5px;
+  }
+  .btn-download.show { display:flex; }
+
+  .btn-back {
+    width:100%; background:#1a1a1a; color:#D4A520;
+    border:1px solid #D4A520; border-radius:8px;
+    font-size:14px; font-family:'Noto Sans Devanagari',sans-serif;
+    padding:12px; cursor:pointer; margin-top:8px; letter-spacing:1px;
+  }
+
+  .rec-dot {
+    width:10px; height:10px; background:#CC0000; border-radius:50%;
+    animation:blink 1s ease infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .spinner {
+    width:14px; height:14px; border:2px solid #4CAF5044;
+    border-top-color:#4CAF50; border-radius:50%;
+    animation:spin 0.7s linear infinite; display:inline-block;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .toast {
+    position:fixed; bottom:20px; left:50%;
+    transform:translateX(-50%) translateY(80px);
+    background:#D4A520; color:#000; padding:10px 24px;
+    border-radius:8px; font-weight:700; font-size:13px;
+    transition:transform 0.3s; z-index:999; white-space:nowrap;
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  .hint { font-size:11px; color:#444; margin-top:6px; line-height:1.6; }
+  .badge-new {
+    display:inline-block; background:#CC0000; color:#fff;
+    font-size:9px; font-weight:700; border-radius:3px;
+    padding:1px 5px; margin-left:5px; vertical-align:middle;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="logo">
+    <span>BBN</span>
+    <p>VIDEO EDITOR <span class="badge-new">NEW</span></p>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">1</span> Video Choose Karo</div>
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="videoFile" accept="video/*" onchange="loadVideo(this)"/>
+      <div class="upload-icon">🎬</div>
+      <div class="upload-text">Tap karke <b>video select karo</b><br>MP4, MOV, AVI — koi bhi chalega</div>
+    </div>
+    <div class="vid-info" id="vidInfo"></div>
+  </div>
+
+  <!-- Step 2: Headline -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">2</span> Headline / Ticker Text</div>
+    <label>Breaking news text (Hindi / Hinglish)</label>
+    <textarea id="headlineText" placeholder="Jaise: मोदी सरकार का बड़ा फैसला..." rows="2" oninput="refreshOverlay()"></textarea>
+    <label>Source / Channel</label>
+    <input type="text" id="sourceText" value="BBN NEWS" oninput="refreshOverlay()"/>
+  </div>
+
+  <!-- Step 3: Overlay settings -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">3</span> Overlay Settings</div>
+
+    <div class="overlay-row">
+      <label>BBN Logo (upar right)</label>
+      <button class="toggle-btn on" id="toggleLogo" onclick="toggle('logo')"></button>
+    </div>
+    <div class="overlay-row">
+      <label>Breaking News bar (neeche)</label>
+      <button class="toggle-btn on" id="toggleBar" onclick="toggle('bar')"></button>
+    </div>
+    <div class="overlay-row">
+      <label>Top laal strip</label>
+      <button class="toggle-btn on" id="toggleStrip" onclick="toggle('strip')"></button>
+    </div>
+
+    <label style="margin-top:12px;">Breaking bar ka rang</label>
+    <div class="swatch-row">
+      <div class="swatch active" style="background:#CC0000;" onclick="setBarColor('#CC0000',this)" title="Laal"></div>
+      <div class="swatch" style="background:#1a237e;" onclick="setBarColor('#1a237e',this)" title="Neela"></div>
+      <div class="swatch" style="background:#1b5e20;" onclick="setBarColor('#1b5e20',this)" title="Hara"></div>
+      <div class="swatch" style="background:#212121;" onclick="setBarColor('#212121',this)" title="Kala"></div>
+      <div class="swatch" style="background:#D4A520;" onclick="setBarColor('#D4A520',this)" title="Sona"></div>
+      <div class="swatch" style="background:#4a148c;" onclick="setBarColor('#4a148c',this)" title="Baingani"></div>
+    </div>
+  </div>
+
+  <!-- Step 4: Preview -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">4</span> Preview</div>
+    <div class="preview-wrap" id="previewWrap">
+      <canvas id="previewCanvas"></canvas>
+    </div>
+    <p class="hint" id="previewHint">Video load hone ke baad yahan preview dikhega</p>
+  </div>
+
+  <!-- Step 5: Record & Download -->
+  <div class="section">
+    <div class="section-title"><span class="step-badge">5</span> Video Banao & Download Karo</div>
+
+    <button class="btn-record" id="recordBtn" onclick="startRecording()" disabled>
+      <span id="recIcon">⏺</span>
+      <span id="recLabel">Video Record Karo</span>
+    </button>
+
+    <div class="prog-wrap" id="progWrap">
+      <div class="prog-bar" id="progBar"></div>
+    </div>
+    <div class="prog-label" id="progLabel"></div>
+
+    <!-- Step 1: Download raw webm -->
+    <button class="btn-download" id="dlWebmBtn" onclick="downloadWebm()">
+      ⬇️ WEBM Download Karo (Fast)
+    </button>
+
+    <!-- Step 2: Convert to MP4 -->
+    <button class="btn-download" id="dlMp4Btn" onclick="convertToMp4()" style="background:linear-gradient(135deg,#1a3a1a,#0f2a0f);border:1.5px solid #4CAF50;color:#4CAF50;margin-top:6px;">
+      🎬 MP4 mein Convert Karke Download Karo
+    </button>
+
+    <!-- ffmpeg progress -->
+    <div id="ffmpegStatus" style="display:none;margin-top:8px;background:#111;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:12px;color:#4CAF50;margin-bottom:6px;" id="ffmpegMsg">⏳ ffmpeg load ho raha hai...</div>
+      <div style="background:#222;border-radius:4px;height:6px;overflow:hidden;">
+        <div id="ffmpegBar" style="height:100%;background:linear-gradient(90deg,#4CAF50,#D4A520);width:0%;transition:width 0.3s;"></div>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:8px;">
+      💡 <b style="color:#D4A520;">WEBM</b> — turant download, WhatsApp/Facebook pe chalti hai<br>
+      💡 <b style="color:#4CAF50;">MP4</b> — convert hone mein 1-2 min lagenge, sabse compatible format<br>
+      ⚠️ Phone ko lock mat karo recording ke dauraan
+    </div>
+  </div>
+
+  <button class="btn-back" onclick="window.location='admin.html'">← Admin Panel</button>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──
+let videoEl      = null;
+let animFrame    = null;
+let mediaRec     = null;
+let recordedChunks = [];
+let isRecording  = false;
+let tickerX      = 0;
+let overlayState = { logo:true, bar:true, strip:true };
+let barColor     = '#CC0000';
+let videoDuration = 0;
+let blobUrl      = null;
+
+// Load fonts
+const devanagariFont = new FontFace('Noto Sans Devanagari',
+  "url('https://fonts.gstatic.com/s/notosansdevanagari/v25/TuGUUUhhADaAADTCB8uYgMy2oVoGCbkb.woff2')",
+  { weight:'900' }
+);
+devanagariFont.load().catch(()=>{});
+document.fonts.add(devanagariFont);
+
+// Pre-load from saved news
+window.onload = () => {
+  const saved = localStorage.getItem('bbn_news');
+  if (saved) {
+    const d = JSON.parse(saved);
+    if (d.headline) {
+      const clean = d.headline.replace(/<[^>]*>/g,'');
+      document.getElementById('headlineText').value = clean;
+    }
+    if (d.source) document.getElementById('sourceText').value = d.source;
+  }
+};
+
+// ── Load video ──
+function loadVideo(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+  videoEl = document.createElement('video');
+  videoEl.src = url;
+  videoEl.muted = true;         // muted for canvas capture
+  videoEl.playsInline = true;
+  videoEl.crossOrigin = 'anonymous';
+
+  videoEl.onloadedmetadata = () => {
+    videoDuration = videoEl.duration;
+    const w = videoEl.videoWidth;
+    const h = videoEl.videoHeight;
+    const sz = (file.size / 1024 / 1024).toFixed(1);
+
+    document.getElementById('vidInfo').textContent =
+      `${w}×${h} · ${videoDuration.toFixed(1)}s · ${sz} MB`;
+
+    // Set canvas size
+    const canvas = document.getElementById('previewCanvas');
+    canvas.width  = w;
+    canvas.height = h;
+
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('previewHint').style.display = 'none';
+    document.getElementById('recordBtn').disabled = false;
+
+    // Start live preview
+    videoEl.loop = true;
+    videoEl.play();
+    startPreviewLoop();
+
+    showToast('✅ Video load ho gayi!');
+  };
+
+  videoEl.onerror = () => showToast('❌ Video load nahi hui — doosri file try karo');
+}
+
+// ── Preview loop ──
+function startPreviewLoop() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  const canvas = document.getElementById('previewCanvas');
+  const ctx    = canvas.getContext('2d');
+
+  function draw() {
+    if (!videoEl) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    drawOverlay(ctx, canvas.width, canvas.height);
+    tickerX -= 2; // scroll speed for preview
+    animFrame = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── Draw overlay ──
+function drawOverlay(ctx, W, H) {
+  const scale = W / 400; // normalize to 400px base
+
+  // Top red strip
+  if (overlayState.strip) {
+    ctx.fillStyle = '#CC0000';
+    ctx.fillRect(0, 0, W, 4 * scale);
+  }
+
+  // BBN Logo circle (top right)
+  if (overlayState.logo) {
+    const lx = W - 44*scale;
+    const ly = 10*scale;
+    const lr = 20*scale;
+
+    // Circle bg
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    ctx.fillStyle = '#0a0a0a';
+    ctx.beginPath();
+    ctx.arc(lx+lr, ly+lr, lr, 0, Math.PI*2);
+    ctx.fill();
+    // Gold border
+    ctx.strokeStyle = '#D4A520';
+    ctx.lineWidth = 1.2*scale;
+    ctx.stroke();
+    ctx.restore();
+
+    // BBN text
+    ctx.save();
+    ctx.font = `900 ${13*scale}px Georgia, serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // Gold gradient via fillStyle
+    const grd = ctx.createLinearGradient(lx+lr, ly, lx+lr, ly+lr*2);
+    grd.addColorStop(0,   '#F5D77A');
+    grd.addColorStop(0.55,'#D4A520');
+    grd.addColorStop(1,   '#8B6508');
+    ctx.fillStyle = grd;
+    ctx.fillText('BBN', lx+lr, ly+lr+0.5);
+    ctx.restore();
+  }
+
+  // Breaking bar (bottom)
+  if (overlayState.bar) {
+    const barH  = 36*scale;
+    const barY  = H - barH;
+    const headline = document.getElementById('headlineText').value || 'ब्रेकिंग न्यूज़';
+    const source   = document.getElementById('sourceText').value   || 'BBN NEWS';
+
+    // Bar background
+    ctx.fillStyle = barColor;
+    ctx.fillRect(0, barY, W, barH);
+
+    // "LIVE" label pill
+    const pillW = 46*scale;
+    ctx.fillStyle = '#8B0000';
+    ctx.fillRect(0, barY, pillW, barH);
+
+    ctx.save();
+    ctx.font = `700 ${9*scale}px 'Trebuchet MS', sans-serif`;
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('LIVE', pillW/2, barY + barH/2);
+    ctx.restore();
+
+    // Divider
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillRect(pillW, barY+4*scale, 1*scale, barH-8*scale);
+
+    // Scrolling headline text — clip to bar area
+    ctx.save();
+    ctx.rect(pillW+4*scale, barY, W - pillW - 4*scale, barH);
+    ctx.clip();
+    ctx.font = `700 ${11*scale}px 'Noto Sans Devanagari', sans-serif`;
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+
+    // Measure text width to loop it
+    const txtW = ctx.measureText(headline).width;
+    const startX = pillW + 8*scale;
+    const drawX  = startX + (tickerX % (txtW + W));
+    // Draw twice for seamless loop
+    ctx.fillText(headline, drawX, barY + barH/2);
+    ctx.fillText(headline, drawX + txtW + 80*scale, barY + barH/2);
+    ctx.restore();
+
+    // Source tag (right side, above bar)
+    ctx.save();
+    ctx.font = `700 ${7.5*scale}px 'Trebuchet MS', sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(source, W - 6*scale, barY - 3*scale);
+    ctx.restore();
+  }
+}
+
+// ── Toggle overlays ──
+function toggle(which) {
+  overlayState[which] = !overlayState[which];
+  document.getElementById('toggle' + which.charAt(0).toUpperCase() + which.slice(1))
+    .classList.toggle('on', overlayState[which]);
+}
+function setBarColor(color, el) {
+  barColor = color;
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+function refreshOverlay() { /* overlay redraws on next frame automatically */ }
+
+// ── Start recording ──
+async function startRecording() {
+  if (isRecording) { stopRecording(); return; }
+  if (!videoEl) return;
+
+  recordedChunks = [];
+  blobUrl = null;
+  document.getElementById('dlWebmBtn').classList.remove('show');
+  document.getElementById('dlMp4Btn').classList.remove('show');
+  document.getElementById('ffmpegStatus').style.display = 'none';
+
+  const canvas = document.getElementById('previewCanvas');
+
+  // Stop preview loop
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+
+  // Reset video
+  videoEl.pause();
+  videoEl.loop   = false;
+  videoEl.muted  = true;
+  videoEl.currentTime = 0;
+
+  const ctx = canvas.getContext('2d');
+  tickerX = 0;
+
+  // Recording draw loop — matches video playback
+  function recDraw() {
+    if (!isRecording) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    drawOverlay(ctx, canvas.width, canvas.height);
+    tickerX -= 2;
+    animFrame = requestAnimationFrame(recDraw);
+  }
+
+  // Pick best supported format
+  const mimeTypes = [
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm',
+    'video/mp4',
+  ];
+  const mimeType = mimeTypes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
+
+  const stream  = canvas.captureStream(30);
+  mediaRec = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 4_000_000 });
+
+  mediaRec.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+
+  mediaRec.onstop = () => {
+    isRecording = false;
+    cancelAnimationFrame(animFrame);
+
+    const blob = new Blob(recordedChunks, { type: mimeType });
+    blobUrl = URL.createObjectURL(blob);
+
+    // UI reset
+    document.getElementById('recIcon').textContent = '⏺';
+    document.getElementById('recLabel').textContent = 'Dobara Record Karo';
+    document.getElementById('recordBtn').classList.remove('recording');
+    document.getElementById('progWrap').style.display = 'none';
+    document.getElementById('progLabel').style.display = 'none';
+    document.getElementById('dlWebmBtn').classList.add('show');
+    document.getElementById('dlMp4Btn').classList.add('show');
+
+    showToast('✅ Video ready hai! Download karo 🎉');
+
+    // Resume preview
+    videoEl.loop = true;
+    videoEl.play();
+    startPreviewLoop();
+  };
+
+  // Progress tracking
+  const progWrap  = document.getElementById('progWrap');
+  const progBar   = document.getElementById('progBar');
+  const progLabel = document.getElementById('progLabel');
+  progWrap.style.display  = 'block';
+  progLabel.style.display = 'block';
+
+  let progInterval = setInterval(() => {
+    if (!isRecording) { clearInterval(progInterval); return; }
+    const pct = Math.min((videoEl.currentTime / videoDuration) * 100, 100);
+    progBar.style.width  = pct + '%';
+    progLabel.textContent = `${videoEl.currentTime.toFixed(1)}s / ${videoDuration.toFixed(1)}s`;
+  }, 200);
+
+  // Start
+  isRecording = true;
+  mediaRec.start(100); // collect every 100ms
+  videoEl.play();
+  recDraw();
+
+  // UI
+  document.getElementById('recIcon').innerHTML = '<span class="rec-dot"></span>';
+  document.getElementById('recLabel').textContent = 'Recording... (Roko)';
+  document.getElementById('recordBtn').classList.add('recording');
+
+  showToast('🔴 Recording shuru ho gayi...');
+
+  // Auto stop when video ends
+  videoEl.onended = () => {
+    if (isRecording) stopRecording();
+  };
+}
+
+function stopRecording() {
+  if (!mediaRec || mediaRec.state === 'inactive') return;
+  isRecording = false;
+  mediaRec.stop();
+  videoEl.pause();
+
+  document.getElementById('recIcon').innerHTML = '<span class="spinner"></span>';
+  document.getElementById('recLabel').textContent = 'Process ho raha hai...';
+  document.getElementById('recordBtn').disabled = true;
+  setTimeout(() => { document.getElementById('recordBtn').disabled = false; }, 1500);
+}
+
+// ── Download helpers ──
+function getFilename(ext) {
+  const headline = document.getElementById('headlineText').value
+    .replace(/<[^>]*>/g,'').substring(0,20).trim()
+    .replace(/\s+/g,'_').replace(/[^\w_]/g,'') || 'bbn_video';
+  return 'BBN_' + headline + '.' + ext;
+}
+
+function triggerDownload(url, filename) {
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+}
+
+// Download raw webm immediately
+function downloadWebm() {
+  if (!blobUrl) return showToast('⚠️ Pehle video record karo!');
+  triggerDownload(blobUrl, getFilename('webm'));
+  showToast('⬇️ WEBM download shuru!');
+}
+
+// Convert webm → mp4 using ffmpeg.wasm (runs fully in browser)
+let ffmpegLoaded = false;
+let ffmpegInstance = null;
+
+async function convertToMp4() {
+  if (!blobUrl) return showToast('⚠️ Pehle video record karo!');
+
+  const statusDiv = document.getElementById('ffmpegStatus');
+  const msgEl     = document.getElementById('ffmpegMsg');
+  const barEl     = document.getElementById('ffmpegBar');
+  const btn       = document.getElementById('dlMp4Btn');
+
+  statusDiv.style.display = 'block';
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
+
+  try {
+    // Load ffmpeg.wasm if not loaded
+    if (!ffmpegLoaded) {
+      msgEl.textContent = '⏳ ffmpeg.wasm load ho raha hai (~25MB, ek baar hi)...';
+      barEl.style.width = '10%';
+
+      // Load from CDN
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
+      document.head.appendChild(script);
+      await new Promise((res, rej) => { script.onload = res; script.onerror = rej; });
+
+      const script2 = document.createElement('script');
+      script2.src = 'https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
+      document.head.appendChild(script2);
+      await new Promise((res, rej) => { script2.onload = res; script2.onerror = rej; });
+
+      barEl.style.width = '30%';
+      msgEl.textContent = '⚙️ ffmpeg initialize ho raha hai...';
+
+      const { FFmpeg } = FFmpegWASM;
+      ffmpegInstance = new FFmpeg();
+
+      ffmpegInstance.on('progress', ({ progress }) => {
+        const pct = Math.round(progress * 70) + 30;
+        barEl.style.width = pct + '%';
+        msgEl.textContent = `🔄 Convert ho raha hai... ${Math.round(progress*100)}%`;
+      });
+
+      ffmpegInstance.on('log', ({ message }) => {
+        console.log('[ffmpeg]', message);
+      });
+
+      await ffmpegInstance.load({
+        coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+      });
+
+      ffmpegLoaded = true;
+      barEl.style.width = '35%';
+    }
+
+    msgEl.textContent = '📦 Video data prepare ho rahi hai...';
+    barEl.style.width = '40%';
+
+    // Fetch webm blob as Uint8Array
+    const response  = await fetch(blobUrl);
+    const arrayBuf  = await response.arrayBuffer();
+    const uint8     = new Uint8Array(arrayBuf);
+
+    // Write input file to ffmpeg virtual FS
+    await ffmpegInstance.writeFile('input.webm', uint8);
+
+    msgEl.textContent = '🎬 MP4 ban rahi hai...';
+    barEl.style.width = '45%';
+
+    // Run conversion
+    await ffmpegInstance.exec([
+      '-i', 'input.webm',
+      '-c:v', 'libx264',
+      '-preset', 'ultrafast',
+      '-crf', '23',
+      '-c:a', 'aac',
+      '-movflags', '+faststart',
+      'output.mp4'
+    ]);
+
+    barEl.style.width = '90%';
+    msgEl.textContent = '✅ Convert ho gayi! Download ho rahi hai...';
+
+    // Read output
+    const data = await ffmpegInstance.readFile('output.mp4');
+    const mp4Blob = new Blob([data.buffer], { type: 'video/mp4' });
+    const mp4Url  = URL.createObjectURL(mp4Blob);
+
+    triggerDownload(mp4Url, getFilename('mp4'));
+    URL.revokeObjectURL(mp4Url);
+
+    // Cleanup ffmpeg FS
+    await ffmpegInstance.deleteFile('input.webm');
+    await ffmpegInstance.deleteFile('output.mp4');
+
+    barEl.style.width = '100%';
+    msgEl.textContent = '🎉 MP4 download ho gayi! Facebook pe share karo!';
+    showToast('✅ MP4 ready! Download ho gayi 🎉');
+
+  } catch(err) {
+    console.error('ffmpeg error:', err);
+    msgEl.textContent = '❌ Error: ' + err.message + ' — WEBM download try karo';
+    msgEl.style.color = '#CC0000';
+    showToast('❌ Convert nahi hua — WEBM use karo');
+  }
+
+  btn.style.opacity = '';
+  btn.style.pointerEvents = '';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
