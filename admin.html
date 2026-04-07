@@ -423,6 +423,32 @@ body {
   border: 1px solid var(--border);
 }
 
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border-hi);
+  border-radius: 8px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(212,165,32,0.05);
+}
+.upload-zone.has-file {
+  border-color: var(--green);
+  background: rgba(76,175,80,0.05);
+}
+.upload-icon { font-size: 24px; }
+.upload-text { font-size: 12px; font-weight: 700; color: var(--txt-md); letter-spacing: 0.5px; }
+.upload-sub  { font-size: 10px; color: var(--txt-lo); }
+
 /* Spinner */
 .spinner {
   display: inline-block;
@@ -792,7 +818,18 @@ body {
       <span class="panel-chevron">▼</span>
     </div>
     <div class="panel-body" id="pb-photo">
-      <div class="ctrl-label">Photo URL (Internet Link)</div>
+
+      <!-- Device Upload -->
+      <div class="ctrl-label">📱 Device Se Upload Karo</div>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('deviceUpload').click()">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Tap karo ya photo khींcho</div>
+        <div class="upload-sub">JPG, PNG, WEBP — Max 10MB</div>
+      </div>
+      <input type="file" id="deviceUpload" accept="image/*" style="display:none" onchange="handleDeviceUpload(this)"/>
+      <img id="photoPreviewDevice" class="photo-thumb" src="" alt=""/>
+
+      <div class="ctrl-label">Ya Photo URL (Internet Link)</div>
       <input class="pro-input" type="text" id="photoUrl" placeholder="https://...photo.jpg" oninput="previewImg('photoUrl','photoPreview')"/>
       <div class="ctrl-label">Ya GitHub Photos/ Folder Se</div>
       <input class="pro-input" type="text" id="photoFile" placeholder="photos/modi.jpg" oninput="previewImgFile()"/>
@@ -1022,6 +1059,58 @@ function copyText(id) {
     .then(() => showToast('✅ Copy ho gaya!', 'green'));
 }
 
+// ── Device Upload ──
+function handleDeviceUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) return showToast('❌ 10MB se bada file nahi chalega!', 'red');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    const img = document.getElementById('photoPreviewDevice');
+    img.src = base64;
+    img.style.display = 'block';
+
+    // Store base64 for use in saveNews
+    window._uploadedPhotoBase64 = base64;
+
+    // Update zone UI
+    const zone = document.getElementById('uploadZone');
+    zone.classList.add('has-file');
+    zone.querySelector('.upload-text').textContent = '✅ ' + file.name;
+    zone.querySelector('.upload-sub').textContent = (file.size / 1024).toFixed(0) + ' KB — Upload ready!';
+
+    markStep(4);
+    showToast('✅ Photo load ho gaya!', 'green');
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drag & Drop support
+document.addEventListener('DOMContentLoaded', function() {
+  const zone = document.getElementById('uploadZone');
+  if (!zone) return;
+  zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', function() {
+    zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('deviceUpload').files = dt.files;
+      handleDeviceUpload(document.getElementById('deviceUpload'));
+    }
+  });
+});
+
 // ── Photo preview ──
 function previewImg(inputId, imgId) {
   const url = document.getElementById(inputId).value.trim();
@@ -1058,7 +1147,7 @@ function saveNews() {
   const photoUrl  = document.getElementById('photoUrl').value.trim();
   const photoFile = document.getElementById('photoFile').value.trim();
   const source    = document.getElementById('sourceText').value.trim();
-  const photo     = photoUrl || photoFile || 'photos/default.jpg';
+  const photo     = window._uploadedPhotoBase64 || photoUrl || photoFile || 'photos/default.jpg';
 
   const saveData = { headline, photo, source, template: selectedTemplate };
   if (selectedTemplate === 'poll') {
